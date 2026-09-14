@@ -11,7 +11,7 @@ edition: "OTP-29.0.6; ERTS 17.0.6"
 isbn: null
 doi: null
 url: "https://www.erlang.org/doc/apps/erts/init.html"
-accessed: "2026-09-13"
+accessed: "2026-09-14"
 tags:
   - boot
   - browser-security
@@ -48,7 +48,8 @@ Erlang/OTP Project. OTP 29.0.6 / ERTS 17.0.6 documentation and source:
   BIT_BINARY_EXT input”](https://github.com/erlang/otp/security/advisories/GHSA-54pw-5645-jh86),
   published 2026-07-27.
 
-All pages were accessed 2026-09-13. Version-neutral documentation URLs
+All pages were accessed 2026-09-13 and the tagged boot paths were re-inspected
+2026-09-14. Version-neutral documentation URLs
 identified themselves as OTP 29.0.6 where noted during access.
 
 ## Research question or contribution
@@ -207,6 +208,7 @@ resilience require separate threat modeling and verification.
 
 ## Derived work
 
+- [ERTS architecture and the minimum browser WebAssembly port](../20-notes/erts-architecture-and-minimal-browser-webassembly-port.md)
 - [First-party Erlang/OTP ERTS WebAssembly runtime stack](../20-notes/first-party-erlang-otp-erts-webassembly-runtime-stack.md)
 - [Can BlazeX build and own an ERTS WebAssembly runtime stack?](../40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md)
 - [ERTS WebAssembly runtime stack map](../10-maps/erts-webassembly-runtime-stack.md)

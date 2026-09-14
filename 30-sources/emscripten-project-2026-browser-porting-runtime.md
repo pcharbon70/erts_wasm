@@ -11,7 +11,7 @@ edition: "6.0.10-git development documentation"
 isbn: null
 doi: null
 url: "https://emscripten.org/docs/porting/index.html"
-accessed: "2026-09-13"
+accessed: "2026-09-14"
 tags:
   - browser
   - emscripten
@@ -40,7 +40,7 @@ Overview”](https://emscripten.org/docs/porting/files/file_systems_overview.htm
 [“Dynamic Linking”](https://emscripten.org/docs/compiling/Dynamic-Linking.html),
 [“Sanitizers”](https://emscripten.org/docs/debugging/Sanitizers.html), and the
 [settings reference](https://emscripten.org/docs/tools_reference/settings_reference.html).
-Development documentation labeled `6.0.10-git`, accessed 2026-09-13.
+Development documentation labeled `6.0.10-git`, accessed again 2026-09-14.
 
 ## Research question or contribution
 
@@ -129,6 +129,7 @@ and deployment evidence.
 
 ## Derived work
 
+- [ERTS architecture and the minimum browser WebAssembly port](../20-notes/erts-architecture-and-minimal-browser-webassembly-port.md)
 - [First-party Erlang/OTP ERTS WebAssembly runtime stack](../20-notes/first-party-erlang-otp-erts-webassembly-runtime-stack.md)
 - [First-party ERTS/Wasm feasibility inquiry](../40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md)
 - [ERTS WebAssembly runtime stack map](../10-maps/erts-webassembly-runtime-stack.md)

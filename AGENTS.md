@@ -4,23 +4,171 @@ These instructions apply to the entire repository. This is a Markdown research
 archive, not an implementation repository. Preserve exploratory work while
 keeping provenance, navigation, security assumptions, and structure reliable.
 
-## Project goal
+## Project mission
 
-Research a first-party WebAssembly port of upstream Erlang/OTP ERTS and a
-version-matched OTP profile. Prefer a small, reviewable platform layer over a
-new BEAM implementation or broad POSIX emulation. Treat browser deployment,
-Worker topology, lifecycle, compatibility, supply-chain maintenance, and
-security as equal parts of feasibility.
+Determine whether the official upstream Erlang Runtime System (ERTS) can be
+cross-built into a secure, maintainable browser WebAssembly runtime that boots
+a version-matched OTP profile and executes ordinary admitted BEAM modules.
+This is a runtime-porting and product-feasibility program, not merely an
+exercise in producing a `.wasm` binary.
+
+The intended result preserves Erlang/OTP process, mailbox, scheduling, timer,
+garbage-collection, ETS, link, monitor, application, and supervision semantics
+closely enough to support a useful pinned OTP and Elixir subset. It must also
+fit the browser's asynchronous execution model, stay off the page UI thread,
+grant no ambient host authority, terminate cleanly, meet explicit product
+budgets, and remain practical to update when ERTS or the toolchain changes.
+
+Prefer a small, reviewable platform layer over a new BEAM implementation or
+broad POSIX emulation. Treat semantic compatibility, browser deployment,
+Worker topology, lifecycle, resource limits, supply-chain maintenance, and
+security as independent requirements. A build, boot, or visual demonstration
+does not by itself establish feasibility.
+
+## Major goals
+
+1. **Preserve upstream semantics.** Start from a pinned upstream ERTS and run
+   matching official OTP BEAM modules. Do not casually replace the scheduler,
+   process model, garbage collector, loader, or OTP behaviours.
+2. **Create the smallest browser platform port.** Identify every ERTS
+   dependency on threads, atomics, polling, timers, allocators, files, signals,
+   dynamic loading, ports, and other OS facilities. Adapt only the facilities
+   the supported profile needs; reject unsupported operations predictably.
+3. **Keep ERTS off the UI thread.** Run the interpreter in a directly
+   supervised Worker group. Compare candidate Emscripten Worker/pthread
+   topologies using boot, responsiveness, ownership, and teardown evidence.
+4. **Define a version-locked runtime profile.** Ship an immutable release with
+   matching ERTS, `kernel`, and `stdlib`, followed only by explicitly qualified
+   OTP and Elixir modules. Compatibility is a tested allowlist, not a claim of
+   general BEAM forward compatibility.
+5. **Make host authority explicit.** Expose browser services through a
+   versioned, typed, bounded, deny-by-default capability broker. Rendering is
+   a declarative protocol to a separate DOM adapter; networking, persistence,
+   and cryptography are separately admitted capabilities.
+6. **Prove lifecycle and resource control.** Account for every Worker,
+   MessagePort, timer, listener, request, renderer handle, shared-memory
+   buffer, and pthread registry entry. Forced termination must reject stale
+   completions and repeated boot/dispose cycles must settle without a positive
+   resource slope.
+7. **Establish reproducible ownership.** Keep the upstream patch stack small;
+   pin sources and toolchains; produce hashes, manifests, SBOMs, provenance,
+   compatibility reports, and reproducible artifacts; rehearse security
+   updates and upstream rebases.
+8. **Use falsifiable gates.** Compare observable native and Wasm behavior in
+   Chrome and Firefox, measure size/startup/memory/latency/cleanup, fuzz trust
+   boundaries, and retain negative results. Product budgets must be approved
+   rather than invented by research authors.
+
+## Target architecture under investigation
+
+- Upstream ERTS compiled for `wasm32-unknown-emscripten`.
+- The portable BEAM interpreter, with BeamAsm/JIT disabled initially.
+- Emscripten pthreads, shared WebAssembly memory, and cross-origin isolation as
+  the first threading hypothesis; a threadless ERTS is a separate research
+  program, not a build flag.
+- A directly supervised browser Worker group with an independently schedulable
+  watchdog capable of terminating the complete runtime generation.
+- A content-addressed, immutable release containing matching boot files, `.app`
+  metadata, BEAM modules, and approved assets.
+- A small static browser system adapter and asynchronous capability broker;
+  no generic JavaScript, DOM, socket, shell, or filesystem escape hatch.
+- A separate renderer that consumes bounded semantic operations. Phoenix and
+  Plug are independent server-adapter concerns; LiveView and LocalLiveView are
+  deferred from this runtime investigation.
+- One runtime may serve multiple components in the same trust domain. Mutually
+  untrusted code requires separate Worker-plus-Wasm instances unless a future
+  design proves stronger internal isolation.
+
+The exact Worker topology, host-wakeup mechanism, supported OTP/Elixir surface,
+numeric budgets, and long-term package ownership remain decisions to be made
+from experiments rather than assumptions.
+
+## Security model
+
+Security is a day-one property. WebAssembly constrains linear-memory access and
+host imports, but it does not make ERTS or statically linked C code memory-safe.
+Treat one ERTS instance and its admitted code as a shared trusted failure
+domain, with the browser engine, loader, broker, manifest verifier, page
+bootstrap, delivery origin, and update path forming parts of the trusted base.
+
+Keep host authority deny-by-default and treat browser events, network data,
+stored bytes, decoded terms, URLs, and all other external data as hostile.
+Preserve loader enforcement, capability checks, quota ownership, Worker
+isolation, deterministic teardown, secret minimization, update response,
+reproducibility, SBOM, provenance, sanitizers, and fuzzing in every relevant
+proposal. Do not use untrusted Erlang External Term Format at a browser
+boundary. Client-held data is neither server authorization nor confidential
+from the browser user or a compromised origin.
+
+## Current evidence boundary
+
+- The pinned source-inspection baseline is Erlang/OTP 29.0.6, ERTS 17.0.6,
+  commit `e07fd07837e5aa845657f5fa340637121e451d47`.
+- The audit found no documented first-party ERTS browser target and confirmed
+  that contemporary ERTS requires a thread implementation; `+S 1:1` is not a
+  threadless build.
+- `emcc` was not available during the recorded investigation. No ERTS/Wasm
+  compile, OTP boot, browser conformance run, lifecycle test, benchmark, or
+  support matrix has been produced by this corpus.
+- The feasibility inquiry is open, the main synthesis is developing, and
+  `60-planning/` intentionally contains no implementation plan until work is
+  explicitly authorized.
+- Some documents retain BlazeX terminology because the research originated in
+  that corpus. Historical framing does not establish current package ownership,
+  roadmap authority, or adoption by another repository.
+
+Never turn a research conclusion into an implementation or support claim.
+Clearly label source facts, local observations, inferences, proposals, pass
+criteria, and unresolved assumptions.
+
+## Scope exclusions and stop conditions
+
+Do not treat any of the following as the default solution:
+
+- a new or clean-room BEAM implementation;
+- direct native-Wasm compilation of each Elixir component as a substitute for
+  ERTS semantics;
+- ERTS execution or blocking waits on the browser UI thread;
+- complete Unix/POSIX emulation, broad socket shims, or ambient filesystem
+  access;
+- dynamic NIFs/drivers, arbitrary code loading, shell/eval/compiler support,
+  distribution, raw sockets, OS processes, or terminal facilities in the
+  initial profile; or
+- broad OTP or Elixir compatibility inferred from dependency lists or one
+  successful component demo.
+
+Stop or reassess the candidate if minimal boot requires broad POSIX emulation,
+a pervasive unmergeable fork, UI-thread blocking, an unbounded import surface,
+unsafe code loading, uncontrollable Worker groups, positive post-disposal
+resource slopes, broken Tier 0 OTP semantics, or deployment headers that make
+the intended product unusable.
 
 The Popcorn stack is explicitly outside scope: do not inspect, cite, compare,
 or use it as evidence. This exclusion does not prevent studying upstream ERTS,
 OTP, Elixir, WebAssembly standards, browser APIs, Emscripten, operating-system
 interfaces, or relevant scientific literature.
 
-Security is a day-one property. Keep host authority deny-by-default; distinguish
-Wasm containment from memory safety; treat external data as hostile; preserve
-loader, capability, quota, Worker isolation, teardown, update, reproducibility,
-SBOM, provenance, and fuzzing requirements in every relevant proposal.
+## Read these first
+
+1. `10-maps/home.md` for corpus navigation and status.
+2. `20-notes/erts-architecture-and-minimal-browser-webassembly-port.md` for the
+   component model, minimum browser platform contract, evidence ladder, and
+   implementation boundary.
+3. `40-inquiries/what-is-the-minimum-browser-platform-contract-for-upstream-erts.md`
+   for the repository-neutral compile, boot, semantics, lifecycle, and
+   qualification gates.
+4. `20-notes/first-party-erlang-otp-erts-webassembly-runtime-stack.md` for the
+   proposed architecture, security model, alternatives, and staged program.
+5. `40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md`
+   for the falsifiable operational question, experiment gates, blockers, and
+   resolution criteria.
+6. `50-journal/2026-09-14-erts-architecture-and-minimal-webassembly-port-deep-dive.md`
+   for the current component audit, comparative evidence, and negative
+   findings.
+7. `50-journal/2026-09-13-first-party-erts-webassembly-runtime-deep-dive.md`
+   for pinned commands, observations, negative findings, and evidence limits.
+8. `10-maps/erts-webassembly-runtime-stack.md` and `30-sources/README.md` for
+   subsystem-specific trails into the primary and peer-reviewed evidence.
 
 ## Archive principles
 

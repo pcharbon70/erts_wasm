@@ -26,9 +26,12 @@ One evidence-focused note for every source used substantively by the research.
 
 ### Documents
 
+- [AtomVM runtime architecture and WebAssembly port](atomvm-project-2026-runtime-and-webassembly-port.md)
 - [Emscripten browser porting runtime](emscripten-project-2026-browser-porting-runtime.md)
 - [Erlang/OTP ERTS build, runtime, and source](erlang-otp-project-2026-erts-build-runtime-and-source.md)
+- [ERTS interpreter and message-passing articles](erlang-otp-project-erts-interpreter-and-message-passing-articles.md)
 - [Erlang/OTP boot, security, and compatibility](erlang-otp-project-2026-otp-boot-security-and-compatibility.md)
+- [Erlang/OTP WebAssembly demonstration](vasetenkov-erlang-otp-webassembly-demo.md)
 - [Not So Fast: WebAssembly performance](jangda-et-al-2019-webassembly-performance.md)
 - [Everything Old Is New Again](lehmann-kinder-pradel-2020-webassembly-binary-security.md)
 - [Swivel](narayan-et-al-2021-swivel.md)

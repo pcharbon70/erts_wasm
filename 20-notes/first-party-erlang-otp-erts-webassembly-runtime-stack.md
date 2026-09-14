@@ -968,6 +968,9 @@ keeps a compelling demo from concealing an unsafe or unmaintainable runtime.
 
 ## Related research
 
+- [ERTS architecture and the minimum browser WebAssembly port](erts-architecture-and-minimal-browser-webassembly-port.md)
+- [Minimum browser platform-contract inquiry](../40-inquiries/what-is-the-minimum-browser-platform-contract-for-upstream-erts.md)
+- [2026-09-14 component deep-dive journal](../50-journal/2026-09-14-erts-architecture-and-minimal-webassembly-port-deep-dive.md)
 - [ERTS WebAssembly runtime-stack map](../10-maps/erts-webassembly-runtime-stack.md)
 - [First-party ERTS-in-Wasm inquiry](../40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md)
 - [Research journal](../50-journal/2026-09-13-first-party-erts-webassembly-runtime-deep-dive.md)

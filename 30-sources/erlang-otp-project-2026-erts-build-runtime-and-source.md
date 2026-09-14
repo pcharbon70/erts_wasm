@@ -11,7 +11,7 @@ edition: "OTP-29.0.6; ERTS 17.0.6; commit e07fd07837e5aa845657f5fa340637121e451d
 isbn: null
 doi: null
 url: "https://github.com/erlang/otp/releases/tag/OTP-29.0.6"
-accessed: "2026-09-13"
+accessed: "2026-09-14"
 tags:
   - beam
   - build-systems
@@ -34,7 +34,7 @@ Erlang/OTP Project. [Erlang/OTP 29.0.6 release
 record](https://github.com/erlang/otp/releases/tag/OTP-29.0.6), released
 2026-09-01, containing ERTS 17.0.6. Source tag `OTP-29.0.6`, commit
 [`e07fd07837e5aa845657f5fa340637121e451d47`](https://github.com/erlang/otp/commit/e07fd07837e5aa845657f5fa340637121e451d47).
-Accessed 2026-09-13.
+Accessed 2026-09-13 and re-inspected at the same commit 2026-09-14.
 
 The inspected build and runtime sources at that tag were:
 
@@ -207,10 +207,12 @@ experiment exists.
 The interpreter, allocator, poller, atomics, and pthread assumptions need
 small compile probes before a schedule is credible. Browser and Emscripten
 behavior must also be pinned by version; the linked Emscripten pages are living
-documentation and were accessed 2026-09-13.
+documentation and were accessed 2026-09-13; the pinned source paths used by
+the component audit were re-inspected 2026-09-14.
 
 ## Derived work
 
+- [ERTS architecture and the minimum browser WebAssembly port](../20-notes/erts-architecture-and-minimal-browser-webassembly-port.md)
 - [First-party Erlang/OTP ERTS WebAssembly runtime stack](../20-notes/first-party-erlang-otp-erts-webassembly-runtime-stack.md)
 - [Can BlazeX build and own an ERTS WebAssembly runtime stack?](../40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md)
 - [ERTS WebAssembly runtime stack map](../10-maps/erts-webassembly-runtime-stack.md)

@@ -26,6 +26,7 @@ Selective conceptual navigation rather than exhaustive evidence inventories.
 
 ### Documents
 
+- [ERTS architecture and minimum browser-port map](erts-architecture-and-minimal-browser-port.md) — component-level preserve, adapt, and prohibit trails.
 - [Research home](home.md) — corpus entry point and current open threads.
 - [ERTS WebAssembly runtime stack](erts-webassembly-runtime-stack.md) — subsystem and evidence map.
 

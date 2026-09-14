@@ -33,6 +33,12 @@ LocalLiveView are deferred and are not part of this runtime investigation.
 
 ## Start here
 
+- [ERTS architecture and the minimum browser WebAssembly
+  port](../20-notes/erts-architecture-and-minimal-browser-webassembly-port.md)
+  supplies the component-level model and preserve/adapt/prohibit inventory.
+- [Minimum browser platform-contract
+  inquiry](../40-inquiries/what-is-the-minimum-browser-platform-contract-for-upstream-erts.md)
+  separates compile, boot, semantic, lifecycle, and qualified-profile gates.
 - [First-party Erlang/OTP ERTS WebAssembly runtime
   stack](../20-notes/first-party-erlang-otp-erts-webassembly-runtime-stack.md)
   is the complete synthesis, recommended architecture, security model, staged
@@ -48,6 +54,9 @@ LocalLiveView are deferred and are not part of this runtime investigation.
 
 ## Runtime internals and upstream baseline
 
+- [ERTS interpreter and message-passing engineering
+  articles](../30-sources/erlang-otp-project-erts-interpreter-and-message-passing-articles.md)
+  explain loader specialization, interpreter execution, and process signals.
 - [The BEAM Book](../30-sources/stenman-2025-beam-book.md) explains the
   distinction between BEAM and ERTS plus process representation, instruction
   loading, reductions, scheduler loops, memory, garbage collection, I/O,
@@ -80,6 +89,14 @@ LocalLiveView are deferred and are not part of this runtime investigation.
 
 ## Browser platform and WebAssembly boundary
 
+- [AtomVM runtime architecture and WebAssembly
+  port](../30-sources/atomvm-project-2026-runtime-and-webassembly-port.md)
+  provides comparative evidence for off-main-thread execution and queued
+  browser events while documenting a different semantic profile.
+- [Erlang/OTP WebAssembly
+  demonstration](../30-sources/vasetenkov-erlang-otp-webassembly-demo.md)
+  is a weak independent feasibility signal without reproducible build or
+  lifecycle evidence.
 - [Emscripten browser porting, pthreads, and runtime
   services](../30-sources/emscripten-project-2026-browser-porting-runtime.md)
   covers Autoconf/C builds, pthread Workers and shared memory, asynchronous
