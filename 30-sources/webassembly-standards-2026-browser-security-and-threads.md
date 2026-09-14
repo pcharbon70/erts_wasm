@@ -14,7 +14,7 @@ edition: "WebAssembly 3.0 and living standards"
 isbn: null
 doi: null
 url: "https://webassembly.github.io/spec/"
-accessed: "2026-09-13"
+accessed: "2026-09-14"
 tags:
   - browser-security
   - cross-origin-isolation
@@ -32,7 +32,7 @@ aliases:
 
 WebAssembly Community Group, WHATWG, Web Application Security Working Group,
 and Emscripten contributors. Living specifications and implementation
-documentation accessed 2026-09-13. Principal sources:
+documentation accessed 2026-09-13 and rechecked 2026-09-14. Principal sources:
 
 - [WebAssembly specifications](https://webassembly.github.io/spec/), including
   the [Core Specification 3.0](https://webassembly.github.io/spec/core/), its
@@ -44,6 +44,10 @@ documentation accessed 2026-09-13. Principal sources:
   policies](https://html.spec.whatwg.org/multipage/browsers.html#cross-origin-opener-policies)
 - [Content Security Policy Level 3 WebAssembly
   integration](https://www.w3.org/TR/CSP3/#wasm-integration)
+- WebAssembly [Threads specification](https://webassembly.github.io/threads/core/),
+  [JavaScript Promise Integration
+  overview](https://github.com/WebAssembly/js-promise-integration/blob/main/proposals/js-promise-integration/Overview.md),
+  and [proposal registry](https://github.com/WebAssembly/proposals/blob/main/README.md)
 - Emscripten [pthreads support](https://emscripten.org/docs/porting/pthreads.html)
 
 ## Research question or contribution
@@ -100,6 +104,10 @@ this note.
   shared memory is available and transparently falls back to non-threaded
   execution otherwise. Supporting both modes requires separate builds and
   an outer selection policy.
+- Core threads standardize shared-memory atomics, while JSPI addresses
+  suspension across JavaScript Promise boundaries. Proposal phase does not by
+  itself establish stable support in a selected Emscripten SDK; the toolchain's
+  own documentation still labels its JSPI integration experimental.
 - CSP Level 3 gates Wasm compilation and instantiation. The
   `'wasm-unsafe-eval'` source expression permits Wasm execution sinks without
   also enabling JavaScript `eval`, while `'unsafe-eval'` enables both.
@@ -132,6 +140,7 @@ browser-engine defects or microarchitectural side channels.
 
 ## Derived work
 
+- [ERTS architecture and the minimum browser WebAssembly port](../20-notes/erts-architecture-and-minimal-browser-webassembly-port.md)
 - [First-party Erlang/OTP ERTS WebAssembly runtime stack](../20-notes/first-party-erlang-otp-erts-webassembly-runtime-stack.md)
 - [First-party ERTS/Wasm feasibility inquiry](../40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md)
 - [ERTS WebAssembly runtime stack map](../10-maps/erts-webassembly-runtime-stack.md)

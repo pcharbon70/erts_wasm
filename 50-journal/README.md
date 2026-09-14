@@ -28,6 +28,7 @@ Time-bound observations and reproducible evidence, including negative results.
 
 - [2026-09-13 first-party ERTS WebAssembly deep dive](2026-09-13-first-party-erts-webassembly-runtime-deep-dive.md) — source and local-inspection record for the recovered study.
 - [2026-09-14 corpus recovery and migration](2026-09-14-corpus-recovery-and-migration.md) — source-commit provenance and standalone-corpus reconstruction evidence.
+- [2026-09-14 ERTS architecture and minimum WebAssembly-port deep dive](2026-09-14-erts-architecture-and-minimal-webassembly-port-deep-dive.md) — component audit, comparative evidence, and minimal-platform synthesis.
 
 ## Maintaining this index
 

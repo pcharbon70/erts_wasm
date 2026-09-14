@@ -78,6 +78,7 @@ browser implementation parity, performance, or suitability for BlazeX.
 
 ## Derived work
 
+- [ERTS architecture and minimum browser-port map](../10-maps/erts-architecture-and-minimal-browser-port.md)
 - [First-party Erlang/OTP ERTS WebAssembly runtime stack](../20-notes/first-party-erlang-otp-erts-webassembly-runtime-stack.md)
 - [First-party ERTS/Wasm feasibility inquiry](../40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md)
 - [ERTS WebAssembly runtime stack map](../10-maps/erts-webassembly-runtime-stack.md)
