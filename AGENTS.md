@@ -4,6 +4,14 @@ These instructions apply to the entire repository. This is a Markdown research
 archive, not an implementation repository. Preserve exploratory work while
 keeping provenance, navigation, security assumptions, and structure reliable.
 
+## Markdown viewing
+
+Always use the MarkText tool when opening Markdown (`.md`) documents. Do not
+substitute a generic editor, browser preview, or another document viewer. If
+MarkText is unavailable, state that limitation explicitly instead of silently
+opening the document with a different tool. Read-only command-line inspection
+for search, validation, and repository maintenance is still permitted.
+
 ## Project mission
 
 Determine whether the official upstream Erlang Runtime System (ERTS) can be
@@ -66,10 +74,17 @@ does not by itself establish feasibility.
 - Emscripten pthreads, shared WebAssembly memory, and cross-origin isolation as
   the first threading hypothesis; a threadless ERTS is a separate research
   program, not a build flag.
+- Fixed initial/maximum shared memory for the first proof, with bounded growth
+  deferred until correctness and JavaScript-view lifetime are qualified.
 - A directly supervised browser Worker group with an independently schedulable
   watchdog capable of terminating the complete runtime generation.
 - A content-addressed, immutable release containing matching boot files, `.app`
   metadata, BEAM modules, and approved assets.
+- An Emscripten controlled-start seam that suppresses automatic `main`, mounts
+  and seals the verified release, then permits one supervisor-owned ERTS entry.
+- One manifest-listed ordinary qualification module loaded through the normal
+  ERTS prepare/finish path after boot but before `ready`; its single-use exact
+  authorization closes further code admission before native parsing begins.
 - A small static browser system adapter and asynchronous capability broker;
   no generic JavaScript, DOM, socket, shell, or filesystem escape hatch.
 - A separate renderer that consumes bounded semantic operations. Phoenix and
@@ -110,9 +125,9 @@ from the browser user or a compromised origin.
 - `emcc` was not available during the recorded investigation. No ERTS/Wasm
   compile, OTP boot, browser conformance run, lifecycle test, benchmark, or
   support matrix has been produced by this corpus.
-- The feasibility inquiry is open, the main synthesis is developing, and
-  `60-planning/` intentionally contains no implementation plan until work is
-  explicitly authorized.
+- The feasibility inquiry and canonical synthesis are developing. The
+  authorized milestone plan in `research/60-planning/` has no completed gates
+  and records no implementation evidence.
 - Some documents retain BlazeX terminology because the research originated in
   that corpus. Historical framing does not establish current package ownership,
   roadmap authority, or adoption by another repository.
@@ -150,24 +165,29 @@ interfaces, or relevant scientific literature.
 
 ## Read these first
 
-1. `10-maps/home.md` for corpus navigation and status.
-2. `20-notes/erts-architecture-and-minimal-browser-webassembly-port.md` for the
-   component model, minimum browser platform contract, evidence ladder, and
-   implementation boundary.
-3. `40-inquiries/what-is-the-minimum-browser-platform-contract-for-upstream-erts.md`
+1. `research/10-maps/home.md` for corpus navigation and status.
+2. `research/20-notes/erts-webassembly-runtime-architecture-and-milestones.md`
+   for the canonical component model, runtime-loading contract, security
+   architecture, and the two-stage proof and compatibility program.
+3. `research/20-notes/erts-webassembly-component-implementation-deep-dive.md`
+   and its linked `components/` notes for implementation decisions, seams,
+   risks, and falsifiable gates for each architectural component.
+4. `research/40-inquiries/what-is-the-minimum-browser-platform-contract-for-upstream-erts.md`
    for the repository-neutral compile, boot, semantics, lifecycle, and
    qualification gates.
-4. `20-notes/first-party-erlang-otp-erts-webassembly-runtime-stack.md` for the
-   proposed architecture, security model, alternatives, and staged program.
-5. `40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md`
+5. `research/60-planning/erts-webassembly-runtime-milestones.md` for the
+   unchecked P0–P6 proof-of-concept gates and C1–C10 in-depth compatibility
+   gates.
+6. `research/40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md`
    for the falsifiable operational question, experiment gates, blockers, and
    resolution criteria.
-6. `50-journal/2026-09-14-erts-architecture-and-minimal-webassembly-port-deep-dive.md`
+7. `research/50-journal/2026-09-14-erts-architecture-and-minimal-webassembly-port-deep-dive.md`
    for the current component audit, comparative evidence, and negative
    findings.
-7. `50-journal/2026-09-13-first-party-erts-webassembly-runtime-deep-dive.md`
+8. `research/50-journal/2026-09-13-first-party-erts-webassembly-runtime-deep-dive.md`
    for pinned commands, observations, negative findings, and evidence limits.
-8. `10-maps/erts-webassembly-runtime-stack.md` and `30-sources/README.md` for
+9. `research/10-maps/erts-webassembly-runtime-stack.md` and
+   `research/30-sources/README.md` for
    subsystem-specific trails into the primary and peer-reviewed evidence.
 
 ## Archive principles
@@ -176,7 +196,7 @@ interfaces, or relevant scientific literature.
 - Separate source claims, local evidence, synthesis, proposed architecture, and
   unresolved assumptions.
 - Directory READMEs are exhaustive inventories; maps are selective.
-- `frontmatter.schema.json` is the metadata authority.
+- `research/frontmatter.schema.json` is the metadata authority.
 - Change a document and every affected index, map, and local link together.
 - Record exact versions, revisions, commands, dates, negative findings, and
   limitations for fast-moving software and standards.
@@ -184,25 +204,27 @@ interfaces, or relevant scientific literature.
 ## Canonical structure
 
 ```text
-00-inbox/       Unprocessed captures
-10-maps/        Curated conceptual navigation
-20-notes/       Synthesis and architecture reasoning
-30-sources/     Source and bibliographic notes
-40-inquiries/   Open research questions
-50-journal/     Dated research and experiment evidence
-60-planning/    Phased implementation plans and gates
-70-tools/       Corpus validators and tests
-90-archive/     Superseded material retained for provenance
-assets/         Attachments, datasets, and generated evidence
-templates/      Document and directory scaffolds
+research/           Self-contained research corpus root
+  00-inbox/         Unprocessed captures
+  10-maps/          Curated conceptual navigation
+  20-notes/         Synthesis and architecture reasoning
+  30-sources/       Source and bibliographic notes
+  40-inquiries/     Open research questions
+  50-journal/       Dated research and experiment evidence
+  60-planning/      Phased implementation plans and gates
+  70-tools/         Corpus validators and tests
+  90-archive/       Superseded material retained for provenance
+  assets/           Attachments, datasets, and generated evidence
+  templates/        Document and directory scaffolds
 ```
 
-Do not add or rename a top-level directory without a demonstrated need.
+Keep the archive below `research/`. Do not add or rename another repository
+top-level directory without a demonstrated need.
 
 ## Directory and metadata invariants
 
 Every archive directory contains a `README.md` made from
-`templates/directory-readme.md`. It uses `kind: map`, contains `Purpose`,
+`research/templates/directory-readme.md`. It uses `kind: map`, contains `Purpose`,
 `What belongs here`, `Index`, and `Maintaining this index`, and inventories
 every direct child except itself.
 
@@ -219,7 +241,7 @@ and all affected indexes. Prefer primary specifications, source trees, official
 documentation, and peer-reviewed work. Search snippets are discovery aids, not
 evidence.
 
-Implementation planning belongs in `60-planning/` and must retain unchecked
+Implementation planning belongs in `research/60-planning/` and must retain unchecked
 gates until executable evidence exists. A successful build, boot, or visual
 demo alone does not establish semantic compatibility, security, lifecycle
 cleanup, performance, or maintainability.
@@ -229,8 +251,8 @@ cleanup, performance, or maintainability.
 Before reporting corpus work complete:
 
 1. preserve unrelated changes;
-2. run `python3 70-tools/validate_archive.py`;
-3. run `python3 -m unittest discover -s 70-tools -p 'test_validate_archive.py'`;
+2. run `python3 research/70-tools/validate_archive.py`;
+3. run `python3 -m unittest discover -s research/70-tools -p 'test_validate_archive.py'`;
 4. verify new external citations against primary sources;
 5. run `git diff --check` when a Git worktree exists; and
 6. inspect the complete change for stale paths and accidental rewrites.
