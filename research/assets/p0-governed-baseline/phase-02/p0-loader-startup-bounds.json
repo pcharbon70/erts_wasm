@@ -1,0 +1,23 @@
+{
+  "contract_id": "p0-loader-bounds",
+  "acceptance_id": "P0-A02",
+  "task_id": "p0-p02-unsupported-bounds",
+  "bounds": [
+    {"id": "manifest-bytes", "resource": "encoded manifest", "owner": "page-supervisor", "unit": "bytes", "limit": 1048576, "enforcement_point": "bounded fetch before decode", "mechanism": "content-length precheck plus streaming byte counter", "breach_action": "cancel fetch and fail generation"},
+    {"id": "manifest-depth", "resource": "decoded manifest nesting", "owner": "manifest-verifier", "unit": "levels", "limit": 32, "enforcement_point": "schema decode", "mechanism": "bounded decoder", "breach_action": "reject manifest"},
+    {"id": "artifact-count", "resource": "manifest-listed artifacts", "owner": "manifest-verifier", "unit": "entries", "limit": 4096, "enforcement_point": "manifest validation", "mechanism": "array length check", "breach_action": "reject manifest"},
+    {"id": "artifact-bytes", "resource": "one fetched artifact", "owner": "loader", "unit": "bytes", "limit": 134217728, "enforcement_point": "bounded fetch before allocation/compile", "mechanism": "declared size plus streaming byte counter", "breach_action": "cancel fetch and fail generation"},
+    {"id": "aggregate-artifact-bytes", "resource": "all pre-ready artifacts", "owner": "loader", "unit": "bytes", "limit": 268435456, "enforcement_point": "manifest validation and fetch accounting", "mechanism": "overflow-checked sum and streaming counter", "breach_action": "reject or cancel and fail generation"},
+    {"id": "path-bytes", "resource": "normalized release path", "owner": "manifest-verifier", "unit": "utf8-bytes", "limit": 1024, "enforcement_point": "before path normalization", "mechanism": "byte-length and segment validation", "breach_action": "reject manifest"},
+    {"id": "argv-count", "resource": "ERTS argv", "owner": "generation-supervisor", "unit": "entries", "limit": 64, "enforcement_point": "controlled-start assembly", "mechanism": "fixed allowlisted argv builder", "breach_action": "fail before ERTS entry"},
+    {"id": "argv-entry-bytes", "resource": "one argv value", "owner": "generation-supervisor", "unit": "utf8-bytes", "limit": 4096, "enforcement_point": "controlled-start assembly", "mechanism": "byte-length check", "breach_action": "fail before ERTS entry"},
+    {"id": "worker-agents", "resource": "generation-owned Workers and pthread hosts", "owner": "generation-supervisor", "unit": "agents", "limit": 64, "enforcement_point": "registry reservation before Worker construction", "mechanism": "strict fixed registry capacity", "breach_action": "refuse creation and terminate generation"},
+    {"id": "shared-memory", "resource": "initial and maximum shared Wasm memory", "owner": "runtime-generation", "unit": "bytes", "limit": 536870912, "enforcement_point": "before WebAssembly.Memory construction", "mechanism": "fixed maximum and manifest equality check", "breach_action": "refuse instantiation"},
+    {"id": "pre-ready-message-queue", "resource": "queued generation messages", "owner": "generation-supervisor", "unit": "messages", "limit": 1024, "enforcement_point": "message receipt", "mechanism": "bounded queue", "breach_action": "fail and terminate generation"},
+    {"id": "concurrent-fetches", "resource": "artifact requests", "owner": "loader", "unit": "requests", "limit": 16, "enforcement_point": "fetch scheduler", "mechanism": "bounded semaphore", "breach_action": "queue within aggregate startup deadline or fail"},
+    {"id": "startup-timers", "resource": "generation startup timers", "owner": "generation-registry", "unit": "timers", "limit": 32, "enforcement_point": "timer registration", "mechanism": "generation-owned registry", "breach_action": "fail and cancel generation timers"},
+    {"id": "startup-wall-clock", "resource": "generation create-to-ready interval", "owner": "generation-supervisor", "unit": "milliseconds", "limit": 120000, "enforcement_point": "independent watchdog", "mechanism": "supervisor-owned monotonic deadline", "breach_action": "terminate complete generation and reject ready"}
+  ],
+  "integer_rule": "all sums use overflow-checked non-negative integers and reject values not exactly representable by the implementation",
+  "scope_rule": "these are experimental safety ceilings, not product acceptance budgets"
+}

@@ -29,6 +29,7 @@ not belong here until an independent reviewer accepts the corresponding work.
 ### Subdirectories
 
 - [Phase 1 baseline authority and runtime inventory](phase-01/README.md) — exact input identities, trust and language ownership, pinned-source runtime inventory, and thread-census contract.
+- [Phase 2 bounds and evidence contracts](phase-02/README.md) — frozen experimental safety, negative scope, resource bounds, product-budget governance, and evidence profiles.
 
 ### Documents
 

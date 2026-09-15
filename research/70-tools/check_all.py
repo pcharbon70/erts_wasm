@@ -22,6 +22,7 @@ def main() -> int:
     checks = [
         [sys.executable, str(TOOLS_ROOT / "validate_archive.py")],
         [sys.executable, str(TOOLS_ROOT / "p0_contract_validation.py"), "phase-01"],
+        [sys.executable, str(TOOLS_ROOT / "p0_contract_validation.py"), "phase-02"],
         [
             sys.executable,
             "-m",

@@ -1,0 +1,17 @@
+{
+  "contract_id": "p0-product-budget-method",
+  "decision_id": "P0-D03",
+  "acceptance_id": "P0-A02",
+  "task_id": "p0-p02-product-budget-method",
+  "approval_state": "blocked-authority-unassigned",
+  "authority": "unassigned",
+  "numeric_product_budgets": null,
+  "required_inputs": ["accepted POC artifact and compatibility profile identity", "native baseline on named reference hardware", "Chrome and Firefox cold/warm distributions", "compressed and uncompressed artifact sizes", "steady-state and peak memory", "capability latency", "repeated-dispose resource slope", "deployment and accessibility constraints"],
+  "allowed_derivations": ["absolute value justified by a documented product constraint", "ratio to the named native baseline with an authority-approved coefficient", "percentile from retained representative runs with an authority-approved margin"],
+  "forbidden_derivations": ["copy an experimental safety ceiling", "choose a threshold after seeing an implementation result", "drop a failing browser or cold-start population", "replace a distribution with the best run", "change normalization to hide semantic differences"],
+  "approval_point": "after P6 evidence and before Program B/C1 execution",
+  "approval_record_requires": ["named accountable product authority", "metric and unit", "population and percentile", "baseline artifact and environment digests", "derivation", "rationale", "date and immutable revision", "independent technical review"],
+  "change_control": "a budget change creates a new decision revision, records evidence and rationale, reruns affected gates, and never rewrites historical dispositions",
+  "reopening_triggers": ["supported profile changes", "toolchain or browser pin changes", "reference hardware changes", "delivery compression/cache policy changes", "measurement method changes", "security or accessibility requirement changes"],
+  "blocker": "no actual product-budget authority has been named; P0 can preserve the method but cannot approve product values"
+}
