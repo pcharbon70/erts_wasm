@@ -44,6 +44,7 @@ cannot alias declared sources.
 ### Files
 
 - [All-checks runner](check_all.py) — run every archive, unit, and fixture check even when an earlier check fails.
+- [P0 contract validator](p0_contract_validation.py) — validate authored P0 contracts without treating local checks as acceptance evidence.
 - [Planning authoring schema](planning-authoring-v1.schema.json) — machine-readable identities and relations for streams, milestones, plans, and phases.
 - [Planning evidence policy](planning-evidence-profile-v1.yaml) — role-neutral provenance, review, replay, discovery, size bounds, and contract-binding requirements.
 - [Planning evidence schema](planning-evidence-v1.schema.json) — bounded shape for contract/research, native-C, Emscripten-Wasm, and browser-runtime evidence.

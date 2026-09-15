@@ -1,0 +1,33 @@
+{
+  "contract_id": "p0-baseline",
+  "acceptance_id": "P0-A01",
+  "task_id": "p0-p01-pins",
+  "recorded_at": "2026-09-15",
+  "qualification_target": "linux/amd64 build container and browser Linux x86_64 fixtures",
+  "review_state": "independent-review-pending",
+  "pins": [
+    {"id": "otp-source", "kind": "source", "version": "OTP-29.0.6", "revision": "e07fd07837e5aa845657f5fa340637121e451d47", "tree": "bddab8fbbe44097258572512d689a5be2ec0686f", "origin": "https://github.com/erlang/otp.git", "verification": ["git rev-parse HEAD", "git rev-parse HEAD^{tree}", "git describe --exact-match --tags HEAD"], "materialization_state": "resolved"},
+    {"id": "native-bootstrap", "kind": "build-input", "version": "OTP-29.0.6", "revision": "e07fd07837e5aa845657f5fa340637121e451d47", "origin": "build from the pinned otp-source for the build platform", "expected_identity": "erlang:system_info(otp_release) = 29 and source tag OTP-29.0.6", "verification": ["erl -noshell -eval 'io:format(\"~s~n\", [erlang:system_info(otp_release)]), halt().'"], "materialization_state": "required-not-materialized"},
+    {"id": "emsdk-repository", "kind": "source", "version": "emsdk-selection-2026-09-15", "revision": "5eb0bde7585670252e8ba05e9d361627bffd08b5", "origin": "https://github.com/emscripten-core/emsdk.git", "verification": ["git ls-remote https://github.com/emscripten-core/emsdk.git refs/heads/main"], "materialization_state": "resolved"},
+    {"id": "emscripten-release", "kind": "toolchain", "version": "6.0.9", "revision": "f04ea239d533260dd1db760dd2d668d5f9a88d6b", "origin": "https://chromium.googlesource.com/emscripten-releases", "verification": ["read DEPS at f04ea239d533260dd1db760dd2d668d5f9a88d6b", "emcc --version"], "materialization_state": "metadata-resolved-tool-unavailable-locally"},
+    {"id": "emscripten-source", "kind": "source", "version": "6.0.9 component", "revision": "4e4223852a0835923411059a3929907d7df1232e", "origin": "https://github.com/emscripten-core/emscripten.git", "verification": ["compare emscripten-releases DEPS"], "materialization_state": "resolved"},
+    {"id": "llvm-project", "kind": "source", "version": "6.0.9 component", "revision": "b158b0ae6c559f87be325b8f427c5588e6a48823", "origin": "https://github.com/llvm/llvm-project.git", "verification": ["compare emscripten-releases DEPS", "emcc --version"], "materialization_state": "resolved"},
+    {"id": "binaryen", "kind": "source", "version": "6.0.9 component", "revision": "d03c25ea43d8f147fc222f9b88ff3bf641abe8da", "origin": "https://github.com/WebAssembly/binaryen.git", "verification": ["compare emscripten-releases DEPS", "wasm-opt --version"], "materialization_state": "resolved"},
+    {"id": "build-image", "kind": "oci-image", "version": "docker.io/emscripten/emsdk:6.0.9@sha256:96617f27fe16421588241def73908fd348a7f9d260440ed0d00b36dcf7a063cc", "revision": "linux-amd64-manifest-sha256:3ba391c5b1554e06f9af0a69652ff20919dff14e771619339dba988bd62574b5", "origin": "https://hub.docker.com/r/emscripten/emsdk", "verification": ["docker buildx imagetools inspect docker.io/emscripten/emsdk:6.0.9"], "materialization_state": "resolved-not-pulled"},
+    {"id": "chrome-for-testing", "kind": "browser", "version": "153.0.8010.36", "revision": "1681091", "origin": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.36/linux64/chrome-linux64.zip", "verification": ["compare Chrome for Testing last-known-good stable metadata", "google-chrome --version", "sha256sum chrome-linux64.zip"], "materialization_state": "version-resolved-upstream-sha256-unpublished"},
+    {"id": "firefox", "kind": "browser", "version": "155.0", "revision": "sha256:fd9ec3f5f113d0825ca0bd1ab3c0756fbc40241034eefce6743be953bcca7473", "origin": "https://archive.mozilla.org/pub/firefox/releases/155.0/linux-x86_64/en-US/firefox-155.0.tar.xz", "verification": ["compare official SHA256SUMS", "firefox --version", "sha256sum firefox-155.0.tar.xz"], "materialization_state": "resolved-not-downloaded"}
+  ],
+  "local_observations_not_qualification_inputs": [
+    "native Erlang/OTP is release 27, not the required same-release OTP 29 bootstrap",
+    "emcc and clang are unavailable",
+    "Google Chrome 140.0.7339.80 is installed and does not match the qualification pin",
+    "Firefox 134.0 is installed and does not match the qualification pin",
+    "Docker 28.3.3, Node.js v24.3.0, Python 3.12.12, and cc 13.3.0 are locally observable but are not accepted P0 pins"
+  ],
+  "unresolved": [
+    "materialize and hash the Chrome-for-Testing archive because its selected metadata does not publish a digest",
+    "build and hash the same-release native OTP bootstrap",
+    "materialize the OCI image and verify its internal emcc, Clang, LLVM, and Binaryen version output",
+    "obtain independent resolution of every pin"
+  ]
+}

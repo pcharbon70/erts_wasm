@@ -37,9 +37,10 @@ Back to milestone: [P0 plan](README.md).
 ## Entry, scope, and dependencies
 
 Entry requires only the accepted research-corpus scope. Plan review is pending;
-execution and tests have not started. This phase owns planning and source-audit
-artifacts in the research corpus. The future C/Emscripten implementation
-location and named reviewers remain unresolved.
+contract drafting and local validation are in progress, while independent
+acceptance and implementation probes have not started. This phase owns
+planning and source-audit artifacts in the research corpus. The future
+C/Emscripten implementation location and named reviewers remain unresolved.
 
 The phase does not compile ERTS or accept ADR-0001. It freezes the candidate
 inputs and the measurements that P1 must perform without granting ambient host
@@ -108,7 +109,7 @@ authority or broadening the proof claim.
       validation. Completion requires a trace from every proposed language and
       generated output to its P1 acceptance evidence and review trigger.
 
-      - [ ] 1.1.3.1 Subtask — Reconcile ADR-0001 with the pinned build and ABI ledger.
+      - [x] 1.1.3.1 Subtask — Reconcile ADR-0001 with the pinned build and ABI ledger.
 
         Record C, TypeScript/JavaScript, Erlang/BEAM, and deferred-language
         ownership; flag any missing pin or owner without accepting the ADR.
@@ -120,7 +121,7 @@ authority or broadening the proof claim.
       behavior. Completion requires every category to have a search method and
       recorded result, including negative findings.
 
-      - [ ] 1.1.4.1 Subtask — Run and retain the pinned-source inventory procedure.
+      - [x] 1.1.4.1 Subtask — Run and retain the pinned-source inventory procedure.
 
         Record exact search commands, source paths and revisions, classified
         edges, unknowns, and review notes so P1 can localize probe failures.
@@ -132,7 +133,7 @@ authority or broadening the proof claim.
       executable census contract and an explicit prohibition on inferring N
       from scheduler count.
 
-      - [ ] 1.1.5.1 Subtask — Specify census events, counters, owners, and N/N-1 outcomes.
+      - [x] 1.1.5.1 Subtask — Specify census events, counters, owners, and N/N-1 outcomes.
 
         Name the instrumentation seam, output schema, lifecycle interval, and
         expected prompt failure and cleanup at N-1; leave the implementation

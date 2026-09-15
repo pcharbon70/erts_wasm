@@ -1,0 +1,19 @@
+{
+  "contract_id": "p0-language-ownership",
+  "decision_id": "P0-D01",
+  "task_id": "p0-p01-language-ownership",
+  "adr": "research/20-notes/architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md",
+  "adr_state": "proposed",
+  "review_state": "architecture-review-pending",
+  "owners": [
+    {"language": "C", "source_boundary": "upstream ERTS and smallest browser platform adapter", "toolchain_pin": "p0-baseline:emscripten-release", "generated_artifacts": ["erts.wasm", "generated Emscripten JavaScript", "symbol and source maps when enabled"], "abi_owner": "c-runtime-owner-unassigned", "p1_evidence": ["cross-compile probe", "import/export ledger", "native bootstrap comparison"]},
+    {"language": "TypeScript", "source_boundary": "bootstrap, manifest verifier, generation supervisor, Worker registry, watchdog, capability broker, and browser harness", "toolchain_pin": "unresolved-until-browser-host-materialization", "generated_artifacts": ["authority-separated JavaScript", "declarations", "source maps when retained"], "abi_owner": "browser-host-owner-unassigned", "p1_evidence": ["strict compilation", "emitted-global inspection", "Worker authority test", "runtime message validation"]},
+    {"language": "Erlang", "source_boundary": "P0-P6 semantic and loader qualification modules", "toolchain_pin": "p0-baseline:native-bootstrap", "generated_artifacts": ["version-matched BEAM files"], "abi_owner": "beam-fixture-owner-unassigned", "p1_evidence": ["identical native/Wasm BEAM digests", "normal prepare/finish loader path"]},
+    {"language": "Elixir", "source_boundary": "deferred exact-version compatibility profile after P6", "toolchain_pin": "unresolved-until-C5", "generated_artifacts": ["later profile BEAM files and metadata"], "abi_owner": "compatibility-owner-unassigned", "p1_evidence": ["none; explicitly deferred"]},
+    {"language": "Rust", "source_boundary": "not admitted without a superseding component ADR", "toolchain_pin": "not-applicable", "generated_artifacts": [], "abi_owner": "unassigned", "p1_evidence": ["none"]},
+    {"language": "C++", "source_boundary": "handwritten C++ and BeamAsm/JIT excluded from the first proof", "toolchain_pin": "not-applicable", "generated_artifacts": [], "abi_owner": "unassigned", "p1_evidence": ["none"]}
+  ],
+  "abi_rules": ["fixed-width scalars", "offset-plus-length bounded snapshots", "opaque handles", "explicit status values", "generation identity", "documented buffer ownership", "runtime decoding of all untrusted values"],
+  "review_triggers": ["P1 toolchain or ABI failure", "platform changes spread into ERTS semantics", "OTP or emsdk ABI changes", "C5 Elixir patch selection", "Worker/DOM authority separation fails", "proposal adds Rust or handwritten C++"],
+  "unresolved": ["TypeScript compiler and package-manager pin", "named owners", "independent ADR review", "actual P1 artifact locations"]
+}
