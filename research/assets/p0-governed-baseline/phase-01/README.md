@@ -34,6 +34,8 @@ compile, boot, browser, lifecycle, or compatibility evidence is not present.
 
 - [`p0-baseline-lock.json`](p0-baseline-lock.json) — exact qualification pins, acquisition origins, digests, and explicitly unresolved materialization checks.
 - [`p0-language-ownership.json`](p0-language-ownership.json) — source-language, generated-artifact, ABI, toolchain, and review-trigger ownership.
+- [`p0-phase-01-validation-contract.json`](p0-phase-01-validation-contract.json) — positive and contradiction cases for the assembled Phase 1 contract.
+- [`p0-phase-01-validation-report.json`](p0-phase-01-validation-report.json) — local results and explicit not-run acceptance cases.
 - [`p0-runtime-inventory.json`](p0-runtime-inventory.json) — categorized observations and commands against the pinned OTP tree.
 - [`p0-thread-census-contract.json`](p0-thread-census-contract.json) — independent logical-role, pthread-host, pool-capacity, and browser-supervisor measurements.
 - [`p0-trust-scope-matrix.json`](p0-trust-scope-matrix.json) — assets, trust zones, authorities, quotas, topology candidates, and stop conditions.

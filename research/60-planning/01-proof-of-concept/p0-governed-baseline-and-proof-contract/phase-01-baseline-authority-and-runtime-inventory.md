@@ -152,13 +152,13 @@ authority or broadening the proof claim.
       identities, missing owners, silent runtime categories, or circular
       assumptions between topology and thread count.
 
-      - [ ] 1.2.1.1 Subtask — Run the integrated contract-consistency review.
+      - [x] 1.2.1.1 Subtask — Run the integrated contract-consistency review.
 
         Use the pinned corpus revision and declared review checklist to verify
         completeness, links, identities, negative findings, and explicit
         unknowns; retain the result by P0-A01 and task ID.
 
-      - [ ] 1.2.1.2 Subtask — Exercise contradiction and omission cases.
+      - [x] 1.2.1.2 Subtask — Exercise contradiction and omission cases.
 
         Inject a floating tool version, duplicate authority, missing runtime
         category, topology-selected census, and `+S 1:1`-derived pool size;
@@ -170,7 +170,7 @@ authority or broadening the proof claim.
       reviewed artifacts, failures, limitations, and proceed/revise/blocked
       decision. Unresolved required input blocks Phase 2.
 
-      - [ ] 1.2.2.1 Subtask — Publish the dated Phase 1 execution record.
+      - [x] 1.2.2.1 Subtask — Publish the dated Phase 1 execution record.
 
         Link the journal evidence to P0-A01 and every task ID, distinguishing
         inspected facts from unrun implementation probes.

@@ -1,0 +1,20 @@
+{
+  "report_id": "p0-phase-01-local-validation-2026-09-15",
+  "contract_id": "p0-phase-01-validation",
+  "task_ids": ["p0-p01-pins", "p0-p01-trust-boundary", "p0-p01-language-ownership", "p0-p01-runtime-inventory", "p0-p01-thread-census", "p0-p01-integration"],
+  "tested_base_revision": "ccdebe1",
+  "source_revision": "e07fd07837e5aa845657f5fa340637121e451d47",
+  "environment": {"python": "3.12.12", "emcc": "unavailable", "native_otp": "27", "qualification_browsers": "not materialized or run"},
+  "results": [
+    {"case_id": "P0-P01-CONTRACT", "result": "pass-local", "observation": "five component contracts validated"},
+    {"case_id": "P0-P01-NEG-FLOATING", "result": "pass-local", "observation": "floating-pin rejected"},
+    {"case_id": "P0-P01-NEG-AUTHORITY", "result": "pass-local", "observation": "duplicate-authority rejected"},
+    {"case_id": "P0-P01-NEG-RUNTIME", "result": "pass-local", "observation": "missing-runtime-category rejected"},
+    {"case_id": "P0-P01-NEG-TOPOLOGY", "result": "pass-local", "observation": "topology-selected-census rejected"},
+    {"case_id": "P0-P01-NEG-SCHEDULERS", "result": "pass-local", "observation": "scheduler-derived-pool rejected"},
+    {"case_id": "P0-P01-INDEPENDENT-REVIEW", "result": "not-run", "observation": "required reviewers and authorities remain unassigned"},
+    {"case_id": "P0-P01-RUNTIME", "result": "not-run", "observation": "no ERTS/Wasm compile, boot, browser, or lifecycle experiment was attempted"}
+  ],
+  "disposition": "draft-progression-authorized-gate-open",
+  "planning_evidence": "none; this report cannot close a task or gate"
+}

@@ -51,6 +51,7 @@ cannot alias declared sources.
 - [Planning validation helpers](planning_validation.py) — validate full task projections and graphs, stream hashes, load digest-bound contracts, and discover real `*.planning-evidence.json` records below `research/assets/` while excluding conformance fixtures.
 - [Research path helper](research_paths.py) — locate the standalone corpus.
 - [Planning-validator tests](test_planning.py) — exercise phase structure, iterative graphs, bounded evidence, contract binding, discovery, and inert command fixtures.
+- [P0 contract-validator tests](test_p0_contract_validation.py) — exercise the Phase 1 positive contract and five required contradiction cases.
 - [Archive-validator tests](test_validate_archive.py) — exercise schema and link helpers.
 - [Archive validator](validate_archive.py) — enforce metadata, inventory, links, planning graphs, evidence support references, and evidence-bound checked tasks.
 - [Planning fixture verifier](verify_planning_fixtures.py) — run production validators over hash-closed synthetic C/Emscripten inputs without executing authored commands.
