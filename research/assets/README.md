@@ -23,7 +23,7 @@ indexed research documents.
 
 ### Subdirectories
 
-- None yet.
+- [Planning conformance fixtures](planning-conformance/README.md) — synthetic C/Emscripten and evidence-validator inputs that cannot close runtime gates.
 
 ### Files
 

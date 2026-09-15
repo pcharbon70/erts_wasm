@@ -23,6 +23,10 @@ native/Wasm evidence, not as the presence of OTP or Elixir files. Prove a small
 Kernel/STDLIB Erlang profile first, expand core OTP behaviours second, and pin
 an exact Elixir patch only after those gates pass.
 
+[ADR-0001](../architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md)
+governs this ordering: Erlang is the diagnostic proof language, while Elixir is
+an intended application language admitted only through incremental profiles.
+
 ## What a profile records
 
 For every release application and module, record exact version and digest,
@@ -44,6 +48,23 @@ import stub does not prove the target module is present. Combine `.rel`/`.app`
 metadata, BEAM chunk/import inspection, native artifact and `on_load`
 inventory, native-oracle tracing, browser tracing, broker requests, and
 loader-negative tests.[^otp-boot]
+
+## Why Erlang precedes Elixir
+
+ERTS executes admitted BEAM instructions rather than source languages, so a
+precompiled Elixir module is technically a BEAM candidate. That does not make
+it the best first diagnostic. A useful Elixir program brings an exact `elixir`
+application, compiler output, runtime modules and metadata, protocols, and
+packaging assumptions in addition to ERTS, `kernel`, and `stdlib`. If it is the
+only first payload, a failure cannot be localized cleanly among the platform
+port, OTP boot, code admission, or the Elixir closure.
+
+The ordinary Erlang POC therefore proves the smaller shared foundation. The
+same exact BEAM digests run on the native and browser targets, so the capsule
+can isolate ERTS/OTP semantic differences. This order does not prefer Erlang as
+the product language. An exploratory Elixir run after Tier 0 is only an out-of-
+band observation: it admits no Elixir profile, unlocks no gate, and cannot
+substitute for the accepted P6 proof or Tier-1 OTP baseline.
 
 ## Tier 0: POC semantic kernel
 
@@ -97,6 +118,30 @@ Elixir modules using protocols, structs, exceptions, maps/binaries, processes,
 `GenServer`, supervisors, and application lifecycle. Add Unicode, calendar,
 I/O protocols, regex, crypto, and other modules only after their exact closure
 passes.
+
+Advance Tier 2 through these separately versioned increments:
+
+1. **ELX-0 — discovery and toolchain lock:** select one exact Elixir patch,
+   compiler, source/dependency graph, emitted BEAM set, and candidate browser
+   capability closure. This produces no runtime support claim.
+2. **ELX-1 — precompiled smoke:** within C5, after P6 is accepted and the
+   Tier-1 OTP baseline passes, load one manifest-listed ordinary Elixir module
+   through the governed loader and compare a small deterministic result with
+   native OTP. This proves only that the declared module and its observed
+   closure executed.
+3. **ELX-2 — core language/runtime surface:** qualify structs, protocols,
+   exceptions, maps, binaries, processes, and representative failure paths with
+   explicit positive and negative support records.
+4. **ELX-3 — OTP behaviour integration:** qualify `GenServer`, supervision,
+   application boot/stop, timeout, crash/restart, cancellation, and generation
+   teardown from Elixir without adding Mix, IEx, compiler, eval, or arbitrary
+   loader authority.
+5. **ELX-4 — representative applications:** admit one bounded application
+   closure per manifest/profile revision and publish its browser, lifecycle,
+   resource, capability, and unsupported-surface evidence.
+
+Failure at one increment leaves later increments unsupported and does not
+invalidate already qualified lower Erlang/OTP layers.
 
 ## Tier 3: optional applications and capabilities
 

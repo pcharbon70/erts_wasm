@@ -147,6 +147,7 @@ and deployment evidence.
 
 ## Derived work
 
+- [ADR-0001 — Implementation languages and BEAM qualification sequence](../20-notes/architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md)
 - [ERTS WebAssembly component implementation deep dive](../20-notes/erts-webassembly-component-implementation-deep-dive.md)
 - [Artifact loader and runtime generations component](../20-notes/components/artifact-loader-and-runtime-generations.md)
 - [ERTS build and BEAM interpreter component](../20-notes/components/erts-build-and-beam-interpreter.md)

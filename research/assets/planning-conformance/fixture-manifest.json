@@ -1,0 +1,60 @@
+{
+  "profile": "erts-wasm.planning-fixture-manifest.v1",
+  "fixture_only": true,
+  "execution_status": "not_run",
+  "claim": "planning-validator conformance only",
+  "bounds": {
+    "maximum_source_bytes": 1048576,
+    "maximum_total_source_bytes": 8388608,
+    "maximum_entities": 10000,
+    "maximum_relations": 50000,
+    "maximum_negative_cases": 100,
+    "authored_commands": "data_only_never_execute"
+  },
+  "files": [
+    {
+      "role": "abi_header",
+      "path": "research/assets/planning-conformance/c-emscripten-abi-probe.h",
+      "sha256": "1f260b497efc5a2e192c8175675c57a9cfe251b74eabc5c88c8655392a16d4fd"
+    },
+    {
+      "role": "abi_probe",
+      "path": "research/assets/planning-conformance/c-emscripten-abi-probe.c",
+      "sha256": "688fc77f0fb6bcf0c677d4143d4bd1268d89f39d65223a726ee07bfc91b800e5"
+    },
+    {
+      "role": "native_stub",
+      "path": "research/assets/planning-conformance/native-host-stub.c",
+      "sha256": "4ebe97640e623dbd71d89bf5e8243c6a3bbd826b4be023acb125da2d96a38f7c"
+    },
+    {
+      "role": "abi_contract",
+      "path": "research/assets/planning-conformance/abi-contract.json",
+      "sha256": "c9561e0bb8d141cbb44680a78340df040f4cc1c3c3ae6cc4dccd9d350f08ccc7"
+    },
+    {
+      "role": "plan_graph_oracle",
+      "path": "research/assets/planning-conformance/expected-plan-graph.json",
+      "sha256": "7839e4522aa302c59fb34437cf9a8979629eb17dad36bd6322bb3eb04aade79d"
+    },
+    {
+      "role": "negative_cases",
+      "path": "research/assets/planning-conformance/synthetic-cases.yaml",
+      "sha256": "8d28f4a7e88ff27727a252d4f54d3550aa57094c0b73b321e834dbaddd3623d2"
+    },
+    {
+      "role": "synthetic_not_run_evidence",
+      "path": "research/assets/planning-conformance/synthetic-not-run-evidence.json",
+      "sha256": "a7db72d9ef18f0891c0dbf9e9f9c212325815639ada67c0c2b1489569ba02695"
+    },
+    {
+      "role": "synthetic_result_bytes",
+      "path": "research/assets/planning-conformance/synthetic-result-artifact.txt",
+      "sha256": "e924070b0cff80ccd8d9248099ba4dfbd1b95eaff0117d3934736a25aa237b43"
+    }
+  ],
+  "expected_graph": "expected-plan-graph.json",
+  "negative_cases": "synthetic-cases.yaml",
+  "abi_contract": "abi-contract.json",
+  "evidence_record": "synthetic-not-run-evidence.json"
+}

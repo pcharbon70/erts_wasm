@@ -40,8 +40,10 @@ only “all files are hashed.”
 
 ## POC implementation
 
-Use a small TypeScript/JavaScript generation supervisor, built separately from
-the Emscripten output. Its accepted input is a schema-versioned manifest whose
+Use a small strict-TypeScript generation supervisor, compiled to pinned
+JavaScript separately from the Emscripten output under
+[ADR-0001](../architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md).
+Its accepted input is a schema-versioned manifest whose
 expected digest or verification key is anchored by the trusted bootstrap. A
 valid POC may include the pinned HTTPS origin, response headers, redirect and
 cache behavior in the trusted base; a stronger design can fetch and verify all

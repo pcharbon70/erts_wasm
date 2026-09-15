@@ -166,6 +166,7 @@ compile, boot, or UI demonstration alone.
 ## Related work
 
 - [ERTS WebAssembly runtime architecture and milestones](../20-notes/erts-webassembly-runtime-architecture-and-milestones.md)
-- [ERTS WebAssembly runtime milestone plan](../60-planning/erts-webassembly-runtime-milestones.md)
+- [ERTS WebAssembly planning roadmap](../60-planning/erts-webassembly-runtime-milestones.md)
+- [Proof-of-concept planning stream](../60-planning/01-proof-of-concept/README.md)
 - [Minimum ERTS browser-port map](../10-maps/erts-architecture-and-minimal-browser-port.md)
 - [ERTS architecture deep-dive journal](../50-journal/2026-09-14-erts-architecture-and-minimal-webassembly-port-deep-dive.md)

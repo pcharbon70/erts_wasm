@@ -175,9 +175,10 @@ interfaces, or relevant scientific literature.
 4. `research/40-inquiries/what-is-the-minimum-browser-platform-contract-for-upstream-erts.md`
    for the repository-neutral compile, boot, semantics, lifecycle, and
    qualification gates.
-5. `research/60-planning/erts-webassembly-runtime-milestones.md` for the
-   unchecked P0–P6 proof-of-concept gates and C1–C10 in-depth compatibility
-   gates.
+5. `research/60-planning/README.md` for the planning convention and
+   `research/60-planning/erts-webassembly-runtime-milestones.md` for the stable
+   roadmap into the unchecked P0–P6 proof-of-concept and C1–C10 in-depth
+   compatibility milestones.
 6. `research/40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md`
    for the falsifiable operational question, experiment gates, blockers, and
    resolution criteria.
@@ -246,13 +247,78 @@ gates until executable evidence exists. A successful build, boot, or visual
 demo alone does not establish semantic compatibility, security, lifecycle
 cleanup, performance, or maintainability.
 
+## Phased implementation planning
+
+Before creating, expanding, or reviewing a phased plan, read
+`research/60-planning/README.md`,
+`research/templates/planning-stream-readme.md`,
+`research/templates/milestone-plan-readme.md`, and
+`research/templates/implementation-phase.md` in full. Use the milestone
+template for every milestone directory, the stream template for every numbered
+stream, and the phase template for each authored phase. The optional
+`research/templates/phase-execution-record.md` records actual execution in
+`research/50-journal/`; a plan is never its own evidence.
+
+Planning uses the flattened single-repository hierarchy
+`research/60-planning/<numbered-stream>/<milestone>/`. Stream names and
+milestone IDs are stable. Each milestone owns a substantive `README.md`; phase
+files are named `phase-NN-<descriptive-name>.md`, with numbering restarting at
+01 per milestone. Do not create empty milestone directories or dummy future
+phases. Decompose near-term work first and leave later gate mappings explicitly
+`decomposition pending` until their inputs justify detail.
+
+Every authored phase uses one described checkbox hierarchy: phase, section,
+task, and subtask. Give every task a stable milestone/phase-qualified ID and
+label it with `[id: ...]`, `[area: ...]`, and `[after: ...]`; maintain the
+matching ownership/traceability table. Areas identify repository-local
+boundaries such as `c-runtime`, `browser-host`, `beam-fixtures`,
+`build-release`, `research-tools`, or `cross-cutting`. Unknown owners,
+implementation locations, limits, and toolchains remain `unassigned` or
+unresolved rather than being invented.
+
+The final section of every phase is `Phase N Integration Tests`, with no later
+work section. It covers assembled behavior, inherited regressions, malformed
+and failure cases, reproducible evidence, and the proceed/revise/stop handoff.
+Counts are determined by required work, never a template quota.
+
+Keep plan review, execution progress, verification result, and acceptance
+disposition separate. New work begins unchecked. A human or agent may check a
+subtask after performing its bounded action and local verification; that is a
+progress assertion, not gate evidence. A task may be checked only after all of
+its declared subtasks are complete and validated pass evidence binds its stable
+task ID. A section may be checked only after every descendant task is checked,
+and a phase only after every section is checked. These parent roll-ups record
+work-hierarchy completion, not milestone acceptance; the milestone gate table
+and execution journal record acceptance. Unchecked parents with completed
+children are valid. Reject free-form checked boxes, and promote any subtask
+that needs independent evidence or dependencies to a stable task. Preserve
+failed attempts and gate-reopening conditions: reopening or adding a child
+invalidates checked ancestors. Planning never authorizes implementation,
+commits, pushes, pull requests, publishing, installation, or external writes.
+
+For C/Emscripten work, execution evidence records the exact source and plan
+revisions, dirty state, native bootstrap, compiler and emsdk identities, target
+and flags, generated sources, imports/exports, artifacts and hashes, commands,
+native/Wasm comparison, browser matrix, sanitizer/fuzz profile, resource
+limits, cleanup result, reviewer, and limitations. Authored command text is
+inert data and must never be executed by corpus validators.
+
+Pass-closing machine records are named `*.planning-evidence.json` beneath
+`research/assets/`, never inside the synthetic `planning-conformance/`
+fixtures. Select the applicable `contract_research`, `native_c`,
+`emscripten_wasm`, or `browser_runtime` evidence kind and bind the record to
+authoritative plan, task, gate, source, artifact, and digest-verified contract
+identities. A synthetic, vacuous, unreviewed, unresolved, cyclic, failed,
+blocked, or not-run record cannot close a checkbox.
+
 ## Verification
 
 Before reporting corpus work complete:
 
 1. preserve unrelated changes;
-2. run `python3 research/70-tools/validate_archive.py`;
-3. run `python3 -m unittest discover -s research/70-tools -p 'test_validate_archive.py'`;
-4. verify new external citations against primary sources;
-5. run `git diff --check` when a Git worktree exists; and
-6. inspect the complete change for stale paths and accidental rewrites.
+2. run `python3 research/70-tools/check_all.py` (this includes archive and
+   planning validation, every `test_*.py` suite, and the inert planning-fixture
+   verifier);
+3. verify new external citations against primary sources;
+4. run `git diff --check` when a Git worktree exists; and
+5. inspect the complete change for stale paths and accidental rewrites.

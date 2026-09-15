@@ -1,0 +1,40 @@
+{
+  "profile": "erts-wasm.c-host-abi-fixture.v1",
+  "fixture_only": true,
+  "claim": "validator input, not ERTS or browser feasibility evidence",
+  "expected": {
+    "evidence_kind": "emscripten_wasm",
+    "target_triple": "wasm32-unknown-emscripten",
+    "c_standard": "c11",
+    "pointer_bits": 32,
+    "logical_host_imports": [
+      "erts_wasm_host_submit",
+      "erts_wasm_host_wake"
+    ],
+    "logical_c_exports": [
+      "erts_wasm_probe_abi_version",
+      "erts_wasm_probe_validate_slice",
+      "erts_wasm_probe_reset",
+      "erts_wasm_probe_begin",
+      "erts_wasm_probe_complete"
+    ],
+    "memory": {
+      "shared": true,
+      "initial_equals_maximum": true,
+      "numeric_budget_selected": false
+    }
+  },
+  "boundary": {
+    "values": ["uint32_t", "int32_t"],
+    "addresses": "uint32-offset-plus-uint32-length",
+    "identities": "uint32-generation-and-request-handles",
+    "forbidden": [
+      "size_t",
+      "cross-boundary-struct-layout",
+      "raw-host-pointers",
+      "nul-terminated-host-strings",
+      "external-term-format",
+      "cross-boundary-exceptions-or-longjmp"
+    ]
+  }
+}

@@ -24,6 +24,11 @@ Cross-build the complete upstream OTP 29.0.6 generated BEAM interpreter for
 generators on a same-release native build host, disable BeamAsm/JIT, and test
 the existing numeric-opcode switch path before optimizing dispatch.
 
+[ADR-0001](../architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md)
+assigns ERTS and the narrow browser target/platform adapter to C following the
+pinned upstream build conventions. Rust or new handwritten C++ is not part of
+the initial port and requires a separate measured decision.
+
 ## What must remain upstream
 
 `beam_makeops` generates interpreter and loader tables from the instruction

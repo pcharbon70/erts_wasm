@@ -1,0 +1,38 @@
+{
+  "profile": "planning.oracle.v1",
+  "fixture_only": true,
+  "expected_entities": [
+    {"id": "planning.synthetic.proof", "kind": "planning_stream", "source_anchor": "#synthetic-proof"},
+    {"id": "planning.synthetic.proof.p1", "kind": "milestone", "source_anchor": "#synthetic-p1"},
+    {"id": "planning.synthetic.proof.p1.plan", "kind": "plan", "source_anchor": "#synthetic-p1-plan"},
+    {"id": "planning.synthetic.proof.p1.phase_01", "kind": "phase", "source_anchor": "#synthetic-phase-1"}
+  ],
+  "expected_relations": [
+    ["planning.synthetic.proof.p1", "belongs_to", "planning.synthetic.proof"],
+    ["planning.synthetic.proof.p1", "contains", "planning.synthetic.proof.p1.plan"],
+    ["planning.synthetic.proof.p1.phase_01", "belongs_to", "planning.synthetic.proof.p1.plan"]
+  ],
+  "expected_tasks": [
+    {"id": "p1-p01-c-abi-probe", "requires": []}
+  ],
+  "expected_gates": ["P1-A01"],
+  "required_rejection_codes": [
+    "fixture_revision_mismatch",
+    "circular_evidence_support",
+    "unresolved_planning_task",
+    "unresolved_planning_gate",
+    "synthetic_pass_forbidden",
+    "pass_requires_applicable_artifact",
+    "command_result_artifact_unresolved",
+    "observation_artifact_unresolved",
+    "completed_command_result_missing",
+    "pass_status_mismatch",
+    "unexpected_wasm_import",
+    "missing_wasm_export",
+    "nonzero_command_marked_pass",
+    "evidence_path_escape",
+    "dirty_state_digest_missing",
+    "wasm_target_mismatch",
+    "abi_width_mismatch"
+  ]
+}

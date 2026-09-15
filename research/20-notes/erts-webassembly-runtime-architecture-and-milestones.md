@@ -87,6 +87,15 @@ The complete browser arrangement has four independent axes:
   broker; and
 - **render or server integration:** optional adapters outside the runtime proof.
 
+The proposed [implementation-language
+decision](architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md)
+assigns upstream ERTS and the narrow target adapter to C, maintained browser
+control-plane code to strict TypeScript compiled into pinned JavaScript,
+P0–P6 qualification payloads to Erlang, and exact-version Elixir to incremental
+Program B profiles. Rust and new handwritten C++ are deferred pending a
+component-specific decision and measured benefit. This ownership split is
+provisional until P1 produces toolchain and ABI evidence.
+
 The resulting artifact is a Core Wasm module, not automatically a WebAssembly
 Component Model component. A later non-browser WASI target may share concepts,
 but current browser threads, networking, storage, DOM, and lifecycle still need
@@ -519,7 +528,11 @@ Elixir compatibility is downstream of ERTS and OTP validity. The POC does not
 need Elixir. A later Elixir profile pins exact Elixir, OTP, and application
 versions; disables compiler, shell, runtime eval, arbitrary code paths, and
 unsupported native dependencies; and compares representative workloads with
-the native oracle.
+the native oracle. Within Tier 2, qualification advances from an exact compiler
+and dependency closure, to one precompiled smoke module, to core Elixir runtime
+semantics and OTP behaviours, and only then to representative applications.
+Each increment has its own manifest and support record; one executed module is
+not a general Elixir claim.
 
 ## Security from day one
 
@@ -566,7 +579,9 @@ reruns the complete applicable suite.
 ## Milestones to the first proof of concept
 
 These milestones are a bounded feasibility program. Detailed unchecked work and
-gates live in the [runtime milestone plan](../60-planning/erts-webassembly-runtime-milestones.md).
+gates live in the [proof-of-concept planning stream](../60-planning/01-proof-of-concept/README.md)
+and [in-depth compatibility planning stream](../60-planning/02-in-depth-erts-compatibility/README.md),
+with stable navigation and global ordering in the [runtime roadmap](../60-planning/erts-webassembly-runtime-milestones.md).
 
 | Milestone | Outcome | Runtime-loading obligation | Exit evidence |
 | --- | --- | --- | --- |
@@ -717,11 +732,14 @@ checklist.
 
 ## Related research and planning
 
+- [ADR-0001 — Implementation languages and BEAM qualification sequence](architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md)
 - [Component implementation deep dive](erts-webassembly-component-implementation-deep-dive.md)
 - [Component implementation map](../10-maps/erts-webassembly-component-implementation.md)
 - [Component-seam inquiry](../40-inquiries/which-component-seams-block-the-first-erts-wasm-proof.md)
 - [Component research journal](../50-journal/2026-09-14-erts-webassembly-component-implementation-research.md)
-- [ERTS WebAssembly runtime milestones](../60-planning/erts-webassembly-runtime-milestones.md)
+- [ERTS WebAssembly runtime planning roadmap](../60-planning/erts-webassembly-runtime-milestones.md)
+- [Proof-of-concept planning stream](../60-planning/01-proof-of-concept/README.md)
+- [In-depth compatibility planning stream](../60-planning/02-in-depth-erts-compatibility/README.md)
 - [Minimum browser platform-contract inquiry](../40-inquiries/what-is-the-minimum-browser-platform-contract-for-upstream-erts.md)
 - [First-party ERTS feasibility inquiry](../40-inquiries/can-blazex-build-and-own-an-erts-webassembly-runtime-stack.md)
 - [Runtime-stack map](../10-maps/erts-webassembly-runtime-stack.md)

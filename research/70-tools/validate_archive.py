@@ -25,7 +25,18 @@ except ModuleNotFoundError as error:
 
 
 from research_paths import RESEARCH_ROOT as ROOT
+from planning_validation import (
+    PlanningDocument,
+    is_structured_planning_document,
+    validate_checked_tasks,
+    validate_evidence_records,
+    validate_planning_document,
+    validate_planning_graph,
+)
+
 SCHEMA_PATH = ROOT / "frontmatter.schema.json"
+PLANNING_SCHEMA_PATH = ROOT / "70-tools/planning-authoring-v1.schema.json"
+EVIDENCE_SCHEMA_PATH = ROOT / "70-tools/planning-evidence-v1.schema.json"
 ARCHIVE_DIRECTORIES = {
     "00-inbox",
     "10-maps",
@@ -217,7 +228,24 @@ def validate() -> tuple[list[str], dict[str, int]]:
     validator = jsonschema.Draft202012Validator(
         schema, format_checker=jsonschema.FormatChecker()
     )
+    try:
+        planning_schema = json.loads(PLANNING_SCHEMA_PATH.read_text(encoding="utf-8"))
+        jsonschema.Draft202012Validator.check_schema(planning_schema)
+    except (OSError, json.JSONDecodeError, jsonschema.SchemaError) as error:
+        return [
+            f"{relative(PLANNING_SCHEMA_PATH)}: invalid JSON Schema: {error}"
+        ], counts
+    planning_validator = jsonschema.Draft202012Validator(planning_schema)
+    try:
+        evidence_schema = json.loads(EVIDENCE_SCHEMA_PATH.read_text(encoding="utf-8"))
+        jsonschema.Draft202012Validator.check_schema(evidence_schema)
+    except (OSError, json.JSONDecodeError, jsonschema.SchemaError) as error:
+        return [
+            f"{relative(EVIDENCE_SCHEMA_PATH)}: invalid JSON Schema: {error}"
+        ], counts
+    evidence_validator = jsonschema.Draft202012Validator(evidence_schema)
     records: dict[Path, tuple[dict[str, object], str]] = {}
+    planning_documents: list[PlanningDocument] = []
 
     for top_name in sorted(ARCHIVE_DIRECTORIES):
         if not (ROOT / top_name).is_dir():
@@ -231,6 +259,17 @@ def validate() -> tuple[list[str], dict[str, int]]:
             errors.append(f"{relative(path)}: {error}")
             continue
         records[path.resolve()] = (metadata, body)
+        if path.relative_to(ROOT).parts[0] == "60-planning":
+            planning_document = validate_planning_document(
+                path,
+                body,
+                planning_validator,
+                errors,
+                required=is_structured_planning_document(path, ROOT),
+                display_path=relative,
+            )
+            if planning_document is not None:
+                planning_documents.append(planning_document)
         schema_errors = validator.iter_errors(metadata)
         for schema_error in sorted(
             schema_errors, key=lambda item: list(item.absolute_path)
@@ -281,6 +320,27 @@ def validate() -> tuple[list[str], dict[str, int]]:
             and not planning_note
         ):
             errors.append(f"{relative(path)}: kind {kind!r} belongs in {expected}/")
+
+    planning_authority = validate_planning_graph(
+        planning_documents,
+        errors,
+        display_path=relative,
+    )
+    evidence_result = validate_evidence_records(
+        ROOT,
+        ROOT.parent,
+        evidence_validator,
+        planning_authority,
+        errors,
+        display_path=relative,
+    )
+    counts["evidence_records"] = len(evidence_result.record_ids)
+    validate_checked_tasks(
+        planning_documents,
+        evidence_result.passed_task_ids,
+        errors,
+        display_path=relative,
+    )
 
     for path in sorted(ROOT.rglob("*.md")):
         if is_ignored(path):

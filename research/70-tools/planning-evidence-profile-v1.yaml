@@ -1,0 +1,66 @@
+profile: erts-wasm.planning-evidence-policy.v1
+evidence:
+  discovery_root: research/assets
+  discovery_suffix: .planning-evidence.json
+  synthetic_fixture_subtree_excluded: research/assets/planning-conformance
+  maximum_record_bytes: 1048576
+  maximum_referenced_file_bytes: 16777216
+  maximum_aggregate_referenced_bytes: 134217728
+  symlinks: forbidden
+  producer_identity_required: true
+  independent_review_required: true
+  merged_baseline_replay_required: true
+  exact_revision_and_dirty_state_required: true
+  source_toolchain_flag_and_artifact_digests_required: true
+  raw_artifact_owner: producing-experiment
+  shared_storage: digest-and-repository-relative-reference
+  retention: repository-history
+  self_support_satisfies_requirement: false
+  support_references_must_resolve_and_be_acyclic: true
+  pass_requires_non_synthetic_record: true
+  pass_requires_authoritative_task_and_gate_ids: true
+  pass_requires_completed_commands_and_nonempty_digest_bound_result_artifacts: true
+  command_and_observation_artifact_references_must_resolve: true
+  pass_artifacts_must_not_alias_sources: true
+  checked_task_boxes_require_validated_pass_evidence: true
+  checked_subtasks_record_human_or_agent_progress: true
+  checked_sections_and_phases_require_complete_descendants: true
+  aggregate_checkmarks_do_not_establish_milestone_acceptance: true
+execution:
+  authored_commands: data-only-never-execute
+  shell_interpolation: forbidden
+  required_result_states:
+    - pass
+    - fail
+    - blocked
+    - not_run
+  synthetic_fixture_closes_gate: false
+  outcome_status_contract:
+    pass: completed
+    fail: completed
+    blocked: blocked
+    not_run: not_run
+evidence_kinds:
+  contract_research: criteria-and-artifact comparison for governance and research tasks
+  native_c: target-standard-and-pointer-width comparison for native C probes
+  emscripten_wasm: target-ABI-import-export-and-memory comparison for Wasm probes
+  browser_runtime: browser-worker-isolation-cycle-and-resource comparison
+  contract_binding: observations are compared only with the digest-verified contract_ref
+c_emscripten:
+  source_language: c
+  language_standard: c11
+  target: wasm32-unknown-emscripten
+  host_boundary: fixed-width-integers-offset-length-and-opaque-handles
+  imported_authority: explicit-allowlist
+  exported_surface: explicit-allowlist
+  shared_memory_requires_equal_initial_and_maximum_for_poc: true
+  native_and_wasm_results_are_distinct: true
+  chrome_and_firefox_results_are_distinct: true
+reopen_when:
+  - selected-erts-or-otp-revision-changes
+  - emsdk-llvm-binaryen-or-browser-version-changes
+  - compiler-linker-or-generated-interpreter-flags-change
+  - source-contract-import-export-or-artifact-digest-changes
+  - memory-worker-topology-or-loader-policy-changes
+  - acceptance-criterion-or-oracle-changes
+  - evidence-access-integrity-or-required-review-changes

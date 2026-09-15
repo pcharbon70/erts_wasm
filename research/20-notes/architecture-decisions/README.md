@@ -28,7 +28,9 @@ Reviewed ADRs created from the architecture-decision template.
 
 ### Documents
 
-- None yet.
+- [ADR-0001 — Implementation languages and BEAM qualification sequence](adr-0001-implementation-languages-and-beam-qualification-sequence.md)
+  — proposed C/TypeScript ownership boundary, Erlang proof baseline, incremental
+  Elixir qualification, and Rust/C++ review rule.
 
 ## Maintaining this index
 

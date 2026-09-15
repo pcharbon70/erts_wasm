@@ -1,0 +1,109 @@
+profile: erts-wasm.planning-negative-fixtures.v1
+fixture_only: true
+cases:
+  - id: wrong-revision-evidence
+    baseline: not_run
+    operations:
+      - path: [execution, tested_revision]
+        value: different-revision
+    expected_codes: [fixture_revision_mismatch]
+  - id: circular-support
+    baseline: not_run
+    operations:
+      - path: [support_refs]
+        value: [evidence.synthetic.c_emscripten_abi]
+    expected_codes: [circular_evidence_support]
+  - id: unresolved-task
+    baseline: not_run
+    operations:
+      - path: [plan_baseline, task_ids]
+        value: [missing-task]
+    expected_codes: [unresolved_planning_task]
+  - id: unresolved-gate
+    baseline: not_run
+    operations:
+      - path: [plan_baseline, gate_ids]
+        value: [P9-MISSING]
+    expected_codes: [unresolved_planning_gate]
+  - id: synthetic-pass
+    baseline: pass
+    operations:
+      - path: [synthetic]
+        value: true
+    expected_codes: [synthetic_pass_forbidden]
+  - id: pass-without-applicable-artifact
+    baseline: pass
+    operations:
+      - path: [artifacts]
+        value: []
+    expected_codes:
+      - pass_requires_applicable_artifact
+      - command_result_artifact_unresolved
+      - observation_artifact_unresolved
+  - id: completed-command-without-results
+    baseline: pass
+    operations:
+      - path: [execution, commands, 0, exit_code]
+        value: null
+    expected_codes: [completed_command_result_missing]
+  - id: pass-with-blocked-status
+    baseline: pass
+    operations:
+      - path: [execution, status]
+        value: blocked
+    expected_codes: [pass_status_mismatch]
+  - id: unexpected-host-import
+    baseline: pass
+    operations:
+      - path: [observations, logical_host_imports]
+        value:
+          - erts_wasm_host_submit
+          - erts_wasm_host_wake
+          - ambient_host_escape
+    expected_codes: [unexpected_wasm_import]
+  - id: missing-c-export
+    baseline: pass
+    operations:
+      - path: [observations, logical_c_exports]
+        value:
+          - erts_wasm_probe_abi_version
+    expected_codes: [missing_wasm_export]
+  - id: failed-command-marked-pass
+    baseline: pass
+    operations:
+      - path: [execution, commands, 0, exit_code]
+        value: 1
+    expected_codes: [nonzero_command_marked_pass]
+  - id: escaping-source-path
+    baseline: not_run
+    operations:
+      - path: [sources, 0, path]
+        value: ../../outside.bin
+    expected_codes: [evidence_path_escape]
+  - id: dirty-candidate-without-digest
+    baseline: not_run
+    operations:
+      - path: [candidate, dirty_state]
+        value: dirty
+    expected_codes: [dirty_state_digest_missing]
+  - id: wrong-wasm-target
+    baseline: pass
+    operations:
+      - path: [observations, target_triple]
+        value: wasm32-wasi
+    expected_codes: [wasm_target_mismatch]
+  - id: wrong-pointer-width
+    baseline: pass
+    operations:
+      - path: [observations, pointer_bits]
+        value: 64
+    expected_codes: [abi_width_mismatch]
+  - id: inert-malicious-command
+    baseline: not_run
+    operations:
+      - path: [execution, commands, 0, argv]
+        value:
+          - sh
+          - -c
+          - touch /tmp/erts-wasm-planning-fixture-must-not-exist
+    expected_codes: []

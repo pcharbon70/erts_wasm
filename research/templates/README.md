@@ -34,9 +34,17 @@ are not completed archive documents until copied and filled in.
   impact-reviewed ADR with explicit status and supersession.
 - [Directory README template](directory-readme.md) — an exhaustive local inventory.
 - [Inquiry template](inquiry.md) — an active question and research workbench.
+- [Implementation phase template](implementation-phase.md) — a described,
+  traceable phase/task hierarchy ending in integration and evidence handoff.
 - [Journal template](journal.md) — a dated research or experiment record.
 - [Map template](map.md) — a selective route through related material.
+- [Milestone plan README template](milestone-plan-readme.md) — a milestone
+  inventory with decisions, gate/artifact mapping, ordered phases, and exit.
+- [Planning stream README template](planning-stream-readme.md) — a numbered
+  stream index with machine-readable identity, entry state, and milestones.
 - [Note template](note.md) — an idea or synthesis in the author's own words.
+- [Phase execution record template](phase-execution-record.md) — an optional
+  journal scaffold for actual commands, results, revisions, and review.
 - [Source template](source.md) — a bibliographic and evidence-focused reading note.
 
 ## Maintaining this index

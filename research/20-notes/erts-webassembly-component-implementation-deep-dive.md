@@ -208,7 +208,8 @@ to transplant or compatibility evidence for this project.[^atomvm]
 
 None of those works predicts that OTP 29.0.6 will compile, fit, boot, remain
 responsive, or cleanly terminate in current browsers. Those remain executable
-gates in the canonical [milestone plan](../60-planning/erts-webassembly-runtime-milestones.md).
+gates in the canonical [planning hierarchy](../60-planning/README.md), reached
+through its proof-of-concept and in-depth compatibility streams.
 
 ## Sources
 

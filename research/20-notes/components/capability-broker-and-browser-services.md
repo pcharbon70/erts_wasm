@@ -24,6 +24,10 @@ broker outside ERTS. Preserve the ERTS port abstraction at the language edge,
 but do not expose arbitrary JavaScript calls, property traversal, URLs,
 filesystem paths, raw ETF, POSIX sockets, or native-library loading.
 
+Under [ADR-0001](../architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md),
+the maintained broker is strict TypeScript compiled to pinned JavaScript; its
+erased types never replace the runtime validation below.
+
 ## Trust and authority model
 
 Core Wasm imports are the module's host authority. An import named `fetch` or

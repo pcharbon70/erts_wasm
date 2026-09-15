@@ -222,6 +222,7 @@ the component audit were re-inspected 2026-09-14.
 
 ## Derived work
 
+- [ADR-0001 — Implementation languages and BEAM qualification sequence](../20-notes/architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md)
 - [ERTS WebAssembly component implementation deep dive](../20-notes/erts-webassembly-component-implementation-deep-dive.md)
 - [ERTS build and BEAM interpreter component](../20-notes/components/erts-build-and-beam-interpreter.md)
 - [Worker and pthread topology component](../20-notes/components/worker-and-pthread-topology.md)

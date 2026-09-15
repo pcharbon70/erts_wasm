@@ -94,5 +94,6 @@ dependencies remain experimental questions.
 
 ## Derived work
 
+- [ADR-0001 — Implementation languages and BEAM qualification sequence](../20-notes/architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md)
 - [OTP and Elixir compatibility profile](../20-notes/components/otp-and-elixir-compatibility-profile.md)
 - [Component implementation deep dive](../20-notes/erts-webassembly-component-implementation-deep-dive.md)
