@@ -195,6 +195,10 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
     schema = load_json(root / "p0-runtime-manifest.schema.json")
     loader = load_json(root / "p0-loader-contract.json")
     trust = load_json(root / "p0-bootstrap-trust.json")
+    ledger = load_json(root / "p0-asset-dependency-patch-ledger.json")
+    environment = load_json(root / "p0-empty-environment-contract.json")
+    acceptance = load_json(root / "p0-acceptance-contract.json")
+    report = load_json(root / "p0-acceptance-report.json")
 
     required_manifest = {"format", "generation", "trust", "sources", "artifacts", "runtime", "boot", "modules", "abi", "capabilities", "bounds"}
     if set(schema.get("required", [])) != required_manifest:
@@ -258,7 +262,30 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
     if set(trust.get("headers", {})) != required_headers:
         raise ContractError("missing-deployment-prerequisite", "required header policy is incomplete")
 
-    return ["manifest-schema", "loader-state-and-ownership", "bootstrap-trust"]
+    unique(ledger.get("assets", []), "id", "duplicate-asset")
+    unique(ledger.get("dependencies", []), "id", "duplicate-dependency")
+    if ledger.get("patch_stack", {}).get("patches") != [] or ledger.get("patch_stack", {}).get("state") != "no-implementation-patches-exist":
+        raise ContractError("fabricated-patch-stack", "P0 must record that no implementation patch stack exists")
+    if environment.get("reproduction_state") != "specified-not-run" or not environment.get("blockers"):
+        raise ContractError("fabricated-empty-environment", "clean environment is specified but not reproduced")
+    required_contracts = {
+        "p0-baseline", "p0-trust-model", "p0-language-ownership",
+        "p0-runtime-inventory", "p0-thread-census-contract",
+        "p0-experiment-bounds", "p0-unsupported-matrix", "p0-loader-bounds",
+        "p0-product-budget-method", "p0-evidence-profile",
+        "p0-loader-contract", "p0-bootstrap-trust",
+        "p0-asset-dependency-patch-ledger", "p0-empty-target-environment",
+    }
+    if set(acceptance.get("required_contracts", [])) != required_contracts:
+        raise ContractError("missing-p0-contract", "P0 acceptance contract set is incomplete")
+    if report.get("review_complete") is not False or not report.get("blockers"):
+        raise ContractError("missing-p0-blocker", "P0 report must retain unresolved review and execution blockers")
+    if report.get("gate_state") != "blocked" or report.get("planning_evidence") != "none; no task or gate may close":
+        raise ContractError("premature-p0-closure", "P0 cannot close with unresolved blockers")
+
+    validate_phase_01()
+    validate_phase_02()
+    return ["manifest-schema", "loader-state-and-ownership", "bootstrap-trust", "asset-dependency-patch-ledger", "empty-environment-contract", "blocked-p0-disposition"]
 
 
 def main(argv: list[str]) -> int:

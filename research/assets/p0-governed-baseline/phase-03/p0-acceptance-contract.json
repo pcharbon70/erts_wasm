@@ -1,0 +1,17 @@
+{
+  "contract_id": "p0-acceptance",
+  "acceptance_ids": ["P0-A01", "P0-A02", "P0-A03", "P0-GATE"],
+  "task_id": "p0-p03-integration",
+  "required_contracts": ["p0-baseline", "p0-trust-model", "p0-language-ownership", "p0-runtime-inventory", "p0-thread-census-contract", "p0-experiment-bounds", "p0-unsupported-matrix", "p0-loader-bounds", "p0-product-budget-method", "p0-evidence-profile", "p0-loader-contract", "p0-bootstrap-trust", "p0-asset-dependency-patch-ledger", "p0-empty-target-environment"],
+  "gate_pass_requires": ["every required contract validates at its recorded revision", "all formal predecessor handoffs are accepted", "every required independent reviewer is assigned and records acceptance", "all pin and dependency identities are materialized and independently resolved", "the clean target recipe reproduces", "root/update/deployment ownership is assigned", "no stop condition is active", "a pass-closing evidence record binds all artifacts and reviews"],
+  "negative_cases": [
+    {"id": "P0-NEG-MISSING-FLOATING", "expected": "phase-01 missing-pin or floating-pin"},
+    {"id": "P0-NEG-CIRCULAR-TRUST", "expected": "circular-root-trust"},
+    {"id": "P0-NEG-MIXED-IDENTITY", "expected": "mixed-manifest-identity"},
+    {"id": "P0-NEG-OWNERLESS", "expected": "missing-owner or ownerless-loader-failure"},
+    {"id": "P0-NEG-NO-BREACH", "expected": "missing-breach-action"},
+    {"id": "P0-NEG-UNDECLARED-MODULE", "expected": "undeclared-module-policy"},
+    {"id": "P0-NEG-DEPLOYMENT", "expected": "missing-deployment-prerequisite"}
+  ],
+  "closure_rule": "any blocker or required not-run result keeps every task, section, phase, and P0-GATE checkbox open"
+}

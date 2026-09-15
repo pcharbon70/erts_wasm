@@ -1,0 +1,24 @@
+{
+  "report_id": "p0-local-acceptance-review-2026-09-15",
+  "contract_id": "p0-acceptance",
+  "tested_base_revision": "5baeb38",
+  "local_contract_results": {"P0-A01": "pass-local-review-pending", "P0-A02": "pass-local-review-pending", "P0-A03": "pass-local-review-pending", "P0-GATE": "blocked"},
+  "gate_state": "blocked",
+  "review_complete": false,
+  "runtime_execution": "not-run",
+  "empty_environment_reproduction": "not-run",
+  "blockers": [
+    "Phase 1 independent pin, security, architecture, ERTS, and concurrency reviews are not run",
+    "native OTP 29 bootstrap, Emscripten toolchain/image, and qualification browsers are not materialized",
+    "Chrome archive digest remains unresolved",
+    "Phase 2 independent measurement, bounds/security, and evidence-profile reviews are not run",
+    "product-budget authority is unassigned and product values are intentionally null",
+    "Phase 3 loader/protocol and root-trust security reviews are not run",
+    "asset owners, patch owner, deployment owner, and update owner are unassigned",
+    "clean target environment has been specified but not reproduced",
+    "no C/Emscripten compile, ERTS/OTP boot, browser, lifecycle, sanitizer, fuzz, or compatibility evidence exists"
+  ],
+  "stop_trigger_state": "none-confirmed-deployment-prerequisites-untested",
+  "disposition": "blocked-formal-P1-entry-not-unlocked",
+  "planning_evidence": "none; no task or gate may close"
+}

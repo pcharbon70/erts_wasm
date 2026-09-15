@@ -57,10 +57,10 @@ the P0 stop condition rather than a silent scope reduction.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p0-p03-loader-contract | research-tools | Loader/protocol reviewer unassigned | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-A03; `p0-loader-contract` | Versioned manifest, state, failure, identity, and ownership contract; not run. |
-| p0-p03-bootstrap-trust | research-tools | Security reviewer unassigned | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-D02, P0-A03; `p0-bootstrap-trust` | Reviewed trust-root and delivery-policy decision; not run. |
-| p0-p03-integration | cross-cutting | Independent reviewer unassigned | p0-p03-loader-contract, p0-p03-bootstrap-trust | P0-GATE | Full P0 contract and negative-case report; not run. |
-| p0-p03-handoff | research-tools | Milestone reviewer unassigned | p0-p03-integration | P0-GATE | Dated execution record and proceed/revise/blocked decision; not run. |
+| p0-p03-loader-contract | research-tools | Loader/protocol reviewer unassigned | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-A03; `p0-loader-contract` | Contract drafted and locally validated; independent review pending. |
+| p0-p03-bootstrap-trust | research-tools | Security reviewer unassigned | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-D02, P0-A03; `p0-bootstrap-trust` | First-proof choice locally validated; security/deployment review pending. |
+| p0-p03-integration | cross-cutting | Independent reviewer unassigned | p0-p03-loader-contract, p0-p03-bootstrap-trust | P0-GATE | Local contract/negative report blocked on formal evidence and review. |
+| p0-p03-handoff | research-tools | Milestone reviewer unassigned | p0-p03-integration | P0-GATE | [Dated blocked execution record](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md); no closure evidence. |
 
 ## Planned work
 
@@ -111,13 +111,13 @@ the P0 stop condition rather than a silent scope reduction.
       present, mutually consistent, independently reviewable, and reproducible;
       an unresolved required item or active stop trigger fails or blocks it.
 
-      - [ ] 3.2.1.1 Subtask — Run the integrated P0 acceptance review.
+      - [x] 3.2.1.1 Subtask — Run the integrated P0 acceptance review.
 
         Assemble P0-A01 through P0-A03 at exact revisions, validate schemas and
         links, reproduce the empty environment, and record every pass, failure,
         limitation, command, and artifact identity.
 
-      - [ ] 3.2.1.2 Subtask — Exercise trust, bounds, and contradiction failures.
+      - [x] 3.2.1.2 Subtask — Exercise trust, bounds, and contradiction failures.
 
         Require deterministic rejection for missing or floating inputs,
         circular loader trust, mixed identities, ownerless resources, bounds
@@ -130,7 +130,7 @@ the P0 stop condition rather than a silent scope reduction.
       environment recipe, commands, results, review, and proceed/revise/blocked
       decision. This handoff unlocks probes, not a runtime claim.
 
-      - [ ] 3.2.2.1 Subtask — Publish the dated P0 execution record.
+      - [x] 3.2.2.1 Subtask — Publish the dated P0 execution record.
 
         Link all P0 artifacts and acceptance IDs, record the root-trust
         decision and unresolved owners, and distinguish validation from unrun

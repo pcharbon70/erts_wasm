@@ -32,7 +32,11 @@ evidence do not.
 
 ### Documents
 
+- [`p0-acceptance-contract.json`](p0-acceptance-contract.json) — combined P0 obligations, pass rule, and inherited contradiction cases.
+- [`p0-acceptance-report.json`](p0-acceptance-report.json) — local validation disposition and exact blockers keeping P0 open.
+- [`p0-asset-dependency-patch-ledger.json`](p0-asset-dependency-patch-ledger.json) — planned assets, exact dependencies, empty patch stack, ownership, and materialization state.
 - [`p0-bootstrap-trust.json`](p0-bootstrap-trust.json) — selected first-proof trust root, delivery/header policy, trusted base, and rejection cases.
+- [`p0-empty-environment-contract.json`](p0-empty-environment-contract.json) — clean build/browser recipe and its not-run reproduction state.
 - [`p0-loader-contract.json`](p0-loader-contract.json) — loader states, topology partial orders, fixed boot inputs, identity, admission, ownership, and failure rules.
 - [`p0-runtime-manifest.schema.json`](p0-runtime-manifest.schema.json) — versioned minimum schema for one coherent runtime generation.
 
