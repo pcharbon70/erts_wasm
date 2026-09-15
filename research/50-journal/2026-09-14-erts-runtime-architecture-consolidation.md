@@ -42,8 +42,8 @@ may be called a meaningful ERTS WebAssembly proof of concept.
 
 ## Evidence
 
-The new [milestone plan](../60-planning/erts-webassembly-runtime-milestones.md)
-separates:
+The [planning roadmap](../60-planning/erts-webassembly-runtime-milestones.md)
+and its numbered planning streams separate:
 
 1. P0–P6, which must all pass before claiming a minimal proof of concept; and
 2. C1–C10, which expand an accepted proof into an in-depth, maintained

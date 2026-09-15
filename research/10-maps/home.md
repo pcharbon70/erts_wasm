@@ -25,6 +25,10 @@ security-first port of upstream ERTS and matching OTP modules to WebAssembly.
   milestones](../20-notes/erts-webassembly-runtime-architecture-and-milestones.md)
   is the canonical synthesis of ERTS components, the browser architecture,
   runtime loading, the minimal proof, and later compatibility work.
+- [ADR-0001 — Implementation languages and BEAM qualification
+  sequence](../20-notes/architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md)
+  proposes C for the upstream runtime boundary, strict TypeScript for the
+  browser host, Erlang for the first proof, and incremental Elixir admission.
 - [Component implementation deep
   dive](../20-notes/erts-webassembly-component-implementation-deep-dive.md)
   translates that architecture into POC choices, later compatibility
@@ -48,13 +52,21 @@ security-first port of upstream ERTS and matching OTP modules to WebAssembly.
 - [2026-09-14 component implementation research
   journal](../50-journal/2026-09-14-erts-webassembly-component-implementation-research.md)
   records the per-component research method, decisions, and evidence limits.
+- [2026-09-14 language-decision
+  journal](../50-journal/2026-09-14-language-boundary-and-elixir-increment-decision.md)
+  records the source checks, inference boundary, and unresolved toolchain proof.
+- [2026-09-14 phased-planning adoption
+  journal](../50-journal/2026-09-14-phased-planning-system-adoption.md)
+  records the local reference, role-neutral adaptation, C/Emscripten evidence
+  boundary, and validation limits.
 
 ## Trails
 
 - [Sources](../30-sources/README.md) contains the complete ERTS, OTP,
   WebAssembly, browser, performance, and security evidence set.
-- [Planning](../60-planning/README.md) contains the authorized but entirely
-  unchecked P0–P6 proof-of-concept and C1–C10 compatibility gates.
+- [Planning](../60-planning/README.md) contains numbered proof-of-concept and
+  compatibility streams, substantive P0–P6 and C1–C10 milestones, and the
+  authored but entirely unchecked P0/P1 phase plans.
 - [Templates](../templates/README.md) and [tools](../70-tools/README.md) govern
   future corpus additions.
 

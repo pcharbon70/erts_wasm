@@ -25,7 +25,7 @@ are defined in [AGENTS.md](../AGENTS.md).
 - [30-sources](30-sources/README.md) — bibliographic and evidence notes.
 - [40-inquiries](40-inquiries/README.md) — open, falsifiable questions.
 - [50-journal](50-journal/README.md) — dated research and experiment records.
-- [60-planning](60-planning/README.md) — implementation plans and gates.
+- [60-planning](60-planning/README.md) — numbered implementation streams, milestone definitions, phase plans, and evidence gates.
 - [70-tools](70-tools/README.md) — corpus validators and tests.
 - [90-archive](90-archive/README.md) — superseded material retained for provenance.
 - [assets](assets/README.md) — durable attachments and generated evidence.

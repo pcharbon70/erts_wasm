@@ -29,10 +29,12 @@ def main() -> int:
             "-s",
             str(TOOLS_ROOT),
             "-p",
-            "test_validate_archive.py",
+            "test_*.py",
         ],
+        [sys.executable, str(TOOLS_ROOT / "verify_planning_fixtures.py")],
     ]
-    return 0 if all(run(command) == 0 for command in checks) else 1
+    results = [run(command) for command in checks]
+    return 0 if all(result == 0 for result in results) else 1
 
 
 if __name__ == "__main__":

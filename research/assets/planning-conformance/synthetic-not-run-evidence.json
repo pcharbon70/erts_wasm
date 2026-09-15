@@ -1,0 +1,118 @@
+{
+  "profile": "erts-wasm.planning-evidence.v1",
+  "record_id": "evidence.synthetic.c_emscripten_abi",
+  "evidence_kind": "emscripten_wasm",
+  "synthetic": true,
+  "producer": "planning-conformance-fixture",
+  "reviewer": null,
+  "plan_baseline": {
+    "document_id": "planning.synthetic.proof.p1.plan",
+    "revision": "synthetic-fixture-v1",
+    "task_ids": ["p1-p01-c-abi-probe"],
+    "gate_ids": ["P1-A01"]
+  },
+  "candidate": {
+    "revision": "synthetic-fixture-v1",
+    "dirty_state": "clean",
+    "diff_sha256": null
+  },
+  "execution": {
+    "status": "not_run",
+    "tested_revision": "synthetic-fixture-v1",
+    "commands": [
+      {
+        "id": "compile-native-probe",
+        "argv": [
+          "cc",
+          "-std=c11",
+          "-Wall",
+          "-Wextra",
+          "-Werror",
+          "c-emscripten-abi-probe.c",
+          "native-host-stub.c"
+        ],
+        "cwd": "research/assets/planning-conformance",
+        "exit_code": null,
+        "stdout_sha256": null,
+        "stderr_sha256": null,
+        "result_artifact_ids": []
+      },
+      {
+        "id": "compile-emscripten-probe",
+        "argv": [
+          "emcc",
+          "-std=c11",
+          "-pthread",
+          "c-emscripten-abi-probe.c"
+        ],
+        "cwd": "research/assets/planning-conformance",
+        "exit_code": null,
+        "stdout_sha256": null,
+        "stderr_sha256": null,
+        "result_artifact_ids": []
+      }
+    ]
+  },
+  "toolchains": [],
+  "sources": [
+    {
+      "id": "source.synthetic.abi_header",
+      "role": "fixed-width C ABI declarations",
+      "applicability": "applicable",
+      "path": "research/assets/planning-conformance/c-emscripten-abi-probe.h",
+      "available": true,
+      "sha256": "1f260b497efc5a2e192c8175675c57a9cfe251b74eabc5c88c8655392a16d4fd",
+      "bytes": 809
+    },
+    {
+      "id": "source.synthetic.abi_probe",
+      "role": "C and Emscripten ABI probe",
+      "applicability": "applicable",
+      "path": "research/assets/planning-conformance/c-emscripten-abi-probe.c",
+      "available": true,
+      "sha256": "688fc77f0fb6bcf0c677d4143d4bd1268d89f39d65223a726ee07bfc91b800e5",
+      "bytes": 2582
+    },
+    {
+      "id": "source.synthetic.native_stub",
+      "role": "native host stub and negative checks",
+      "applicability": "applicable",
+      "path": "research/assets/planning-conformance/native-host-stub.c",
+      "available": true,
+      "sha256": "4ebe97640e623dbd71d89bf5e8243c6a3bbd826b4be023acb125da2d96a38f7c",
+      "bytes": 1614
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "artifact.synthetic.native_probe",
+      "role": "planned native fixture executable",
+      "applicability": "applicable",
+      "path": "research/assets/planning-conformance/generated/native-probe",
+      "available": false,
+      "sha256": null,
+      "bytes": null
+    },
+    {
+      "id": "artifact.synthetic.wasm_probe",
+      "role": "planned Emscripten fixture module",
+      "applicability": "applicable",
+      "path": "research/assets/planning-conformance/generated/abi-probe.wasm",
+      "available": false,
+      "sha256": null,
+      "bytes": null
+    }
+  ],
+  "contract_ref": {
+    "path": "research/assets/planning-conformance/abi-contract.json",
+    "sha256": "c9561e0bb8d141cbb44680a78340df040f4cc1c3c3ae6cc4dccd9d350f08ccc7"
+  },
+  "observations": null,
+  "observation_artifact_ids": [],
+  "outcome": "not_run",
+  "limitations": [
+    "Synthetic validator input only; it records no compiler, browser, ERTS, or WebAssembly execution.",
+    "The exact Emscripten memory, pthread, controlled-start, export, and link flags remain P0/P1 decisions."
+  ],
+  "support_refs": []
+}

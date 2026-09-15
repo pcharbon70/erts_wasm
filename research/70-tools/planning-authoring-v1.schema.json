@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:erts-wasm:planning-authoring:v1",
+  "title": "Planning authoring profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "document_id", "entities", "relations"],
+  "properties": {
+    "profile": {"const": "planning.authoring.v1"},
+    "document_id": {"$ref": "#/$defs/id"},
+    "entities": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {"$ref": "#/$defs/entity"}
+    },
+    "relations": {
+      "type": "array",
+      "maxItems": 50000,
+      "items": {"$ref": "#/$defs/relation"}
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+(?:\\.[a-z0-9_]+)+$"
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "source_anchor"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "kind": {
+          "enum": ["planning_stream", "milestone", "plan", "phase"]
+        },
+        "source_anchor": {
+          "type": "string",
+          "pattern": "^#[a-z0-9][a-z0-9_-]*$"
+        }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subject", "predicate", "object"],
+      "properties": {
+        "subject": {"$ref": "#/$defs/id"},
+        "predicate": {
+          "enum": ["belongs_to", "contains", "precedes", "implements"]
+        },
+        "object": {"$ref": "#/$defs/id"}
+      }
+    }
+  }
+}

@@ -31,7 +31,13 @@ and keeps runtime loading visible at its boundary.
 - [Canonical architecture](../20-notes/erts-webassembly-runtime-architecture-and-milestones.md)
   remains the authority for scope, invariants, proof claims, and milestone
   boundaries.
-- [Detailed milestones](../60-planning/erts-webassembly-runtime-milestones.md)
+- [ADR-0001 — Implementation languages and BEAM qualification
+  sequence](../20-notes/architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md)
+  assigns C, TypeScript, Erlang, and later Elixir to explicit ownership and
+  evidence boundaries while deferring Rust and new C++ pending measured need.
+- [Planning roadmap](../60-planning/erts-webassembly-runtime-milestones.md),
+  [proof-of-concept stream](../60-planning/01-proof-of-concept/README.md), and
+  [compatibility stream](../60-planning/02-in-depth-erts-compatibility/README.md)
   retain every gate unchecked until executable evidence exists.
 - [Component-seam inquiry](../40-inquiries/which-component-seams-block-the-first-erts-wasm-proof.md)
   turns the remaining uncertainties into stop/go experiments.

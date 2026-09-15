@@ -31,6 +31,8 @@ Time-bound observations and reproducible evidence, including negative results.
 - [2026-09-14 ERTS architecture and minimum WebAssembly-port deep dive](2026-09-14-erts-architecture-and-minimal-webassembly-port-deep-dive.md) — component audit, comparative evidence, and minimal-platform synthesis.
 - [2026-09-14 ERTS runtime architecture consolidation](2026-09-14-erts-runtime-architecture-consolidation.md) — merger provenance, runtime-loading decision, and two-stage milestone structure.
 - [2026-09-14 ERTS WebAssembly component implementation research](2026-09-14-erts-webassembly-component-implementation-research.md) — per-component source review, implementation decisions, unresolved seams, and evidence limits.
+- [2026-09-14 language boundary and Elixir increment decision](2026-09-14-language-boundary-and-elixir-increment-decision.md) — ADR provenance for the C/TypeScript split, Erlang proof baseline, and staged Elixir qualification.
+- [2026-09-14 phased planning system adoption](2026-09-14-phased-planning-system-adoption.md) — adaptation of milestone, phase, task identity, C/Emscripten evidence, and validation conventions.
 - [2026-09-14 research directory migration](2026-09-14-research-directory-migration.md) — relocation of the self-contained corpus beneath `research/`.
 
 ## Maintaining this index

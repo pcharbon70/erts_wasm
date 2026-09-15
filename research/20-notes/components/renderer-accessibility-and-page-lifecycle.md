@@ -24,6 +24,10 @@ to an owned subtree, and returns typed user events through the capability
 broker. It never accepts HTML, JavaScript, selectors, arbitrary DOM properties,
 or unrestricted CSS strings.
 
+[ADR-0001](../architecture-decisions/adr-0001-implementation-languages-and-beam-qualification-sequence.md)
+assigns this later DOM-owning adapter to a strict TypeScript target kept
+separate from Worker-only and shared-protocol code.
+
 ## Component boundary
 
 The renderer owns DOM node handles, subtree ownership, event listeners,

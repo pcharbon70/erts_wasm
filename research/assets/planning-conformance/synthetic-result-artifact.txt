@@ -1,0 +1,1 @@
+Synthetic validator result bytes only; no compiler, browser, ERTS, or Wasm run produced this file.
