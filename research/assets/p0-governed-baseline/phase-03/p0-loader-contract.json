@@ -1,0 +1,51 @@
+{
+  "contract_id": "p0-loader-contract",
+  "acceptance_id": "P0-A03",
+  "task_id": "p0-p03-loader-contract",
+  "schema": "p0-runtime-manifest.schema.json",
+  "schema_version": "erts-wasm-manifest-v1",
+  "review_state": "loader-protocol-review-pending",
+  "states": ["created", "platform-preflighted", "bootstrap-trust-established", "manifest-authenticated", "topology-starting", "artifacts-verified", "shared-memory-created", "workers-registered", "runtime-instantiated-main-suppressed", "immutable-release-mounted", "explicit-erts-entry-invoked", "erts-initialized", "otp-booted", "runtime-identity-attested", "booted-for-qualification", "qualification-admission-consumed-and-closed", "qualification-module-published", "qualification-module-executed", "tier-0-self-check-passed", "ready", "cancelling", "all-generation-resources-revoked", "terminated"],
+  "common_partial_order": [
+    ["created", "platform-preflighted"], ["platform-preflighted", "bootstrap-trust-established"], ["bootstrap-trust-established", "manifest-authenticated"], ["manifest-authenticated", "topology-starting"], ["artifacts-verified", "runtime-instantiated-main-suppressed"], ["shared-memory-created", "runtime-instantiated-main-suppressed"], ["workers-registered", "runtime-instantiated-main-suppressed"], ["runtime-instantiated-main-suppressed", "immutable-release-mounted"], ["immutable-release-mounted", "explicit-erts-entry-invoked"], ["explicit-erts-entry-invoked", "erts-initialized"], ["erts-initialized", "otp-booted"], ["otp-booted", "runtime-identity-attested"], ["runtime-identity-attested", "booted-for-qualification"], ["booted-for-qualification", "qualification-admission-consumed-and-closed"], ["qualification-admission-consumed-and-closed", "qualification-module-published"], ["qualification-module-published", "qualification-module-executed"], ["qualification-module-executed", "tier-0-self-check-passed"], ["tier-0-self-check-passed", "ready"], ["cancelling", "all-generation-resources-revoked"], ["all-generation-resources-revoked", "terminated"]
+  ],
+  "topology_partial_orders": [
+    {"id": "outer-dedicated-worker", "edges": [["topology-starting", "artifacts-verified"], ["topology-starting", "shared-memory-created"], ["artifacts-verified", "workers-registered"], ["shared-memory-created", "workers-registered"]], "selection_state": "candidate"},
+    {"id": "proxy-to-pthread", "edges": [["topology-starting", "artifacts-verified"], ["artifacts-verified", "shared-memory-created"], ["shared-memory-created", "workers-registered"]], "selection_state": "candidate"}
+  ],
+  "boot_inputs": {
+    "argv": ["beam.wasm", "+S", "1:1", "+SDcpu", "1:1", "+SDio", "1", "-noshell", "-noinput", "-root", "/runtime", "-boot", "/runtime/releases/29/start"],
+    "environment": {},
+    "root": "/runtime",
+    "cwd": "/runtime",
+    "boot_file": "/runtime/releases/29/start.boot",
+    "code_paths": ["/runtime/lib/erts-17.0.6/ebin", "/runtime/lib/kernel-11.0.3/ebin", "/runtime/lib/stdlib-8.0.4/ebin", "/runtime/lib/erts_wasm_poc-0.1.0/ebin"],
+    "write_policy": "release is populated before entry, then write/create/rename/unlink/truncate/directory-mutation/link/device operations are denied"
+  },
+  "module_policy": {
+    "boot_application": "erts_wasm_poc",
+    "qualification_module": "erts_wasm_loader_probe",
+    "qualification_in_boot_script": false,
+    "qualification_referenced_during_boot": false,
+    "authorization": "exact name plus digest, single use",
+    "closure_action": "atomically consume exact authorization and close every further admission path before native parsing",
+    "load_path": "normal ERTS prepare/finish publication path",
+    "on_load": "deny unless exact module and native edges are separately manifest-qualified",
+    "failure_action": "generation-fatal; admission remains closed",
+    "post_ready": "all code loading denied"
+  },
+  "runtime_identity": {"required": ["otp-source-tag", "otp-source-commit", "otp-source-tree", "erts-version", "otp-release", "kernel-version", "stdlib-version", "emscripten-bundle", "build-image-digest", "patch-digest", "generation-id", "manifest-digest", "boot-profile-digest", "module-closure-digest"], "expected_versions": {"erts": "17.0.6", "otp": "29", "kernel": "11.0.3", "stdlib": "8.0.4"}, "mismatch_action": "cancel and terminate generation before ready"},
+  "generation_ownership": {"owner": "page-supervisor", "token": "unforgeable 256-bit generation identifier bound to the manifest digest", "register_before_effect": true, "owned_resources": ["Workers", "pthread slots", "MessagePorts", "requests", "timers", "listeners", "shared memory", "verified-byte Blob URLs", "renderer handles if later present"], "stale_completion": "reject and count", "cleanup": "idempotent cancellation, revoke authority, terminate every Worker, cancel handles, revoke Blob URLs, reject pending promises, sample quiescence"},
+  "failure_matrix": [
+    {"id": "malformed-manifest", "detect": "bounded schema decode", "owner": "manifest-verifier", "action": "reject before generation effect"},
+    {"id": "stale-generation", "detect": "generation token mismatch", "owner": "page-supervisor", "action": "reject, count, and perform no effect"},
+    {"id": "duplicate-start", "detect": "non-created state receives start", "owner": "page-supervisor", "action": "reject without second ERTS entry"},
+    {"id": "identity-skew", "detect": "source, build, artifact, runtime, or module digest mismatch", "owner": "loader", "action": "cancel complete generation"},
+    {"id": "out-of-bounds", "detect": "Phase 2 bound enforcement", "owner": "resource owner named by bound", "action": "reject before allocation where specified and terminate if generation exists"},
+    {"id": "undeclared-module", "detect": "lowest practical loader admission check", "owner": "C loader policy", "action": "reject before native parser entry"},
+    {"id": "entry-before-mount", "detect": "state transition guard", "owner": "page-supervisor", "action": "reject and terminate"},
+    {"id": "partial-worker-graph", "detect": "registry and startup deadline", "owner": "page-supervisor", "action": "terminate all registered agents and revoke handles"},
+    {"id": "trust-preflight-failure", "detect": "bootstrap trust policy", "owner": "root bootstrap", "action": "do not create runtime generation"}
+  ],
+  "p3_boundary": "P3 stops at booted-for-qualification; P4 alone consumes the one-shot qualification authorization and may reach ready"
+}

@@ -169,9 +169,105 @@ def validate_phase_02(root: Path = P0_ROOT / "phase-02") -> list[str]:
     return ["experiment-bounds", "unsupported-operations", "loader-bounds", "product-budget-method", "evidence-profiles"]
 
 
+def acyclic(states: set[str], edges: list[list[str]]) -> bool:
+    outgoing = {state: set() for state in states}
+    incoming = {state: 0 for state in states}
+    for edge in edges:
+        if not isinstance(edge, list) or len(edge) != 2 or any(node not in states for node in edge):
+            raise ContractError("invalid-loader-edge", "loader edges must reference two declared states")
+        source, target = edge
+        if target not in outgoing[source]:
+            outgoing[source].add(target)
+            incoming[target] += 1
+    ready = [state for state, count in incoming.items() if count == 0]
+    visited = 0
+    while ready:
+        source = ready.pop()
+        visited += 1
+        for target in outgoing[source]:
+            incoming[target] -= 1
+            if incoming[target] == 0:
+                ready.append(target)
+    return visited == len(states)
+
+
+def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
+    schema = load_json(root / "p0-runtime-manifest.schema.json")
+    loader = load_json(root / "p0-loader-contract.json")
+    trust = load_json(root / "p0-bootstrap-trust.json")
+
+    required_manifest = {"format", "generation", "trust", "sources", "artifacts", "runtime", "boot", "modules", "abi", "capabilities", "bounds"}
+    if set(schema.get("required", [])) != required_manifest:
+        raise ContractError("incomplete-manifest-schema", "manifest required fields do not match the generation contract")
+    format_const = schema.get("properties", {}).get("format", {}).get("const")
+    if format_const != "erts-wasm-manifest-v1" or loader.get("schema_version") != format_const:
+        raise ContractError("mixed-manifest-identity", "loader and manifest schema versions differ")
+
+    states_list = loader.get("states", [])
+    if len(states_list) != len(set(states_list)):
+        raise ContractError("duplicate-loader-state", "loader states must be unique")
+    states = set(states_list)
+    required_states = {"created", "bootstrap-trust-established", "manifest-authenticated", "runtime-instantiated-main-suppressed", "immutable-release-mounted", "explicit-erts-entry-invoked", "runtime-identity-attested", "booted-for-qualification", "qualification-admission-consumed-and-closed", "ready", "cancelling", "all-generation-resources-revoked", "terminated"}
+    if not required_states.issubset(states):
+        raise ContractError("missing-loader-state", "loader state machine is incomplete")
+    topology_rows = loader.get("topology_partial_orders", [])
+    unique(topology_rows, "id", "duplicate-topology")
+    if {row["id"] for row in topology_rows} != {"outer-dedicated-worker", "proxy-to-pthread"}:
+        raise ContractError("topology-preselected", "both candidate topology partial orders are required")
+    for row in topology_rows:
+        if row.get("selection_state") != "candidate":
+            raise ContractError("topology-preselected", "P0 may not select a Worker topology")
+        edges = loader.get("common_partial_order", []) + row.get("edges", [])
+        if not acyclic(states, edges):
+            raise ContractError("circular-loader-order", f"{row['id']} loader order contains a cycle")
+
+    boot = loader.get("boot_inputs", {})
+    if boot.get("environment") != {} or boot.get("root") != "/runtime" or boot.get("cwd") != "/runtime":
+        raise ContractError("unfixed-boot-input", "environment, root, and cwd must be fixed")
+    if not boot.get("argv") or not boot.get("code_paths") or any("*" in path for path in boot.get("code_paths", [])):
+        raise ContractError("unfixed-boot-input", "argv and explicit code paths are required without globs")
+    modules = loader.get("module_policy", {})
+    if modules.get("qualification_module") != "erts_wasm_loader_probe" or modules.get("post_ready") != "all code loading denied":
+        raise ContractError("undeclared-module-policy", "qualification and post-ready loading policy are incomplete")
+    if modules.get("qualification_in_boot_script") or modules.get("qualification_referenced_during_boot"):
+        raise ContractError("qualification-preloaded", "qualification module must remain outside boot reachability")
+    if "before native parsing" not in modules.get("closure_action", ""):
+        raise ContractError("late-admission-closure", "admission must close before native parsing")
+
+    failures = loader.get("failure_matrix", [])
+    unique(failures, "id", "duplicate-loader-failure")
+    required_failures = {"malformed-manifest", "stale-generation", "duplicate-start", "identity-skew", "out-of-bounds", "undeclared-module", "entry-before-mount", "partial-worker-graph", "trust-preflight-failure"}
+    if {row["id"] for row in failures} != required_failures:
+        raise ContractError("incomplete-failure-matrix", "loader failure matrix is incomplete")
+    for row in failures:
+        if not row.get("owner") or not row.get("action") or not row.get("detect"):
+            raise ContractError("ownerless-loader-failure", f"{row['id']} lacks detection, owner, or action")
+
+    ownership = loader.get("generation_ownership", {})
+    if ownership.get("owner") != "page-supervisor" or not ownership.get("register_before_effect"):
+        raise ContractError("unowned-generation", "page supervisor must register generation resources before effect")
+    if trust.get("selected_policy") != "secure-origin-tcb-v1" or trust.get("self_authentication") is not False:
+        raise ContractError("circular-root-trust", "root policy must not self-authenticate")
+    if trust.get("service_worker_policy", "").find("fails preflight") < 0:
+        raise ContractError("service-worker-ambiguity", "an active service worker must fail preflight")
+    if trust.get("redirect_policy", "").find("error") < 0:
+        raise ContractError("redirect-ambiguity", "redirects must fail")
+    if trust.get("wasm_policy", "").find("verify the complete") < 0:
+        raise ContractError("stream-before-trust", "Wasm must be fully verified before compile")
+    required_headers = {"Cross-Origin-Opener-Policy", "Cross-Origin-Embedder-Policy", "Cross-Origin-Resource-Policy", "Content-Security-Policy", "X-Content-Type-Options", "Cache-Control"}
+    if set(trust.get("headers", {})) != required_headers:
+        raise ContractError("missing-deployment-prerequisite", "required header policy is incomplete")
+
+    return ["manifest-schema", "loader-state-and-ownership", "bootstrap-trust"]
+
+
 def main(argv: list[str]) -> int:
     phase = argv[1] if len(argv) > 1 else "phase-01"
-    validators = {"phase-01": validate_phase_01, "phase-02": validate_phase_02}
+    validators = {
+        "phase-01": validate_phase_01,
+        "phase-02": validate_phase_02,
+        "phase-03": validate_phase_03,
+    }
     if phase not in validators:
         print(f"unsupported phase: {phase}", file=sys.stderr)
         return 2

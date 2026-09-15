@@ -33,8 +33,10 @@ Back to milestone: [P0 plan](README.md).
 
 ## Entry, scope, and dependencies
 
-Entry requires accepted `p0-p02-handoff` evidence from [Phase 2](phase-02-bounds-budgets-and-evidence-contracts.md).
-Plan review is pending; execution and tests have not started. This phase owns
+Formal entry requires accepted `p0-p02-handoff` evidence from [Phase 2](phase-02-bounds-budgets-and-evidence-contracts.md).
+That evidence remains open. The user authorized draft progression with the
+dependency open; contract drafting and local validation are in progress, while
+independent acceptance and browser execution have not started. This phase owns
 the loader and delivery contract in the corpus, not a browser loader
 implementation.
 
@@ -80,7 +82,7 @@ the P0 stop condition rather than a silent scope reduction.
       owner, bound, and failure action. Completion requires explicit states and
       testable rejection behavior without assuming a topology winner.
 
-      - [ ] 3.1.1.1 Subtask — Author and validate the complete loader contract.
+      - [x] 3.1.1.1 Subtask — Author and validate the complete loader contract.
 
         Define manifest fields, state transitions, identities, partial orders,
         module closure, generation tokens, cleanup ownership, and malformed,
@@ -92,7 +94,7 @@ the P0 stop condition rather than a silent scope reduction.
       model. Completion requires an explicit decision, trusted-base inventory,
       delivery matrix, and rejection of circular self-authentication.
 
-      - [ ] 3.1.2.1 Subtask — Resolve and adversarially review the bootstrap trust rule.
+      - [x] 3.1.2.1 Subtask — Resolve and adversarially review the bootstrap trust rule.
 
         Record the selected root, authority chain, required headers and browser
         features, redirect/cache/service-worker behavior, Worker delivery, and
