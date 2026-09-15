@@ -35,6 +35,7 @@ Time-bound observations and reproducible evidence, including negative results.
 - [2026-09-14 phased planning system adoption](2026-09-14-phased-planning-system-adoption.md) — adaptation of milestone, phase, task identity, C/Emscripten evidence, and validation conventions.
 - [2026-09-14 research directory migration](2026-09-14-research-directory-migration.md) — relocation of the self-contained corpus beneath `research/`.
 - [2026-09-15 P0 phase 01 baseline authority execution](2026-09-15-p0-phase-01-baseline-authority-execution.md) — pin, trust, language, runtime-inventory, census-contract, validation, and review-pending record.
+- [2026-09-15 P0 phase 02 bounds contracts execution](2026-09-15-p0-phase-02-bounds-contracts-execution.md) — premeasurement safety, unsupported-operation, loader-bound, product-budget, evidence-profile, and review-pending record.
 
 ## Maintaining this index
 

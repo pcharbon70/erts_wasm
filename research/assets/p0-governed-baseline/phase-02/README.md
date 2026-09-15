@@ -36,6 +36,8 @@ runtime results are not.
 - [`p0-evidence-profiles.json`](p0-evidence-profiles.json) — native/Wasm build, sanitizer, fuzz, minimization, SBOM, and provenance retention rules.
 - [`p0-experiment-bounds.json`](p0-experiment-bounds.json) — finite cycle, settling, noise, safety, and semantic-comparison protocol.
 - [`p0-loader-startup-bounds.json`](p0-loader-startup-bounds.json) — pre-ready resource owners, units, ceilings, enforcement points, and breach actions.
+- [`p0-phase-02-validation-contract.json`](p0-phase-02-validation-contract.json) — assembled positive case and six anti-gaming/malformed cases.
+- [`p0-phase-02-validation-report.json`](p0-phase-02-validation-report.json) — local validation results and explicit not-run authority cases.
 - [`p0-product-budget-method.json`](p0-product-budget-method.json) — approval and anti-gaming method with the product authority explicitly unresolved.
 - [`p0-unsupported-operations.json`](p0-unsupported-operations.json) — finite deny-by-default POC operation inventory.
 

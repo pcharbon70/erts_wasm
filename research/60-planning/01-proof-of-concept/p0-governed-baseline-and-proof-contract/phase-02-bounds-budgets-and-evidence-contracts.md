@@ -140,12 +140,12 @@ and the future implementation and evidence locations remain unresolved.
       operations are enumerable, and every required result has a retention
       path.
 
-      - [ ] 2.2.1.1 Subtask — Run schema, cross-reference, and consistency checks.
+      - [x] 2.2.1.1 Subtask — Run schema, cross-reference, and consistency checks.
 
         Validate machine-readable inputs, resolve task/artifact IDs, and record
         the exact corpus revision, commands, outputs, and unresolved authority.
 
-      - [ ] 2.2.1.2 Subtask — Exercise anti-gaming and malformed-contract cases.
+      - [x] 2.2.1.2 Subtask — Exercise anti-gaming and malformed-contract cases.
 
         Reject post-result threshold edits, missing owners or units, infinite
         test series, silent sanitizer omission, orphaned fuzz failures, and
@@ -157,7 +157,7 @@ and the future implementation and evidence locations remain unresolved.
       A missing product authority may remain visible without fabricating
       approval, but the required pre-C1 freeze remains blocking.
 
-      - [ ] 2.2.2.1 Subtask — Publish the dated Phase 2 execution record.
+      - [x] 2.2.2.1 Subtask — Publish the dated Phase 2 execution record.
 
         Link evidence to P0-A02 and task IDs with exact revisions, commands,
         schema versions, results, failures, and limitations.

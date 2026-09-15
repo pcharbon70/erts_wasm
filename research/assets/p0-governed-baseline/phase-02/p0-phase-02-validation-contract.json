@@ -1,0 +1,15 @@
+{
+  "contract_id": "p0-phase-02-validation",
+  "acceptance_id": "P0-A02",
+  "task_id": "p0-p02-integration",
+  "positive_case": {"id": "P0-P02-CONTRACT", "command": ["python3", "research/70-tools/p0_contract_validation.py", "phase-02"], "expected": "all five Phase 2 contracts validate and acceptance remains review-pending"},
+  "negative_cases": [
+    {"id": "P0-P02-NEG-POSTRESULT", "mutation": "mark bounds as frozen after measurement", "expected_error": "post-result-threshold-edit"},
+    {"id": "P0-P02-NEG-OWNER", "mutation": "remove a loader-bound owner", "expected_error": "missing-owner"},
+    {"id": "P0-P02-NEG-INFINITE", "mutation": "set the maximum test series to a non-positive value", "expected_error": "infinite-test-series"},
+    {"id": "P0-P02-NEG-SANITIZER", "mutation": "remove a required evidence profile", "expected_error": "silent-instrumentation-omission"},
+    {"id": "P0-P02-NEG-ORPHAN", "mutation": "remove the fuzz-failure ownership rule", "expected_error": "orphaned-fuzz-failure"},
+    {"id": "P0-P02-NEG-COPY", "mutation": "remove the prohibition on copying an experimental ceiling", "expected_error": "copied-safety-ceiling"}
+  ],
+  "acceptance_boundary": "local validation proves internal contract consistency only; it does not approve the safety values, assign product authority, qualify instrumentation, or close P0-A02"
+}
