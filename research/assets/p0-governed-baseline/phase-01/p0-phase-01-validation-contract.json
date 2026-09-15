@@ -1,0 +1,18 @@
+{
+  "contract_id": "p0-phase-01-validation",
+  "acceptance_id": "P0-A01",
+  "task_id": "p0-p01-integration",
+  "positive_case": {
+    "id": "P0-P01-CONTRACT",
+    "command": ["python3", "research/70-tools/p0_contract_validation.py", "phase-01"],
+    "expected": "all five component contracts validate and acceptance remains review-pending"
+  },
+  "negative_cases": [
+    {"id": "P0-P01-NEG-FLOATING", "mutation": "replace exact Emscripten version with latest", "expected_error": "floating-pin"},
+    {"id": "P0-P01-NEG-AUTHORITY", "mutation": "duplicate a trust-zone authority identity", "expected_error": "duplicate-authority"},
+    {"id": "P0-P01-NEG-RUNTIME", "mutation": "remove one required runtime inventory category", "expected_error": "missing-runtime-category"},
+    {"id": "P0-P01-NEG-TOPOLOGY", "mutation": "derive pool size from a preselected topology", "expected_error": "topology-selected-census"},
+    {"id": "P0-P01-NEG-SCHEDULERS", "mutation": "remove the prohibition on deriving pool size from +S", "expected_error": "scheduler-derived-pool"}
+  ],
+  "acceptance_boundary": "local validation checks shape and contradictions only; independent reviewers must resolve pins and accept security, architecture, runtime, and concurrency judgments before P0-A01 can close"
+}

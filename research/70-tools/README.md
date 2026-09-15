@@ -44,12 +44,14 @@ cannot alias declared sources.
 ### Files
 
 - [All-checks runner](check_all.py) — run every archive, unit, and fixture check even when an earlier check fails.
+- [P0 contract validator](p0_contract_validation.py) — validate authored P0 contracts without treating local checks as acceptance evidence.
 - [Planning authoring schema](planning-authoring-v1.schema.json) — machine-readable identities and relations for streams, milestones, plans, and phases.
 - [Planning evidence policy](planning-evidence-profile-v1.yaml) — role-neutral provenance, review, replay, discovery, size bounds, and contract-binding requirements.
 - [Planning evidence schema](planning-evidence-v1.schema.json) — bounded shape for contract/research, native-C, Emscripten-Wasm, and browser-runtime evidence.
 - [Planning validation helpers](planning_validation.py) — validate full task projections and graphs, stream hashes, load digest-bound contracts, and discover real `*.planning-evidence.json` records below `research/assets/` while excluding conformance fixtures.
 - [Research path helper](research_paths.py) — locate the standalone corpus.
 - [Planning-validator tests](test_planning.py) — exercise phase structure, iterative graphs, bounded evidence, contract binding, discovery, and inert command fixtures.
+- [P0 contract-validator tests](test_p0_contract_validation.py) — exercise the Phase 1 positive contract and five required contradiction cases.
 - [Archive-validator tests](test_validate_archive.py) — exercise schema and link helpers.
 - [Archive validator](validate_archive.py) — enforce metadata, inventory, links, planning graphs, evidence support references, and evidence-bound checked tasks.
 - [Planning fixture verifier](verify_planning_fixtures.py) — run production validators over hash-closed synthetic C/Emscripten inputs without executing authored commands.

@@ -1,0 +1,31 @@
+{
+  "contract_id": "p0-thread-census-contract",
+  "acceptance_id": "P0-A01",
+  "task_id": "p0-p01-thread-census",
+  "source": {"commit": "e07fd07837e5aa845657f5fa340637121e451d47"},
+  "implementation_location": "unresolved-until-P1-target-probe",
+  "review_state": "runtime-concurrency-review-pending",
+  "identity_domains": ["erts-logical-role", "pthread-thread", "emscripten-worker-host", "pthread-pool-slot", "browser-supervisory-agent", "runtime-generation"],
+  "candidate_roles": [
+    {"id": "bootstrap-main", "evidence": "ERTS entry and initial thread", "count_source": "measured"},
+    {"id": "normal-scheduler", "evidence": "erts/emulator/beam/erl_process.c", "count_source": "measured"},
+    {"id": "dirty-cpu-scheduler", "evidence": "erts/emulator/beam/erl_process.c", "count_source": "measured"},
+    {"id": "dirty-io-scheduler", "evidence": "erts/emulator/beam/erl_process.c", "count_source": "measured"},
+    {"id": "async-worker", "evidence": "erts/emulator/beam/erl_async.c", "count_source": "measured"},
+    {"id": "allocator-helper", "evidence": "erts/emulator/beam/erl_alloc.c", "count_source": "measured"},
+    {"id": "signal-dispatcher", "evidence": "erts/emulator/sys/unix/sys.c", "count_source": "target-reachability-unresolved"},
+    {"id": "poll-helper", "evidence": "erts_init_scheduling no_poll_threads parameter", "count_source": "target-reachability-unresolved"}
+  ],
+  "events": ["generation-create", "worker-create-request", "worker-created", "pthread-create-request", "pthread-start", "role-bind", "ready", "pthread-exit", "worker-terminated", "generation-disposed", "startup-failed"],
+  "event_fields": ["schema-version", "generation-id", "sequence", "monotonic-time", "event", "logical-role", "pthread-id", "worker-id", "pool-slot", "owner", "result-code"],
+  "counters": ["roles-requested", "pthread-create-requests", "pthreads-started", "worker-hosts-created", "pool-slots-reserved", "agents-alive-at-ready", "agents-alive-after-dispose", "stale-events-rejected"],
+  "owners": {"event-emission": "C adapter and generated-runtime hooks", "worker-registry": "page/root generation supervisor", "aggregation": "browser harness", "termination": "page/root generation supervisor", "review": "runtime-concurrency-reviewer-unassigned"},
+  "lifecycle_interval": "before generation-create through quiescent post-dispose sample",
+  "pool_size_rule": {"source": "measured-full-runtime-high-water-plus-declared-headroom", "forbidden_sources": ["+S scheduler count", "hardwareConcurrency alone", "selected topology assumption"], "strict_exhaustion": true},
+  "experiments": [
+    {"id": "P0-THREAD-N", "pool": "N", "expected": "full runtime reaches ready; census has no duplicate identity and all created agents have owners; dispose reaches zero owned agents"},
+    {"id": "P0-THREAD-N-1", "pool": "N-1", "expected": "startup fails within the predeclared timeout with pool-exhausted classification; no partial ready; supervisor terminates the complete generation; owned-agent count settles to zero"}
+  ],
+  "prohibitions": ["do not infer a threadless build from +S 1:1", "do not equate logical roles with Worker hosts", "do not select a topology using this premeasurement census", "do not allow lazy pool exhaustion to deadlock startup"],
+  "execution_state": "contract-authored-not-instrumented-or-run"
+}

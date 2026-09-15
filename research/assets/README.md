@@ -23,6 +23,7 @@ indexed research documents.
 
 ### Subdirectories
 
+- [P0 governed baseline artifacts](p0-governed-baseline/README.md) — machine-readable P0 contracts and local validation results that remain subject to independent acceptance.
 - [Planning conformance fixtures](planning-conformance/README.md) — synthetic C/Emscripten and evidence-validator inputs that cannot close runtime gates.
 
 ### Files

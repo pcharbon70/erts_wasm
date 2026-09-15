@@ -38,6 +38,7 @@ One evidence-focused note for every source used substantively by the research.
 - [Erlang/OTP testing, time, and runtime observability](erlang-otp-project-2026-testing-time-and-runtime-observability.md)
 - [Erlang/OTP WebAssembly demonstration](vasetenkov-erlang-otp-webassembly-demo.md)
 - [Not So Fast: WebAssembly performance](jangda-et-al-2019-webassembly-performance.md)
+- [P0 toolchain and browser pin sources](p0-toolchain-and-browser-pin-sources-2026.md)
 - [Everything Old Is New Again](lehmann-kinder-pradel-2020-webassembly-binary-security.md)
 - [Swivel](narayan-et-al-2021-swivel.md)
 - [Browsix](powers-vilk-berger-2017-browsix.md)

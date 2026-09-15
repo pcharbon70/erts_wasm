@@ -1,0 +1,32 @@
+{
+  "contract_id": "p0-trust-model",
+  "acceptance_id": "P0-A01",
+  "task_id": "p0-p01-trust-boundary",
+  "review_state": "security-review-pending",
+  "failure_domain": "one ERTS generation, its statically linked C, and all admitted BEAM code",
+  "zones": [
+    {"id": "delivery-root", "authority": "serve immutable bootstrap and policy", "trusted_inputs": ["release policy", "root public key or digest policy"], "untrusted_inputs": ["network response", "cache", "service-worker response"], "owner": "deployment-owner-unassigned"},
+    {"id": "page-supervisor", "authority": "verify root artifacts, create and terminate runtime generations", "trusted_inputs": ["root policy"], "untrusted_inputs": ["all Worker messages", "browser events"], "owner": "browser-host-owner-unassigned"},
+    {"id": "runtime-worker-group", "authority": "execute one admitted ERTS generation in shared Wasm memory", "trusted_inputs": ["verified immutable release", "bounded capability responses"], "untrusted_inputs": ["host events", "network and stored bytes"], "owner": "runtime-owner-unassigned"},
+    {"id": "capability-broker", "authority": "perform only typed, granted, quota-bounded browser effects", "trusted_inputs": ["capability policy"], "untrusted_inputs": ["runtime requests", "browser responses"], "owner": "browser-host-owner-unassigned"},
+    {"id": "renderer", "authority": "mutate one owned DOM subtree using bounded semantic operations", "trusted_inputs": ["renderer policy"], "untrusted_inputs": ["runtime render frames"], "owner": "renderer-owner-unassigned"}
+  ],
+  "protected_assets": ["root trust policy", "runtime manifest", "Wasm and generated JavaScript", "OTP release tree", "capability grants", "generation identity", "shared memory", "secrets held by browser adapters"],
+  "attackers": ["malicious admitted BEAM code", "malformed external input", "compromised network/cache/service worker", "stale prior generation", "browser user controlling client-held state", "memory corruption in ERTS or linked C"],
+  "topology_candidates": [
+    {"id": "outer-dedicated-worker", "root_owner": "page-supervisor", "runtime_entry": "dedicated Worker creates pthread Workers", "selection_state": "candidate"},
+    {"id": "proxy-to-pthread", "root_owner": "page-supervisor", "runtime_entry": "Emscripten shell proxies main to pthread Worker", "selection_state": "candidate"}
+  ],
+  "import_abi": {"default": "deny", "allowed_shapes": ["fixed-width scalar", "offset and length into bounded snapshot", "opaque handle", "explicit status", "generation id"], "forbidden": ["generic JavaScript call", "DOM object", "host filesystem path", "raw ERTS pointer retained by host", "untrusted ETF"]},
+  "quota_owners": [
+    {"resource": "workers-and-pthread-slots", "owner": "page-supervisor", "policy": "fixed ceiling and generation-wide termination"},
+    {"resource": "shared-memory", "owner": "runtime-generation", "policy": "fixed initial and maximum for first proof"},
+    {"resource": "requests-timers-listeners-and-message-ports", "owner": "generation-registry", "policy": "bounded count, cancel on dispose, stale completion rejection"},
+    {"resource": "capability-bytes-and-effects", "owner": "capability-broker", "policy": "per-capability limits and deny by default"}
+  ],
+  "patch_policy": {"owner": "erts-port-owner-unassigned", "boundary": "small target/platform layer adjacent to upstream seams", "forbidden": ["new BEAM implementation", "pervasive scheduler rewrite", "broad POSIX emulation", "ambient JavaScript escape"]},
+  "non_goals": ["general OTP compatibility", "dynamic NIFs or drivers", "distribution", "raw sockets", "shell or eval", "runtime compiler", "arbitrary code loading", "UI-thread ERTS"],
+  "stop_conditions": ["UI-thread blocking is required", "minimal boot requires broad POSIX emulation", "patches become pervasive or unmergeable", "imports provide ambient authority", "Worker group cannot be fully terminated", "resource slope remains positive after repeated disposal", "loader admits unverified or mismatched code", "required deployment cannot sustain secure-context and cross-origin isolation"],
+  "contradiction_tests": ["no zone may both distrust a source and grant it unbounded authority", "no imported power may bypass the capability broker", "no topology candidate may become selected before measured evidence", "no quota may lack a runtime owner"],
+  "unresolved": ["independent security review", "topology selection", "numeric safety ceilings", "deployment owner", "reviewed patch-size threshold"]
+}
