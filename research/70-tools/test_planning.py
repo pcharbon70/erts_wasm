@@ -1140,9 +1140,9 @@ class ToolIntegrationTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "hash-bound to role"):
                     verify_fixtures()
     def test_check_all_runs_every_check_after_failure(self) -> None:
-        with mock.patch.object(check_all, "run", side_effect=[1, 0, 0, 0, 0]) as run:
+        with mock.patch.object(check_all, "run", side_effect=[1, 0, 0, 0, 0, 0]) as run:
             self.assertEqual(1, check_all.main())
-            self.assertEqual(5, run.call_count)
+            self.assertEqual(6, run.call_count)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,19 @@
+{
+  "contract_id": "p0-empty-target-environment",
+  "acceptance_id": "P0-GATE",
+  "task_id": "p0-p03-integration",
+  "target": "clean linux/amd64 build container plus clean Linux x86_64 Chrome and Firefox fixtures",
+  "recipe": [
+    {"order": 1, "action": "acquire OTP source and verify tag, commit, and tree against p0-baseline"},
+    {"order": 2, "action": "pull the linux/amd64 Emscripten 6.0.9 image by manifest digest and verify internal tool versions"},
+    {"order": 3, "action": "build the same-source native OTP 29 bootstrap and record its artifact digest"},
+    {"order": 4, "action": "run the target probe in a clean container with network disabled and only declared sources mounted read-only"},
+    {"order": 5, "action": "acquire Chrome and Firefox fixtures by exact URL, verify recorded hashes, and start each with an empty profile"},
+    {"order": 6, "action": "serve only immutable generation paths with the p0-bootstrap-trust headers and no service worker"},
+    {"order": 7, "action": "record commands, environment allowlist, dirty state, input/output digests, browser profiles, and teardown"}
+  ],
+  "network_policy": "acquisition may use the declared HTTPS origins; build and test execution are network-disabled except for the local fixture origin",
+  "host_inheritance": "no compiler, OTP, Node, browser profile, cache, service worker, or environment variable is inherited without an explicit ledger entry",
+  "reproduction_state": "specified-not-run",
+  "blockers": ["same-source native OTP 29 bootstrap not built", "build image not materialized", "Chrome archive digest not recorded", "qualification browsers not installed", "target probe and local fixture server do not exist", "asset and patch digests do not exist"]
+}

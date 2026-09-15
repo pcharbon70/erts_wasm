@@ -1,0 +1,30 @@
+{
+  "contract_id": "p0-bootstrap-trust",
+  "decision_id": "P0-D02",
+  "acceptance_id": "P0-A03",
+  "task_id": "p0-p03-bootstrap-trust",
+  "decision_state": "selected-for-first-proof-security-review-pending",
+  "selected_policy": "secure-origin-tcb-v1",
+  "root": "version-controlled minimal bootstrap delivered as part of the initial HTTPS document from one pinned secure origin",
+  "self_authentication": false,
+  "authority_chain": ["deployment owner controls origin, TLS termination, root HTML, bootstrap bytes, and response headers", "root bootstrap contains or is bound to the manifest verification key/digest policy", "manifest authenticates one generation identity", "manifest digests authenticate every fetched runtime and release artifact", "generation supervisor grants only manifest-declared bounded imports"],
+  "trusted_base": ["browser engine", "secure origin and TLS termination", "root HTML", "minimal root bootstrap", "manifest verifier and cryptography", "CSP/COOP/COEP/CORP response configuration", "generation supervisor and Worker registry", "update and signing path"],
+  "preflight": ["window.isSecureContext is true", "window.crossOriginIsolated is true", "SharedArrayBuffer is available", "WebAssembly and required thread features are available", "navigator.serviceWorker.controller is null", "selected policy and schema versions are supported"],
+  "headers": {
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Embedder-Policy": "require-corp",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Content-Security-Policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval' blob:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "no-store"
+  },
+  "redirect_policy": "manual/error at every fetch; any redirect fails preflight",
+  "cache_policy": "no-store request and response for the first proof; no fallback to a cached generation",
+  "service_worker_policy": "no registration in proof scope; an active controller fails preflight; registration races and controller changes cancel the generation",
+  "worker_integrity": "fetch each single-file Worker/module bundle as bounded bytes, verify its manifest SHA-256, construct an executable Blob URL only after verification, register URL and Worker before effect, prohibit descendant imports, and revoke URLs during cleanup",
+  "wasm_policy": "fetch bounded bytes, verify the complete manifest SHA-256, then call WebAssembly.compile/instantiate; streaming compilation is disabled for the first proof",
+  "mime_policy": {"wasm": "application/wasm", "javascript": "text/javascript", "manifest": "application/json", "release_pack": "application/octet-stream"},
+  "negative_cases": ["wrong root policy", "insecure context", "cross-origin isolation absent", "missing or conflicting header", "redirect", "cache/service-worker substitution", "wrong MIME", "wrong digest", "mixed generation", "Worker import discovered", "Blob URL used before verification", "Wasm compile before full digest", "generated loader claims to authenticate its own root"],
+  "tradeoffs": ["the secure origin and root bootstrap remain trusted and can replace both code and policy", "blob execution is admitted only for supervisor-created verified bytes and expands CSP review", "disabling streaming increases transient bytes and startup latency", "no-store prevents offline reuse and must be revisited with a signed cache/update design"],
+  "stop_conditions": ["deployment cannot provide the required secure context and isolation headers recursively", "CSP cannot support the reviewed verified-byte Worker mechanism", "a Worker bundle requires unverified descendant imports", "service-worker control cannot be excluded", "root/update ownership cannot be assigned"]
+}

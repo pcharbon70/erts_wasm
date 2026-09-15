@@ -37,10 +37,11 @@ readiness, and long-term support do not belong in the proof claim.
 
 ## Program state and ordering
 
-P0 and P1 have authored phase plans. P2–P6 retain substantive milestone
-definitions but remain `decomposition pending` until predecessor evidence
-localizes the next work. All obligations and gates remain unchecked or not
-run.
+P0's three phase drafts are implemented and locally validated, but P0-GATE is
+blocked on independent review, materialized inputs, and clean-environment and
+runtime evidence. P1 has authored phase plans. P2–P6 retain substantive
+milestone definitions but remain `decomposition pending` until predecessor
+evidence localizes the next work. All stable tasks and gates remain unchecked.
 
 Milestones execute in ID order. A later milestone may be researched, but its
 implementation cannot claim entry until the preceding milestone gate is

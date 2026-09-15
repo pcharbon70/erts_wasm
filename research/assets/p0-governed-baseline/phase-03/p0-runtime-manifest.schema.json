@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://erts-wasm.invalid/schema/runtime-manifest-v1.json",
+  "title": "ERTS Wasm immutable runtime generation manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "generation", "trust", "sources", "artifacts", "runtime", "boot", "modules", "abi", "capabilities", "bounds"],
+  "properties": {
+    "format": {"const": "erts-wasm-manifest-v1"},
+    "generation": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "trust": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "manifest_digest", "redirect", "cache", "service_worker", "worker_integrity", "wasm_compilation"],
+      "properties": {
+        "policy": {"const": "secure-origin-tcb-v1"},
+        "manifest_digest": {"$ref": "#/$defs/digest"},
+        "redirect": {"const": "error"},
+        "cache": {"const": "no-store"},
+        "service_worker": {"const": "absent-required"},
+        "worker_integrity": {"const": "verified-bytes-before-executable-blob"},
+        "wasm_compilation": {"const": "full-digest-before-compile"}
+      }
+    },
+    "sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["otp_tag", "otp_commit", "otp_tree", "emscripten_release", "emscripten_bundle", "build_image", "patch_digest"],
+      "properties": {
+        "otp_tag": {"const": "OTP-29.0.6"},
+        "otp_commit": {"const": "e07fd07837e5aa845657f5fa340637121e451d47"},
+        "otp_tree": {"const": "bddab8fbbe44097258572512d689a5be2ec0686f"},
+        "emscripten_release": {"const": "6.0.9"},
+        "emscripten_bundle": {"const": "f04ea239d533260dd1db760dd2d668d5f9a88d6b"},
+        "build_image": {"const": "sha256:3ba391c5b1554e06f9af0a69652ff20919dff14e771619339dba988bd62574b5"},
+        "patch_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4096,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "url", "digest", "bytes", "content_type"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "kind": {"enum": ["wasm", "javascript", "worker", "release-pack", "configuration"]},
+          "url": {"type": "string", "pattern": "^/immutable/[a-f0-9]{64}/"},
+          "digest": {"$ref": "#/$defs/digest"},
+          "bytes": {"type": "integer", "minimum": 1, "maximum": 134217728},
+          "content_type": {"type": "string", "minLength": 1, "maxLength": 128}
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topology", "initial_memory", "maximum_memory", "pthread_pool", "automatic_main", "entry_export", "features"],
+      "properties": {
+        "topology": {"enum": ["outer-dedicated-worker", "proxy-to-pthread"]},
+        "initial_memory": {"type": "integer", "minimum": 16777216, "maximum": 536870912, "multipleOf": 65536},
+        "maximum_memory": {"type": "integer", "minimum": 16777216, "maximum": 536870912, "multipleOf": 65536},
+        "pthread_pool": {"type": "integer", "minimum": 1, "maximum": 64},
+        "automatic_main": {"const": false},
+        "entry_export": {"const": "erts_wasm_start"},
+        "features": {"type": "array", "items": {"enum": ["secure-context", "cross-origin-isolated", "shared-array-buffer", "wasm-threads", "worker-module"]}, "minItems": 5, "maxItems": 5, "uniqueItems": true}
+      }
+    },
+    "boot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["argv", "environment", "root", "cwd", "boot_file", "code_paths"],
+      "properties": {
+        "argv": {"type": "array", "minItems": 1, "maxItems": 64, "items": {"type": "string", "maxLength": 4096}},
+        "environment": {"type": "object", "maxProperties": 0},
+        "root": {"const": "/runtime"},
+        "cwd": {"const": "/runtime"},
+        "boot_file": {"const": "/runtime/releases/29/start.boot"},
+        "code_paths": {"type": "array", "minItems": 3, "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^/runtime/lib/[a-z0-9_.-]+/ebin$", "maxLength": 1024}}
+      }
+    },
+    "modules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["closure_digest", "entries", "qualification_admission", "post_ready_loading"],
+      "properties": {
+        "closure_digest": {"$ref": "#/$defs/digest"},
+        "entries": {"type": "array", "minItems": 1, "maxItems": 4096, "uniqueItems": true, "items": {"type": "object", "required": ["name", "digest", "boot", "on_load"], "additionalProperties": false, "properties": {"name": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9_@]*$"}, "digest": {"$ref": "#/$defs/digest"}, "boot": {"type": "boolean"}, "on_load": {"enum": ["none", "manifest-qualified"]}}}},
+        "qualification_admission": {"type": "object", "additionalProperties": false, "required": ["name", "digest", "uses_normal_loader", "single_use", "closes_before_parse"], "properties": {"name": {"const": "erts_wasm_loader_probe"}, "digest": {"$ref": "#/$defs/digest"}, "uses_normal_loader": {"const": true}, "single_use": {"const": true}, "closes_before_parse": {"const": true}}},
+        "post_ready_loading": {"const": "denied"}
+      }
+    },
+    "abi": {"type": "object", "required": ["imports", "exports", "schema"], "additionalProperties": false, "properties": {"imports": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"type": "string"}}, "exports": {"type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": {"type": "string"}}, "schema": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}},
+    "capabilities": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"type": "object", "required": ["id", "version", "quota"], "additionalProperties": false, "properties": {"id": {"type": "string"}, "version": {"type": "integer", "minimum": 1}, "quota": {"type": "object"}}}},
+    "bounds": {"type": "object", "required": ["contract_digest"], "additionalProperties": false, "properties": {"contract_digest": {"$ref": "#/$defs/digest"}}}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}}
+}
