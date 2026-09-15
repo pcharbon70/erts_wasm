@@ -37,9 +37,11 @@ Back to milestone: [P0 plan](README.md).
 
 ## Entry, scope, and dependencies
 
-Entry requires the reviewed `p0-p01-handoff` record from [Phase 1](phase-01-baseline-authority-and-runtime-inventory.md).
-Plan review is pending; execution and tests have not started. This phase
-defines research and test contracts, not implementation or product approval.
+Formal entry requires the reviewed `p0-p01-handoff` record from [Phase 1](phase-01-baseline-authority-and-runtime-inventory.md).
+That review remains pending. The user authorized draft progression with the
+dependency open; contract drafting and local validation are in progress, while
+independent acceptance and runtime tests have not started. This phase defines
+research and test contracts, not implementation or product approval.
 
 The experimental ceilings protect the proof environment. They do not assert
 performance or become product budgets. Product authority remains unassigned,
@@ -83,7 +85,7 @@ and the future implementation and evidence locations remain unresolved.
       variation, stop behavior, and review authority. Completion requires a
       versioned protocol whose values precede all P1 runs.
 
-      - [ ] 2.1.1.1 Subtask — Publish the premeasurement experiment protocol.
+      - [x] 2.1.1.1 Subtask — Publish the premeasurement experiment protocol.
 
         Record every count, interval, ceiling, tolerance, measurement method,
         and breach disposition; verify timestamps and revision history show the
@@ -95,7 +97,7 @@ and the future implementation and evidence locations remain unresolved.
       than prose-only promises. Completion requires schema-valid inventories
       with no unbounded or ownerless entry.
 
-      - [ ] 2.1.2.1 Subtask — Define, populate, and negatively validate both inventories.
+      - [x] 2.1.2.1 Subtask — Define, populate, and negatively validate both inventories.
 
         Include unsupported operations and every pre-ready artifact, byte,
         Worker, memory, queue, request, timer, and path bound; reject missing
@@ -107,7 +109,7 @@ and the future implementation and evidence locations remain unresolved.
       approval point, and anti-gaming rule. Completion requires approval by the
       actual authority or an explicit unresolved blocker.
 
-      - [ ] 2.1.3.1 Subtask — Record the product-budget derivation and approval contract.
+      - [x] 2.1.3.1 Subtask — Record the product-budget derivation and approval contract.
 
         Specify baseline identities, allowed derivations, required reviewer,
         freeze point, and change/reopening process without inventing numeric
@@ -119,7 +121,7 @@ and the future implementation and evidence locations remain unresolved.
       evidence needed to reproduce, minimize, and compare failures across
       native and Wasm builds.
 
-      - [ ] 2.1.4.1 Subtask — Specify the evidence matrix and retention schema.
+      - [x] 2.1.4.1 Subtask — Specify the evidence matrix and retention schema.
 
         Name build variants, flags, tool versions, seed identities, coverage
         outputs, minimization records, SBOM fields, provenance links, and the
@@ -138,12 +140,12 @@ and the future implementation and evidence locations remain unresolved.
       operations are enumerable, and every required result has a retention
       path.
 
-      - [ ] 2.2.1.1 Subtask — Run schema, cross-reference, and consistency checks.
+      - [x] 2.2.1.1 Subtask — Run schema, cross-reference, and consistency checks.
 
         Validate machine-readable inputs, resolve task/artifact IDs, and record
         the exact corpus revision, commands, outputs, and unresolved authority.
 
-      - [ ] 2.2.1.2 Subtask — Exercise anti-gaming and malformed-contract cases.
+      - [x] 2.2.1.2 Subtask — Exercise anti-gaming and malformed-contract cases.
 
         Reject post-result threshold edits, missing owners or units, infinite
         test series, silent sanitizer omission, orphaned fuzz failures, and
@@ -155,7 +157,7 @@ and the future implementation and evidence locations remain unresolved.
       A missing product authority may remain visible without fabricating
       approval, but the required pre-C1 freeze remains blocking.
 
-      - [ ] 2.2.2.1 Subtask — Publish the dated Phase 2 execution record.
+      - [x] 2.2.2.1 Subtask — Publish the dated Phase 2 execution record.
 
         Link evidence to P0-A02 and task IDs with exact revisions, commands,
         schema versions, results, failures, and limitations.

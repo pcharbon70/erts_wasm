@@ -1,0 +1,22 @@
+{
+  "contract_id": "p0-unsupported-matrix",
+  "acceptance_id": "P0-A02",
+  "task_id": "p0-p02-unsupported-bounds",
+  "default": "unsupported unless explicitly admitted by the immutable profile",
+  "operations": [
+    {"id": "dynamic-nif", "request_surface": "erlang:load_nif/2", "owner": "runtime-profile", "expected_result": "deterministic unsupported error before native loading"},
+    {"id": "dynamic-driver", "request_surface": "erl_ddll and driver loading", "owner": "runtime-profile", "expected_result": "module absent or deterministic unsupported error"},
+    {"id": "os-process-port", "request_surface": "open_port spawn forms", "owner": "runtime-profile", "expected_result": "deterministic unsupported error"},
+    {"id": "fork-exec", "request_surface": "POSIX process creation", "owner": "c-platform-adapter", "expected_result": "no import and deterministic failure if reached"},
+    {"id": "raw-tcp-udp", "request_surface": "prim_inet, prim_socket, socket", "owner": "runtime-profile", "expected_result": "not admitted; use a separately granted browser capability"},
+    {"id": "distribution", "request_surface": "net_kernel and distribution controllers", "owner": "runtime-profile", "expected_result": "not admitted"},
+    {"id": "shell-terminal", "request_surface": "shell, terminal, stdin", "owner": "runtime-profile", "expected_result": "not admitted"},
+    {"id": "eval", "request_surface": "runtime expression evaluation", "owner": "runtime-profile", "expected_result": "not admitted"},
+    {"id": "runtime-compiler", "request_surface": "compiler application and source compilation", "owner": "release-builder", "expected_result": "not shipped"},
+    {"id": "arbitrary-code-loading", "request_surface": "code server outside single qualification authorization", "owner": "loader", "expected_result": "reject before native parser entry"},
+    {"id": "ambient-host-filesystem", "request_surface": "absolute or host-relative file paths", "owner": "loader", "expected_result": "only sealed virtual release paths exist"},
+    {"id": "general-posix-signals", "request_surface": "signal registration and delivery", "owner": "c-platform-adapter", "expected_result": "unimported or explicit target stub; required internal wakeups use a separate mechanism"},
+    {"id": "unlisted-on-load", "request_surface": "module on_load hook", "owner": "loader", "expected_result": "module rejected unless hook and native edges are manifest-qualified"}
+  ],
+  "negative_validation": ["duplicate IDs rejected", "missing owner rejected", "missing request surface rejected", "missing expected result rejected", "operation outside allowlist remains unsupported"]
+}

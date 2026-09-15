@@ -104,13 +104,79 @@ def validate_phase_01(root: Path = P0_ROOT / "phase-01") -> list[str]:
     return ["pins", "trust-boundary", "language-ownership", "runtime-inventory", "thread-census"]
 
 
+def finite_positive(value: object, code: str, label: str) -> None:
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or value <= 0:
+        raise ContractError(code, f"{label} must be a finite positive number")
+
+
+def validate_phase_02(root: Path = P0_ROOT / "phase-02") -> list[str]:
+    experiments = load_json(root / "p0-experiment-bounds.json")
+    unsupported = load_json(root / "p0-unsupported-operations.json")
+    loader = load_json(root / "p0-loader-startup-bounds.json")
+    product = load_json(root / "p0-product-budget-method.json")
+    evidence = load_json(root / "p0-evidence-profiles.json")
+
+    series = experiments.get("series", {})
+    for field in ("cold_boot_attempts", "warmup_cycles_discarded", "measured_boot_dispose_cycles", "maximum_total_cycles_per_run"):
+        finite_positive(series.get(field), "infinite-test-series", field)
+    if sum(series[field] for field in ("cold_boot_attempts", "warmup_cycles_discarded", "measured_boot_dispose_cycles")) > series["maximum_total_cycles_per_run"]:
+        raise ContractError("inconsistent-test-series", "component cycle counts exceed the total ceiling")
+    if not experiments.get("frozen_before_runtime_measurement"):
+        raise ContractError("post-result-threshold-edit", "experiment bounds must be frozen before measurement")
+    ceilings = experiments.get("safety_ceilings", [])
+    unique(ceilings, "id", "duplicate-experiment-bound")
+    for item in ceilings:
+        finite_positive(item.get("limit"), "unbounded-resource", item.get("id", "resource"))
+        for field in ("unit", "owner", "breach_action"):
+            if not item.get(field):
+                raise ContractError(f"missing-{field.replace('_', '-')}", f"{item['id']} lacks {field}")
+
+    operations = unsupported.get("operations", [])
+    unique(operations, "id", "duplicate-unsupported-operation")
+    for item in operations:
+        for field in ("request_surface", "owner", "expected_result"):
+            if not item.get(field):
+                raise ContractError(f"missing-{field.replace('_', '-')}", f"{item['id']} lacks {field}")
+
+    bounds = loader.get("bounds", [])
+    unique(bounds, "id", "duplicate-loader-bound")
+    required_resources = {"manifest-bytes", "artifact-count", "artifact-bytes", "aggregate-artifact-bytes", "path-bytes", "worker-agents", "shared-memory", "pre-ready-message-queue", "concurrent-fetches", "startup-timers", "startup-wall-clock"}
+    if not required_resources.issubset({item["id"] for item in bounds}):
+        raise ContractError("missing-loader-bound", "loader/startup bounds omit a required resource")
+    for item in bounds:
+        finite_positive(item.get("limit"), "unbounded-resource", item.get("id", "resource"))
+        for field in ("resource", "owner", "unit", "enforcement_point", "mechanism", "breach_action"):
+            if not item.get(field):
+                raise ContractError(f"missing-{field.replace('_', '-')}", f"{item['id']} lacks {field}")
+
+    if product.get("numeric_product_budgets") is not None:
+        raise ContractError("premature-product-budget", "numeric product budgets require the actual authority")
+    if product.get("authority") != "unassigned" or product.get("approval_state") != "blocked-authority-unassigned":
+        raise ContractError("fabricated-product-authority", "product authority must remain explicitly unassigned")
+    if "copy an experimental safety ceiling" not in product.get("forbidden_derivations", []):
+        raise ContractError("copied-safety-ceiling", "product method must prohibit copying safety ceilings")
+
+    profiles = evidence.get("profiles", [])
+    unique(profiles, "id", "duplicate-evidence-profile")
+    required_profiles = {"native-debug", "native-release", "wasm-debug", "wasm-release", "host-parser-fuzz", "c-boundary-fuzz"}
+    if {item["id"] for item in profiles} != required_profiles:
+        raise ContractError("silent-instrumentation-omission", "required evidence profile set is incomplete")
+    if not evidence.get("unsupported_combination_rule"):
+        raise ContractError("silent-sanitizer-omission", "unsupported instrumentation needs an explicit disposition")
+    if not evidence.get("failure_minimization", {}).get("orphan_rule"):
+        raise ContractError("orphaned-fuzz-failure", "fuzz failures require retained ownership and reproduction")
+
+    return ["experiment-bounds", "unsupported-operations", "loader-bounds", "product-budget-method", "evidence-profiles"]
+
+
 def main(argv: list[str]) -> int:
     phase = argv[1] if len(argv) > 1 else "phase-01"
-    if phase != "phase-01":
+    validators = {"phase-01": validate_phase_01, "phase-02": validate_phase_02}
+    if phase not in validators:
         print(f"unsupported phase: {phase}", file=sys.stderr)
         return 2
     try:
-        validated = validate_phase_01()
+        validated = validators[phase]()
     except ContractError as exc:
         print(f"P0 contract validation failed [{exc.code}]: {exc}", file=sys.stderr)
         return 1

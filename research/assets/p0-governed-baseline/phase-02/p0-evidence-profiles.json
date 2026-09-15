@@ -1,0 +1,20 @@
+{
+  "contract_id": "p0-evidence-profile",
+  "acceptance_id": "P0-A02",
+  "task_id": "p0-p02-evidence-profiles",
+  "review_state": "test-evidence-review-pending",
+  "profiles": [
+    {"id": "native-debug", "target": "native", "purpose": "assertion and oracle run", "required_features": ["ERTS assertions", "debug symbols", "deterministic case IDs"], "sanitizers": ["address", "undefined"], "status": "specified-not-run"},
+    {"id": "native-release", "target": "native", "purpose": "matching optimized semantic and performance baseline", "required_features": ["pinned optimization flags", "stripped/unstripped artifact hashes"], "sanitizers": [], "status": "specified-not-run"},
+    {"id": "wasm-debug", "target": "emscripten-wasm", "purpose": "assertion, import/export, and supported sanitizer run", "required_features": ["ASSERTIONS", "SAFE_HEAP where compatible", "source maps retained privately", "exact generated JavaScript hash"], "sanitizers": ["address-if-qualified", "undefined-if-qualified"], "status": "specified-support-probe-required"},
+    {"id": "wasm-release", "target": "emscripten-wasm", "purpose": "browser semantic and product-measurement candidate", "required_features": ["fixed memory", "pthreads", "controlled start", "import/export ledger", "artifact hashes"], "sanitizers": [], "status": "specified-not-run"},
+    {"id": "host-parser-fuzz", "target": "native-host-tooling", "purpose": "manifest and message decoder fuzzing", "required_features": ["seed-corpus hash", "coverage output", "crash artifact", "minimized reproducer"], "sanitizers": ["address", "undefined"], "status": "specified-not-run"},
+    {"id": "c-boundary-fuzz", "target": "native-and-wasm-where-supported", "purpose": "loader and byte-ABI boundary fuzzing", "required_features": ["same seed identities", "target-specific coverage", "cross-target disposition"], "sanitizers": ["address-where-supported", "undefined-where-supported"], "status": "specified-support-probe-required"}
+  ],
+  "unsupported_combination_rule": "retain the toolchain probe and mark unsupported with reason; never omit a requested sanitizer or fuzz target silently and never treat another profile as equivalent",
+  "seed_and_coverage": {"seed_identity": "sha256 per input plus ordered corpus manifest digest", "coverage": ["tool and version", "instrumented artifact digest", "raw coverage file digest", "summary", "known blind spots"], "retention": "content-addressed research/assets path linked from the execution journal"},
+  "failure_minimization": {"required": ["original input digest", "minimized input digest", "exact reproducer argv", "toolchain and artifact digests", "determinism count", "failure signature", "owner and disposition"], "orphan_rule": "a crash without a retained reproducer and owner fails evidence handoff"},
+  "sbom_fields": ["document format and version", "component name and version", "source revision", "download location", "license", "artifact digest", "dependency relation", "generated-by tool identity"],
+  "provenance_fields": ["source repository and revision", "dirty state", "builder image digest", "toolchain component revisions", "tokenized commands", "environment allowlist", "input and output digests", "timestamp", "attestation signer or explicit unsigned state"],
+  "required_execution_fields": ["plan revision", "task and case IDs", "profile ID", "target", "flags", "browser", "seed", "limits", "result", "raw artifact links", "reviewer", "limitations"]
+}
