@@ -1,0 +1,32 @@
+{
+  "review_id": "p0-phase-01-owner-review-result-2026-09-16",
+  "acceptance_id": "P0-A01",
+  "producer": "Codex",
+  "reviewer": "Pascal Charbonneau (pcharbon70)",
+  "reviewed_at": "2026-09-16",
+  "reviewed_packet": {
+    "path": "research/assets/p0-governed-baseline/phase-01/p0-phase-01-owner-review-packet.json",
+    "sha256": "d8681ed245e5768a9ba4b8e8bfc307656cf344edc59ff56d812850ea376e3ac4"
+  },
+  "materialization_receipt": {
+    "path": "research/assets/p0-governed-baseline/phase-01/p0-phase-01-materialization-receipt.json",
+    "sha256": "bc011b36367257248cae6527c819c5fc413502089fa456febc9cd1e05ac9296d"
+  },
+  "reviewer_statement": "I accept the P0.1 owner-review packet and its recorded limitations.",
+  "criteria": [
+    {"id": "pins-resolved", "outcome": "accepted"},
+    {"id": "trust-boundary-accepted", "outcome": "accepted"},
+    {"id": "language-ownership-accepted", "outcome": "accepted-for-p0-contract-adr-remains-proposed"},
+    {"id": "runtime-inventory-reproduced", "outcome": "accepted-after-recorded-corrections"},
+    {"id": "thread-census-accepted", "outcome": "accepted-as-later-executable-contract"},
+    {"id": "integration-consistency-passed", "outcome": "accepted"},
+    {"id": "handoff-accepted", "outcome": "accepted-for-p0-a01-only"}
+  ],
+  "accepted_limitations": [
+    "The same-source native bootstrap and required kernel/stdlib inputs pass, but the broader optional debugger application failed because wx_object was unavailable with --without-wx.",
+    "Chrome for Testing did not publish a checksum in the selected metadata; the exact immutable URL produced the locally recorded SHA-256 and independent owner acceptance covers that limitation.",
+    "No ERTS/Wasm compilation, browser runtime, lifecycle, semantic, or compatibility result is part of P0.1."
+  ],
+  "outcome": "accepted",
+  "scope_effect": "P0-A01 may close only after a valid contract_research evidence record binds the committed reviewed inputs; P0-A02, P0-A03, P0-GATE, and ADR-0001 remain open."
+}

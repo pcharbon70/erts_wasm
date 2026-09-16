@@ -55,7 +55,12 @@ does not.
 
 Plan: authored, review pending. Execution: blocked on accepted P0 evidence.
 Tests and P1 gate: not run. Every original obligation and all structural tasks
-remain unchecked. The renderer remains deferred to C7.
+remain unchecked. Pascal Charbonneau (`pcharbon70`) is the assigned experiment
+owner and reviewer; work and review have not started. The renderer remains
+deferred to C7. If Pascal personally produces an evidence record, the
+[assignment independence rule](../../../assets/p0-governed-baseline/phase-03/p0-role-assignments.json)
+requires a different independent reviewer before that record can close a task
+or gate.
 
 ## Authoritative inputs
 
@@ -70,9 +75,9 @@ remain unchecked. The renderer remains deferred to C7.
 
 | Decision ID | Choice and evaluation criteria | Resolution task / location | Responsible owner | Blocks | State and evidence |
 | --- | --- | --- | --- | --- | --- |
-| P1-D01 | Determine whether the pinned C/Emscripten target and narrow fixed-width host ABI are viable without semantic-machine edits. | `p1-p01-target-probe`, `p1-p01-host-abi` | ERTS C-port reviewer unassigned | P2 cross-build | Open; no evidence. |
-| P1-D02 | Compare both Worker topology candidates using loading, responsiveness, ownership, abort, and cleanup evidence; do not select one in P1. | `p1-p02-worker-topologies`, `p1-p03-integration` | Runtime/concurrency reviewer unassigned | P3 topology selection | Open; no evidence. |
-| P1-D03 | Confirm a controlled-start seam and fixed shared-memory experiment profile under the exact generated glue. | `p1-p02-fixed-memory`, `p1-p02-controlled-start` | Browser/Wasm reviewer unassigned | P2 loader design | Open; no evidence. |
+| P1-D01 | Determine whether the pinned C/Emscripten target and narrow fixed-width host ABI are viable without semantic-machine edits. | `p1-p01-target-probe`, `p1-p01-host-abi` | Pascal Charbonneau (`pcharbon70`), ERTS C-port reviewer | P2 cross-build | Open; no evidence. |
+| P1-D02 | Compare both Worker topology candidates using loading, responsiveness, ownership, abort, and cleanup evidence; do not select one in P1. | `p1-p02-worker-topologies`, `p1-p03-integration` | Pascal Charbonneau (`pcharbon70`), runtime/concurrency reviewer | P3 topology selection | Open; no evidence. |
+| P1-D03 | Confirm a controlled-start seam and fixed shared-memory experiment profile under the exact generated glue. | `p1-p02-fixed-memory`, `p1-p02-controlled-start` | Pascal Charbonneau (`pcharbon70`), browser/Wasm reviewer | P2 loader design | Open; no evidence. |
 
 ## Gate-to-phase and artifact mapping
 

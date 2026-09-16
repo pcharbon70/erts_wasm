@@ -38,8 +38,10 @@ readiness, and long-term support do not belong in the proof claim.
 ## Program state and ordering
 
 P0's three phase drafts are implemented and locally validated, but P0-GATE is
-blocked on independent review, materialized inputs, and clean-environment and
-runtime evidence. P1 has authored phase plans. P2–P6 retain substantive
+blocked on independent review, materialized experiment inputs, and
+clean-environment readiness evidence. Pascal Charbonneau (`pcharbon70`) has
+accepted the immediate review and experiment-owner roles. Runtime implementation
+results are explicitly deferred to P1–P6. P1 has authored phase plans. P2–P6 retain substantive
 milestone definitions but remain `decomposition pending` until predecessor
 evidence localizes the next work. All stable tasks and gates remain unchecked.
 

@@ -3,7 +3,7 @@
   "contract_id": "p0-phase-02-validation",
   "task_ids": ["p0-p02-experiment-bounds", "p0-p02-unsupported-bounds", "p0-p02-product-budget-method", "p0-p02-evidence-profiles", "p0-p02-integration"],
   "tested_base_revision": "d21d262",
-  "environment": {"python": "3.12.12", "runtime_measurement": "not-run", "sanitizer_and_fuzz_support_probes": "not-run", "product_authority": "unassigned"},
+  "environment": {"python": "3.12.12", "runtime_measurement": "not-run-deferred-to-later-milestones", "sanitizer_and_fuzz_support_probes": "not-run-deferred-to-owning-milestones", "product_authority": "unassigned-until-post-p6-pre-c1"},
   "results": [
     {"case_id": "P0-P02-CONTRACT", "result": "pass-local", "observation": "five Phase 2 contracts validated"},
     {"case_id": "P0-P02-NEG-POSTRESULT", "result": "pass-local", "observation": "post-result-threshold-edit rejected"},
@@ -12,7 +12,7 @@
     {"case_id": "P0-P02-NEG-SANITIZER", "result": "pass-local", "observation": "silent-instrumentation-omission rejected"},
     {"case_id": "P0-P02-NEG-ORPHAN", "result": "pass-local", "observation": "orphaned-fuzz-failure rejected"},
     {"case_id": "P0-P02-NEG-COPY", "result": "pass-local", "observation": "copied-safety-ceiling rejected"},
-    {"case_id": "P0-P02-INDEPENDENT-REVIEW", "result": "not-run", "observation": "measurement, ERTS/security, product, and test/evidence authorities remain unassigned"}
+    {"case_id": "P0-P02-INDEPENDENT-REVIEW", "result": "not-run", "observation": "Pascal Charbonneau (pcharbon70) is assigned to the measurement-contract, ERTS/security, method, and test/evidence review roles; the reviews have not been run, and final product authority is explicitly deferred until post-P6/pre-C1"}
   ],
   "disposition": "draft-progression-authorized-gate-open",
   "planning_evidence": "none; this report cannot close a task or gate"

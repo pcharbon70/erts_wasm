@@ -4,7 +4,7 @@
   "task_id": "p0-p01-thread-census",
   "source": {"commit": "e07fd07837e5aa845657f5fa340637121e451d47"},
   "implementation_location": "unresolved-until-P1-target-probe",
-  "review_state": "runtime-concurrency-review-pending",
+  "review_state": "accepted-by-independent-owner-2026-09-16",
   "identity_domains": ["erts-logical-role", "pthread-thread", "emscripten-worker-host", "pthread-pool-slot", "browser-supervisory-agent", "runtime-generation"],
   "candidate_roles": [
     {"id": "bootstrap-main", "evidence": "ERTS entry and initial thread", "count_source": "measured"},
@@ -19,7 +19,7 @@
   "events": ["generation-create", "worker-create-request", "worker-created", "pthread-create-request", "pthread-start", "role-bind", "ready", "pthread-exit", "worker-terminated", "generation-disposed", "startup-failed"],
   "event_fields": ["schema-version", "generation-id", "sequence", "monotonic-time", "event", "logical-role", "pthread-id", "worker-id", "pool-slot", "owner", "result-code"],
   "counters": ["roles-requested", "pthread-create-requests", "pthreads-started", "worker-hosts-created", "pool-slots-reserved", "agents-alive-at-ready", "agents-alive-after-dispose", "stale-events-rejected"],
-  "owners": {"event-emission": "C adapter and generated-runtime hooks", "worker-registry": "page/root generation supervisor", "aggregation": "browser harness", "termination": "page/root generation supervisor", "review": "runtime-concurrency-reviewer-unassigned"},
+  "owners": {"event-emission": "C adapter and generated-runtime hooks — Pascal Charbonneau (pcharbon70)", "worker-registry": "page/root generation supervisor — Pascal Charbonneau (pcharbon70)", "aggregation": "browser harness — Pascal Charbonneau (pcharbon70)", "termination": "page/root generation supervisor — Pascal Charbonneau (pcharbon70)", "review": "Pascal Charbonneau (pcharbon70), accepted 2026-09-16"},
   "lifecycle_interval": "before generation-create through quiescent post-dispose sample",
   "pool_size_rule": {"source": "measured-full-runtime-high-water-plus-declared-headroom", "forbidden_sources": ["+S scheduler count", "hardwareConcurrency alone", "selected topology assumption"], "strict_exhaustion": true},
   "experiments": [

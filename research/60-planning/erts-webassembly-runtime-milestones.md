@@ -40,7 +40,7 @@ meaningful proof of concept.
 
 | Milestone | Outcome | Planning state |
 | --- | --- | --- |
-| [P0](01-proof-of-concept/p0-governed-baseline-and-proof-contract/README.md) | Governed baseline and proof contract | Three draft phases locally validated; formal gate blocked. |
+| [P0](01-proof-of-concept/p0-governed-baseline-and-proof-contract/README.md) | Governed baseline and proof contract | Three draft phases locally validated and review/experiment roles assigned; gate blocked on review, input materialization, and experiment readiness—not downstream implementation results. |
 | [P1](01-proof-of-concept/p1-target-and-dependency-probes/README.md) | Target and dependency probes | Three authored phases; not started. |
 | [P2](01-proof-of-concept/p2-interpreter-artifact-and-outer-loader/README.md) | Interpreter artifact and outer loader | Decomposition pending P1 evidence. |
 | [P3](01-proof-of-concept/p3-immutable-erts-and-otp-cold-boot/README.md) | Immutable ERTS and OTP cold boot | Decomposition pending P2 evidence. |

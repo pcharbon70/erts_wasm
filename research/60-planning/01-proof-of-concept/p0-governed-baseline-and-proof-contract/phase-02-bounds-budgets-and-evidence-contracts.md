@@ -44,8 +44,10 @@ independent acceptance and runtime tests have not started. This phase defines
 research and test contracts, not implementation or product approval.
 
 The experimental ceilings protect the proof environment. They do not assert
-performance or become product budgets. Product authority remains unassigned,
-and the future implementation and evidence locations remain unresolved.
+performance or become product budgets. P0 freezes only the product-budget
+derivation and anti-gaming method; numeric product values and their accountable
+authority are deliberately deferred until after P6 and before C1. Future
+implementation and evidence locations remain unresolved.
 
 ## Research and acceptance traceability
 
@@ -58,12 +60,12 @@ and the future implementation and evidence locations remain unresolved.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p0-p02-experiment-bounds | research-tools | Measurement reviewer unassigned | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-D03, P0-A02; `p0-experiment-bounds` | Reviewed premeasurement protocol; not run. |
-| p0-p02-unsupported-bounds | research-tools | ERTS C-port and security reviewers unassigned | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-unsupported-matrix`, `p0-loader-bounds` | Machine-readable inventories and schema checks; not run. |
-| p0-p02-product-budget-method | research-tools | Product-budget authority unassigned | p0-p02-experiment-bounds | P0-D03, P0-A02; `p0-product-budget-method` | Approved method or explicit blocker; not run. |
-| p0-p02-evidence-profiles | unresolved | Test/evidence reviewer unassigned | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-evidence-profile` | Reviewed native/Wasm evidence schema and profiles; not run. |
-| p0-p02-integration | research-tools | Independent reviewer unassigned | p0-p02-experiment-bounds, p0-p02-unsupported-bounds, p0-p02-product-budget-method, p0-p02-evidence-profiles | P0-A02 | Integrated limits and evidence-contract report; not run. |
-| p0-p02-handoff | research-tools | Milestone reviewer unassigned | p0-p02-integration | P0-A02 | Dated execution record and proceed/revise/blocked decision; not run. |
+| p0-p02-experiment-bounds | research-tools | Pascal Charbonneau (`pcharbon70`), measurement reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-D03, P0-A02; `p0-experiment-bounds` | Reviewed premeasurement protocol; not run. |
+| p0-p02-unsupported-bounds | research-tools | Pascal Charbonneau (`pcharbon70`), ERTS C-port and security reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-unsupported-matrix`, `p0-loader-bounds` | Machine-readable inventories and schema checks; not run. |
+| p0-p02-product-budget-method | research-tools | Pascal Charbonneau (`pcharbon70`), method reviewer; final product authority deferred post-P6/pre-C1 | p0-p02-experiment-bounds | P0-D03, P0-A02; `p0-product-budget-method` | Independently reviewed method and explicit downstream approval point; product numbers are not P0 evidence. |
+| p0-p02-evidence-profiles | unresolved | Pascal Charbonneau (`pcharbon70`), test/evidence reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-evidence-profile` | Reviewed native/Wasm evidence schema and profiles; not run. |
+| p0-p02-integration | research-tools | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p02-experiment-bounds, p0-p02-unsupported-bounds, p0-p02-product-budget-method, p0-p02-evidence-profiles | P0-A02 | Integrated limits and evidence-contract report; not run. |
+| p0-p02-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p0-p02-integration | P0-A02 | Dated execution record and proceed/revise/blocked decision; not run. |
 
 ## Planned work
 
@@ -106,8 +108,9 @@ and the future implementation and evidence locations remain unresolved.
     - [ ] 2.1.3 Task [id: p0-p02-product-budget-method] [area: research-tools] [after: p0-p02-experiment-bounds] — Define how product qualification budgets will be approved from named POC and native baselines before Program B, so later thresholds cannot be chosen to fit a completed implementation.
 
       Separate experimental safety from product acceptance and name the inputs,
-      approval point, and anti-gaming rule. Completion requires approval by the
-      actual authority or an explicit unresolved blocker.
+      approval point, and anti-gaming rule. P0 completion requires independent
+      review of this method, not appointment of the later product authority or
+      numeric product values.
 
       - [x] 2.1.3.1 Subtask — Record the product-budget derivation and approval contract.
 
@@ -154,8 +157,8 @@ and the future implementation and evidence locations remain unresolved.
     - [ ] 2.2.2 Task [id: p0-p02-handoff] [area: research-tools] [after: p0-p02-integration] — Record evidence and decide the Phase 2 handoff.
 
       Preserve actual validation output and a proceed/revise/blocked decision.
-      A missing product authority may remain visible without fabricating
-      approval, but the required pre-C1 freeze remains blocking.
+      The product authority and numeric values remain explicitly deferred; they
+      block C1 only if still absent after P6, not P0 or P1.
 
       - [x] 2.2.2.1 Subtask — Publish the dated Phase 2 execution record.
 

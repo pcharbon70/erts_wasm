@@ -36,15 +36,19 @@ Back to milestone: [P0 plan](README.md).
 
 ## Entry, scope, and dependencies
 
-Entry requires only the accepted research-corpus scope. Plan review is pending;
-contract drafting and local validation are in progress, while independent
-acceptance and implementation probes have not started. This phase owns
-planning and source-audit artifacts in the research corpus. The future
-C/Emscripten implementation location and named reviewers remain unresolved.
+Entry requires only the accepted research-corpus scope. Plan review is pending.
+Contract drafting, local validation, exact input materialization, and
+pinned-source reproduction are complete; independent acceptance and
+C/Emscripten implementation probes have not started. This phase owns planning
+and source-audit artifacts in the research corpus. The future C/Emscripten
+implementation location remains unresolved. Pascal Charbonneau (`pcharbon70`)
+accepted the explicit owner-review packet and its recorded limitations on
+2026-09-16; pass-closing evidence binding remains pending.
 
-The phase does not compile ERTS or accept ADR-0001. It freezes the candidate
-inputs and the measurements that P1 must perform without granting ambient host
-authority or broadening the proof claim.
+The phase materializes and verifies the same-source native OTP bootstrap but
+does not compile ERTS for WebAssembly or accept ADR-0001. It freezes the
+candidate inputs and the measurements that P1 must perform without granting
+ambient host authority or broadening the proof claim.
 
 ## Research and acceptance traceability
 
@@ -58,13 +62,13 @@ authority or broadening the proof claim.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p0-p01-pins | research-tools | Build/reproducibility reviewer unassigned | None | P0-A01; `p0-baseline` | Reviewed version and digest ledger; not run. |
-| p0-p01-trust-boundary | research-tools | Security reviewer unassigned | None | P0-A01; `p0-trust-model` | Reviewed boundary and stop-condition record; not run. |
-| p0-p01-language-ownership | research-tools | Architecture reviewer unassigned | None | P0-D01; `p0-language-ownership` | ADR review record and P1 trigger map; not run. |
-| p0-p01-runtime-inventory | cross-cutting | ERTS C-port reviewer unassigned | p0-p01-pins | P0-A01; `p0-runtime-inventory` | Reproducible source inventory; not run. |
-| p0-p01-thread-census | unresolved | Runtime/concurrency reviewer unassigned | p0-p01-runtime-inventory | P0-A01; `p0-thread-census-contract` | Reviewed census method and N/N-1 test contract; not run. |
-| p0-p01-integration | research-tools | Independent reviewer unassigned | p0-p01-pins, p0-p01-trust-boundary, p0-p01-language-ownership, p0-p01-runtime-inventory, p0-p01-thread-census | P0-A01 | Integrated consistency and omission report; not run. |
-| p0-p01-handoff | research-tools | Milestone reviewer unassigned | p0-p01-integration | P0-A01 | Dated execution record and proceed/revise/blocked decision; not run. |
+| p0-p01-pins | research-tools | Pascal Charbonneau (`pcharbon70`), build/reproducibility reviewer | None | P0-A01; `p0-baseline` | Exact inputs materialized and owner-accepted; evidence binding pending. |
+| p0-p01-trust-boundary | research-tools | Pascal Charbonneau (`pcharbon70`), security reviewer | None | P0-A01; `p0-trust-model` | Boundary and contradiction matrix owner-accepted; evidence binding pending. |
+| p0-p01-language-ownership | research-tools | Pascal Charbonneau (`pcharbon70`), architecture reviewer | None | P0-D01; `p0-language-ownership` | P0 contract owner-accepted; ADR-0001 remains proposed pending P1. |
+| p0-p01-runtime-inventory | cross-cutting | Pascal Charbonneau (`pcharbon70`), ERTS C-port reviewer | p0-p01-pins | P0-A01; `p0-runtime-inventory` | Reproduced, corrected, and owner-accepted; evidence binding pending. |
+| p0-p01-thread-census | unresolved | Pascal Charbonneau (`pcharbon70`), runtime/concurrency reviewer | p0-p01-runtime-inventory | P0-A01; `p0-thread-census-contract` | N/N-1 contract owner-accepted; runtime execution remains deferred. |
+| p0-p01-integration | research-tools | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p01-pins, p0-p01-trust-boundary, p0-p01-language-ownership, p0-p01-runtime-inventory, p0-p01-thread-census | P0-A01 | Integrated validation owner-accepted; evidence binding pending. |
+| p0-p01-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p0-p01-integration | P0-A01 | Owner accepted P0-A01 handoff; evidence binding pending. |
 
 ## Planned work
 
@@ -160,9 +164,10 @@ authority or broadening the proof claim.
 
       - [x] 1.2.1.2 Subtask — Exercise contradiction and omission cases.
 
-        Inject a floating tool version, duplicate authority, missing runtime
-        category, topology-selected census, and `+S 1:1`-derived pool size;
-        require deterministic rejection by the review contract.
+        Inject a floating or unmaterialized tool version, missing browser
+        digest, duplicate authority, missing TypeScript pin, missing or stale
+        runtime inventory data, topology-selected census, and `+S 1:1`-derived
+        pool size; require deterministic rejection by the review contract.
 
     - [ ] 1.2.2 Task [id: p0-p01-handoff] [area: research-tools] [after: p0-p01-integration] — Record evidence and decide the Phase 1 handoff.
 

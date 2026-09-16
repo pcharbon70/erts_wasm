@@ -7,18 +7,23 @@
   "review_complete": false,
   "runtime_execution": "not-run",
   "empty_environment_reproduction": "not-run",
+  "role_assignment": {"contract": "p0-role-assignments", "assignee": "Pascal Charbonneau (pcharbon70)", "state": "reviewers-and-experiment-owners-assigned; reviews-and-work-not-run"},
   "blockers": [
-    "Phase 1 independent pin, security, architecture, ERTS, and concurrency reviews are not run",
-    "native OTP 29 bootstrap, Emscripten toolchain/image, and qualification browsers are not materialized",
-    "Chrome archive digest remains unresolved",
-    "Phase 2 independent measurement, bounds/security, and evidence-profile reviews are not run",
-    "product-budget authority is unassigned and product values are intentionally null",
+    "Phase 1 owner review is accepted, but its committed-baseline contract_research evidence binding and checkbox roll-up are pending",
+    "Phase 2 independent experiment-contract, bounds/security, and evidence-profile reviews are not run",
     "Phase 3 loader/protocol and root-trust security reviews are not run",
-    "asset owners, patch owner, deployment owner, and update owner are unassigned",
-    "clean target environment has been specified but not reproduced",
-    "no C/Emscripten compile, ERTS/OTP boot, browser, lifecycle, sanitizer, fuzz, or compatibility evidence exists"
+    "clean experiment-readiness static preflight and empty browser profiles have been specified but not reproduced"
+  ],
+  "deferred_outcomes_not_blocking_p0": [
+    "C/Emscripten compile, link, and instantiate evidence belongs to P1 and P2",
+    "built Wasm, generated JavaScript, Worker, release-pack, and qualification-BEAM artifacts belong to P2 through P4",
+    "ERTS/OTP boot and browser runtime evidence belongs to P3 and later",
+    "semantic, lifecycle, sanitizer, fuzz, and compatibility results belong to their P1 through P6 gates",
+    "implementation patches and their nonempty stack digest are produced only when implementation work creates them",
+    "numeric product budgets and their accountable authority are required after P6 and before C1"
   ],
   "stop_trigger_state": "none-confirmed-deployment-prerequisites-untested",
   "disposition": "blocked-formal-P1-entry-not-unlocked",
+  "expectation_correction": {"date": "2026-09-15", "baseline_revision": "1a049f45580af13ea42c31afa40d95320acfe11d", "reason": "remove circular requirements for downstream implementation outcomes from the P0 entry gate"},
   "planning_evidence": "none; no task or gate may close"
 }

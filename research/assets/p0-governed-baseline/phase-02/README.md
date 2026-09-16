@@ -38,7 +38,7 @@ runtime results are not.
 - [`p0-loader-startup-bounds.json`](p0-loader-startup-bounds.json) — pre-ready resource owners, units, ceilings, enforcement points, and breach actions.
 - [`p0-phase-02-validation-contract.json`](p0-phase-02-validation-contract.json) — assembled positive case and six anti-gaming/malformed cases.
 - [`p0-phase-02-validation-report.json`](p0-phase-02-validation-report.json) — local validation results and explicit not-run authority cases.
-- [`p0-product-budget-method.json`](p0-product-budget-method.json) — approval and anti-gaming method with the product authority explicitly unresolved.
+- [`p0-product-budget-method.json`](p0-product-budget-method.json) — anti-gaming method frozen in P0 with numeric approval and product authority deferred post-P6/pre-C1.
 - [`p0-unsupported-operations.json`](p0-unsupported-operations.json) — finite deny-by-default POC operation inventory.
 
 ## Maintaining this index

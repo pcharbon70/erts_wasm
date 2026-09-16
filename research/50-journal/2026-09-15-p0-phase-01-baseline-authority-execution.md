@@ -16,6 +16,10 @@ Phase 1 produced review-ready baseline contracts and exercised their local
 consistency rules. It did not satisfy P0-A01 because the required independent
 pin, security, architecture, ERTS, and concurrency reviews were not available.
 
+Later on 2026-09-15, the phase was resumed to materialize its exact inputs and
+prepare a bounded owner-review packet. That work resolves the missing input
+identities but does not stand in for Pascal Charbonneau's independent review.
+
 ## Plan and acceptance baseline
 
 The run implemented [Phase 1](../60-planning/01-proof-of-concept/p0-governed-baseline-and-proof-contract/phase-01-baseline-authority-and-runtime-inventory.md)
@@ -50,6 +54,63 @@ The validation contract is
 | `p0-p01-integration`; five negative cases | `python3 -m unittest research/70-tools/test_p0_contract_validation.py` | Reject floating pin, duplicate authority, missing category, topology-derived N, and `+S`-derived N | All deterministic rejection tests passed | pass-local | validation report above |
 | `p0-p01-handoff`; independent review | Not run | Assigned reviewers accept every required judgment | Reviewers remain unassigned | not run | No planning-evidence record created |
 
+Later assignment: Pascal Charbonneau (`pcharbon70`) accepted assignment to all
+P0 reviewer roles on 2026-09-15. The historical observation above remains the
+state at execution time; the reviews themselves are still not run.
+
+## P0.1 materialization and source-review resumption
+
+The resumed run used repository base
+`1a049f45580af13ea42c31afa40d95320acfe11d` with the active P0 correction
+changes still dirty. The machine-readable receipt is
+[`p0-phase-01-materialization-receipt.json`](../assets/p0-governed-baseline/phase-01/p0-phase-01-materialization-receipt.json),
+and the explicit owner checklist is
+[`p0-phase-01-owner-review-packet.json`](../assets/p0-governed-baseline/phase-01/p0-phase-01-owner-review-packet.json).
+
+- The exact OTP source tag, commit, and tree were reproduced in a clean
+  detached worktree. The same-source bootstrap reported OTP 29 / ERTS 17.0.6,
+  compiled and ran a small Erlang probe, and recorded hashes for the VM,
+  bootstrap launcher, boot file, `kernel.app`, `stdlib.app`, and probe BEAM.
+- The broader native `make -j20` did not complete: after producing the required
+  bootstrap and core applications, it failed in the optional `debugger`
+  application because `wx_object` was unavailable with `--without-wx` and
+  warnings were errors. This run is evidence for the Phase 1 native-bootstrap
+  identity, not a claim that a complete OTP installation passed.
+- The immutable linux/amd64 Emscripten image was pulled and verified as emcc
+  6.0.9 with the recorded Emscripten revision, Clang 24 component, Binaryen 132,
+  Node 24.19.0, npm 11.17.0, and Python 3.12.3.
+- Chrome for Testing 153.0.8010.36 and Firefox 155.0 were downloaded from their
+  exact official URLs, hashed, extracted, and identity-checked. Firefox's hash
+  matched Mozilla's SHA256SUMS. Chrome's immutable archive URL does not expose
+  a publisher checksum, so its locally observed digest remains an explicit
+  item for independent reproduction.
+- The browser-host lock now pins Node 24.19.0, npm 11.17.0, and TypeScript
+  6.0.3, including the npm integrity value and independently computed SHA-256.
+  TypeScript 7's separate native compiler/toolchain transition is deliberately
+  outside the first proof until an ADR review trigger and P1 evidence justify
+  it.
+- Replaying the runtime-inventory procedures found two corpus errors: the
+  pinned tree contains 22 preloaded Erlang sources rather than 23, and the
+  recorded `erts/emulator/beam/erl_driver.c` path does not exist. The inventory
+  now cites the actual dynamic-driver and port implementation files. All
+  retained source paths exist in the pinned tree.
+
+The focused P0 validator now rejects unmaterialized required inputs, missing
+browser digests, missing TypeScript toolchain pins, the stale driver path, and
+the stale preload count. Its 36 tests pass. P0-A01 remains review-pending and no
+`*.planning-evidence.json` file has been created.
+
+## Owner acceptance
+
+On 2026-09-16 Pascal Charbonneau (`pcharbon70`) stated: “I accept the P0.1
+owner-review packet and its recorded limitations.” The dated machine-readable
+review result is
+[`p0-phase-01-owner-review-result.json`](../assets/p0-governed-baseline/phase-01/p0-phase-01-owner-review-result.json).
+This accepts the six reviewed contract areas and the Phase 1 handoff for
+P0-A01 only. ADR-0001, P0-A02, P0-A03, P0-GATE, and every downstream runtime
+claim remain open. Task roll-up still requires committed-baseline replay and a
+valid `contract_research` evidence record.
+
 The aggregate command `python3 research/70-tools/check_all.py` passed after the
 Section 1.2 changes, including the focused P0 tests. `git diff --check` also
 passed. The containing commit is the exact Section 1.2 record revision; later
@@ -63,10 +124,11 @@ review and includes required not-run cases.
 
 ## Review and handoff
 
-Disposition: **draft progression authorized; P0-A01 remains open**. The user
-explicitly authorized preparation and merge of later phase drafts while
+Disposition: **P0.1 contract ready for owner review; P0-A01 remains open**. The
+user explicitly authorized preparation and merge of later phase drafts while
 evidence-bound tasks remain unchecked. Phase 2 may consume these artifacts as
-draft inputs, but this does not satisfy its formal `p0-p01-handoff` dependency.
+draft inputs, but this does not satisfy its formal `p0-p01-handoff` dependency
+until the owner records the requested acceptance disposition.
 
 Independent reviewers must still resolve all pin materializations, accept the
 trust and language boundaries, audit the runtime inventory, and approve the
@@ -75,9 +137,12 @@ category, or pool-size rule reopen the corresponding local validation.
 
 ## Follow-ups
 
-- Materialize and hash the Chrome archive, build image contents, and native
-  OTP 29 bootstrap.
-- Assign the independent reviewer roles named by the plan.
+- Obtain Pascal Charbonneau's explicit disposition on the six items in the
+  owner-review packet, including the recorded native-build and Chrome-checksum
+  limitations.
+- After acceptance, bind the committed contract and artifact digests in an
+  independently reviewed `contract_research` evidence record and roll up only
+  the P0.1 task hierarchy and P0-A01.
 - Implement and run the census only in the later target/runtime probe.
 - Preserve the explicit distinction between draft progression and accepted
   P0 evidence in Phases 2 and 3.

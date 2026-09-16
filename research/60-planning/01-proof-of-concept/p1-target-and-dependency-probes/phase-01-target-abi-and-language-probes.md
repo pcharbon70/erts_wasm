@@ -40,8 +40,9 @@ Back to milestone: [P1 plan](README.md).
 
 Entry requires an accepted `p0-p03-handoff` from the [P0 plan](../p0-governed-baseline-and-proof-contract/README.md).
 Plan review is pending; execution and tests are blocked on that evidence. The
-C runtime and browser-host implementation locations are unresolved; tasks name
-their technical areas without inventing repositories or assignees.
+C runtime and browser-host implementation locations are unresolved; Pascal
+Charbonneau (`pcharbon70`) is assigned as experiment owner and reviewer. Work
+and review have not started.
 
 The phase compiles representative generated-interpreter C and narrow protocol
 fixtures. It neither attempts a full ERTS link nor treats TypeScript's erased
@@ -59,11 +60,11 @@ types as runtime validation or a security boundary.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p1-p01-target-probe | c-runtime | ERTS C-port reviewer unassigned | [p0-p03-handoff](../p0-governed-baseline-and-proof-contract/phase-03-loader-trust-contract-and-p0-acceptance.md) | P1-D01, P1-A01; `p1-target-matrix` | Commands, flags, generated C inputs, compile results, and limitations; not run. |
-| p1-p01-host-abi | cross-cutting | C/browser ABI reviewers unassigned | [p0-p03-handoff](../p0-governed-baseline-and-proof-contract/phase-03-loader-trust-contract-and-p0-acceptance.md) | P1-D01, P1-A01; `p1-host-abi-probe` | ABI artifact and import/export/glue report; not run. |
-| p1-p01-typescript-authority | browser-host | Browser-host reviewer unassigned | [p0-p03-handoff](../p0-governed-baseline-and-proof-contract/phase-03-loader-trust-contract-and-p0-acceptance.md) | P1-A01; `p1-ts-authority-probe` | Compile-pass/fail fixtures and emitted-JavaScript audit; not run. |
-| p1-p01-integration | cross-cutting | Independent reviewer unassigned | p1-p01-target-probe, p1-p01-host-abi, p1-p01-typescript-authority | P1-A01 | Integrated target/ABI/authority matrix; not run. |
-| p1-p01-handoff | research-tools | Milestone reviewer unassigned | p1-p01-integration | P1-A01 | Dated execution record and proceed/revise/blocked decision; not run. |
+| p1-p01-target-probe | c-runtime | Pascal Charbonneau (`pcharbon70`), experiment owner and ERTS C-port reviewer | [p0-p03-handoff](../p0-governed-baseline-and-proof-contract/phase-03-loader-trust-contract-and-p0-acceptance.md) | P1-D01, P1-A01; `p1-target-matrix` | Commands, flags, generated C inputs, compile results, and limitations; not run. |
+| p1-p01-host-abi | cross-cutting | Pascal Charbonneau (`pcharbon70`), experiment owner and C/browser ABI reviewer | [p0-p03-handoff](../p0-governed-baseline-and-proof-contract/phase-03-loader-trust-contract-and-p0-acceptance.md) | P1-D01, P1-A01; `p1-host-abi-probe` | ABI artifact and import/export/glue report; not run. |
+| p1-p01-typescript-authority | browser-host | Pascal Charbonneau (`pcharbon70`), experiment owner and browser-host reviewer | [p0-p03-handoff](../p0-governed-baseline-and-proof-contract/phase-03-loader-trust-contract-and-p0-acceptance.md) | P1-A01; `p1-ts-authority-probe` | Compile-pass/fail fixtures and emitted-JavaScript audit; not run. |
+| p1-p01-integration | cross-cutting | Pascal Charbonneau (`pcharbon70`), independent reviewer | p1-p01-target-probe, p1-p01-host-abi, p1-p01-typescript-authority | P1-A01 | Integrated target/ABI/authority matrix; not run. |
+| p1-p01-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p1-p01-integration | P1-A01 | Dated execution record and proceed/revise/blocked decision; not run. |
 
 ## Planned work
 

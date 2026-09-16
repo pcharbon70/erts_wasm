@@ -18,6 +18,11 @@ contract and negative-case validation passed. P0-GATE is **blocked** and formal
 P1 entry is not unlocked because independent review, materialized inputs, and
 runtime evidence do not exist.
 
+**Later correction:** [The P0 expectation correction](2026-09-15-p0-expectation-correction.md)
+removes runtime implementation outcomes from the P0 gate. This journal retains
+the original disposition as historical evidence; the corrected acceptance
+report is authoritative for the current blocker set.
+
 ## Plan and acceptance baseline
 
 The run implemented [Phase 3](../60-planning/01-proof-of-concept/p0-governed-baseline-and-proof-contract/phase-03-loader-trust-contract-and-p0-acceptance.md)
@@ -42,9 +47,14 @@ executed. The clean environment was specified but not reproduced.
 | `p0-p03-loader-contract`; P0-A03 | `python3 research/70-tools/p0_contract_validation.py phase-03` | Complete, acyclic, generation-owned loader contract with fixed boot inputs and failure behavior | Contract validated locally | pass-local | [`p0-loader-contract.json`](../assets/p0-governed-baseline/phase-03/p0-loader-contract.json), [`p0-runtime-manifest.schema.json`](../assets/p0-governed-baseline/phase-03/p0-runtime-manifest.schema.json) |
 | `p0-p03-bootstrap-trust`; P0-D02/P0-A03 | same validator | One non-circular root, recursive deployment policy, verified Worker/Wasm behavior | `secure-origin-tcb-v1` selected for the proof; security review and deployment test not run | pass-local / review pending | [`p0-bootstrap-trust.json`](../assets/p0-governed-baseline/phase-03/p0-bootstrap-trust.json) |
 | `p0-p03-integration`; P0-A01–P0-A03 | same validator | All required contracts present and internally consistent | All three phase contract validators passed locally | pass-local / acceptance pending | [`p0-acceptance-report.json`](../assets/p0-governed-baseline/phase-03/p0-acceptance-report.json) |
-| `p0-p03-integration`; P0-GATE | clean environment recipe and independent reviews | Reproducible materialized environment, accepted reviews, no blockers | Environment not reproduced; owners/reviewers and runtime evidence absent | blocked | [`p0-empty-environment-contract.json`](../assets/p0-governed-baseline/phase-03/p0-empty-environment-contract.json), acceptance report above |
+| `p0-p03-integration`; P0-GATE | clean readiness recipe and independent reviews | Reproducible materialized experiment environment, accepted reviews, no P0 blockers | Environment not reproduced and immediate owners/reviewers absent; downstream runtime evidence is not required | blocked | [`p0-empty-environment-contract.json`](../assets/p0-governed-baseline/phase-03/p0-empty-environment-contract.json), acceptance report above |
 | `p0-p03-integration`; inherited and Phase 3 negative cases | `python3 -m unittest research/70-tools/test_p0_contract_validation.py` | Reject missing/floating inputs, circular order/trust, mixed identity, ownerless or actionless entries, undeclared modules, missing deployment prerequisites, and premature closure | Deterministic rejection cases passed | pass-local | [`p0-acceptance-contract.json`](../assets/p0-governed-baseline/phase-03/p0-acceptance-contract.json) |
 | `p0-p03-handoff`; formal P0 closure | Not run | Independent milestone reviewer accepts pass-closing evidence | No reviewer or planning-evidence record; nine blocker classes retained | not run / blocked | acceptance report above |
+
+Later assignment: Pascal Charbonneau (`pcharbon70`) accepted assignment to all
+P0 review roles and planned experiment-owner roles on 2026-09-15. This removes
+the missing-assignment blocker only; review, materialization, readiness, and
+pass-closing evidence remain open.
 
 The aggregate `python3 research/70-tools/check_all.py` and `git diff --check`
 passed after Section 3.2. The containing commit is the Section 3.2 record
@@ -61,8 +71,10 @@ or milestone gate.
 Disposition: **blocked; formal P0-to-P1 handoff denied**. The merged documents
 are implementation-ready drafts, not accepted governance evidence. P1 may be
 read and refined, but its target/runtime probes may not claim formal entry
-until the blockers in `p0-acceptance-report.json` are resolved by actual
-materialization, execution, and independent review.
+until the P0 blockers in `p0-acceptance-report.json` are resolved by input
+materialization, readiness reproduction, and independent review. The later
+role assignment resolved the ownership prerequisite only. P1 execution is an
+outcome after that handoff, not its prerequisite.
 
 No stop trigger is confirmed. Deployment prerequisites remain untested; a
 failure to provide secure context, cross-origin isolation, recursive headers,
@@ -72,8 +84,8 @@ decision.
 
 ## Follow-ups
 
-- Assign every reviewer, artifact owner, deployment owner, update owner, and
-  product-budget authority named by P0.
+- Perform and record the assigned P0 reviews; use a different independent
+  reviewer for any evidence the assigned owner personally produces.
 - Materialize and independently resolve all pins and reproduce the clean
   environment.
 - Implement P1 probes for toolchain, ABI, Worker topology, memory, controlled

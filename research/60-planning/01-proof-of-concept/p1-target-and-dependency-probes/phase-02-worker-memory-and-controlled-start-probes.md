@@ -40,8 +40,9 @@ Back to milestone: [P1 plan](README.md).
 
 Entry requires accepted `p1-p01-handoff` evidence from [Phase 1](phase-01-target-abi-and-language-probes.md).
 Plan review is pending; execution and tests have not started. Browser-host and
-C-runtime areas share the probe, while the implementation repository and
-named reviewers remain unresolved.
+C-runtime areas share the probe, while the implementation repository remains
+unresolved. Pascal Charbonneau (`pcharbon70`) is assigned as experiment owner
+and reviewer; work and review have not started.
 
 This phase compares candidates; it does not select the final Worker topology
 or claim the full ERTS pool size. It uses fixed memory for the first proof and
@@ -59,12 +60,12 @@ does not qualify memory growth.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p1-p02-worker-topologies | browser-host | Runtime/concurrency reviewer unassigned | [p1-p01-handoff](phase-01-target-abi-and-language-probes.md) | P1-D02, P1-A02; `p1-worker-probes` | Both production-shaped topology probe results; not run. |
-| p1-p02-worker-accounting | browser-host | Lifecycle reviewer unassigned | p1-p02-worker-topologies | P1-A02; `p1-worker-accounting` | Isolation, exhaustion, responsiveness, abort, retry, and ownership metrics; not run. |
-| p1-p02-fixed-memory | c-runtime | Memory reviewer unassigned | [p1-p01-handoff](phase-01-target-abi-and-language-probes.md) | P1-D03, P1-A02; `p1-memory-probe` | Fixed-memory layout and deterministic ceiling failure evidence; not run. |
-| p1-p02-controlled-start | cross-cutting | Loader/runtime reviewers unassigned | [p1-p01-handoff](phase-01-target-abi-and-language-probes.md) | P1-D03, P1-A02; `p1-controlled-start-probe` | Instrumented proof that factory/instantiation does not call `main` or `erl_init`; not run. |
-| p1-p02-integration | cross-cutting | Independent reviewer unassigned | p1-p02-worker-topologies, p1-p02-worker-accounting, p1-p02-fixed-memory, p1-p02-controlled-start | P1-A02 | Integrated Worker/memory/start result; not run. |
-| p1-p02-handoff | research-tools | Milestone reviewer unassigned | p1-p02-integration | P1-A02 | Dated execution record and proceed/revise/blocked decision; not run. |
+| p1-p02-worker-topologies | browser-host | Pascal Charbonneau (`pcharbon70`), experiment owner and runtime/concurrency reviewer | [p1-p01-handoff](phase-01-target-abi-and-language-probes.md) | P1-D02, P1-A02; `p1-worker-probes` | Both production-shaped topology probe results; not run. |
+| p1-p02-worker-accounting | browser-host | Pascal Charbonneau (`pcharbon70`), experiment owner and lifecycle reviewer | p1-p02-worker-topologies | P1-A02; `p1-worker-accounting` | Isolation, exhaustion, responsiveness, abort, retry, and ownership metrics; not run. |
+| p1-p02-fixed-memory | c-runtime | Pascal Charbonneau (`pcharbon70`), experiment owner and memory reviewer | [p1-p01-handoff](phase-01-target-abi-and-language-probes.md) | P1-D03, P1-A02; `p1-memory-probe` | Fixed-memory layout and deterministic ceiling failure evidence; not run. |
+| p1-p02-controlled-start | cross-cutting | Pascal Charbonneau (`pcharbon70`), experiment owner and loader/runtime reviewer | [p1-p01-handoff](phase-01-target-abi-and-language-probes.md) | P1-D03, P1-A02; `p1-controlled-start-probe` | Instrumented proof that factory/instantiation does not call `main` or `erl_init`; not run. |
+| p1-p02-integration | cross-cutting | Pascal Charbonneau (`pcharbon70`), independent reviewer | p1-p02-worker-topologies, p1-p02-worker-accounting, p1-p02-fixed-memory, p1-p02-controlled-start | P1-A02 | Integrated Worker/memory/start result; not run. |
+| p1-p02-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p1-p02-integration | P1-A02 | Dated execution record and proceed/revise/blocked decision; not run. |
 
 ## Planned work
 

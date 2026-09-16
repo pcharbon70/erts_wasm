@@ -4,30 +4,140 @@
   "task_id": "p0-p01-pins",
   "recorded_at": "2026-09-15",
   "qualification_target": "linux/amd64 build container and browser Linux x86_64 fixtures",
-  "review_state": "independent-review-pending",
+  "review_state": "accepted-by-independent-owner-2026-09-16",
   "pins": [
-    {"id": "otp-source", "kind": "source", "version": "OTP-29.0.6", "revision": "e07fd07837e5aa845657f5fa340637121e451d47", "tree": "bddab8fbbe44097258572512d689a5be2ec0686f", "origin": "https://github.com/erlang/otp.git", "verification": ["git rev-parse HEAD", "git rev-parse HEAD^{tree}", "git describe --exact-match --tags HEAD"], "materialization_state": "resolved"},
-    {"id": "native-bootstrap", "kind": "build-input", "version": "OTP-29.0.6", "revision": "e07fd07837e5aa845657f5fa340637121e451d47", "origin": "build from the pinned otp-source for the build platform", "expected_identity": "erlang:system_info(otp_release) = 29 and source tag OTP-29.0.6", "verification": ["erl -noshell -eval 'io:format(\"~s~n\", [erlang:system_info(otp_release)]), halt().'"], "materialization_state": "required-not-materialized"},
-    {"id": "emsdk-repository", "kind": "source", "version": "emsdk-selection-2026-09-15", "revision": "5eb0bde7585670252e8ba05e9d361627bffd08b5", "origin": "https://github.com/emscripten-core/emsdk.git", "verification": ["git ls-remote https://github.com/emscripten-core/emsdk.git refs/heads/main"], "materialization_state": "resolved"},
-    {"id": "emscripten-release", "kind": "toolchain", "version": "6.0.9", "revision": "f04ea239d533260dd1db760dd2d668d5f9a88d6b", "origin": "https://chromium.googlesource.com/emscripten-releases", "verification": ["read DEPS at f04ea239d533260dd1db760dd2d668d5f9a88d6b", "emcc --version"], "materialization_state": "metadata-resolved-tool-unavailable-locally"},
-    {"id": "emscripten-source", "kind": "source", "version": "6.0.9 component", "revision": "4e4223852a0835923411059a3929907d7df1232e", "origin": "https://github.com/emscripten-core/emscripten.git", "verification": ["compare emscripten-releases DEPS"], "materialization_state": "resolved"},
-    {"id": "llvm-project", "kind": "source", "version": "6.0.9 component", "revision": "b158b0ae6c559f87be325b8f427c5588e6a48823", "origin": "https://github.com/llvm/llvm-project.git", "verification": ["compare emscripten-releases DEPS", "emcc --version"], "materialization_state": "resolved"},
-    {"id": "binaryen", "kind": "source", "version": "6.0.9 component", "revision": "d03c25ea43d8f147fc222f9b88ff3bf641abe8da", "origin": "https://github.com/WebAssembly/binaryen.git", "verification": ["compare emscripten-releases DEPS", "wasm-opt --version"], "materialization_state": "resolved"},
-    {"id": "build-image", "kind": "oci-image", "version": "docker.io/emscripten/emsdk:6.0.9@sha256:96617f27fe16421588241def73908fd348a7f9d260440ed0d00b36dcf7a063cc", "revision": "linux-amd64-manifest-sha256:3ba391c5b1554e06f9af0a69652ff20919dff14e771619339dba988bd62574b5", "origin": "https://hub.docker.com/r/emscripten/emsdk", "verification": ["docker buildx imagetools inspect docker.io/emscripten/emsdk:6.0.9"], "materialization_state": "resolved-not-pulled"},
-    {"id": "chrome-for-testing", "kind": "browser", "version": "153.0.8010.36", "revision": "1681091", "origin": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.36/linux64/chrome-linux64.zip", "verification": ["compare Chrome for Testing last-known-good stable metadata", "google-chrome --version", "sha256sum chrome-linux64.zip"], "materialization_state": "version-resolved-upstream-sha256-unpublished"},
-    {"id": "firefox", "kind": "browser", "version": "155.0", "revision": "sha256:fd9ec3f5f113d0825ca0bd1ab3c0756fbc40241034eefce6743be953bcca7473", "origin": "https://archive.mozilla.org/pub/firefox/releases/155.0/linux-x86_64/en-US/firefox-155.0.tar.xz", "verification": ["compare official SHA256SUMS", "firefox --version", "sha256sum firefox-155.0.tar.xz"], "materialization_state": "resolved-not-downloaded"}
+    {
+      "id": "otp-source",
+      "kind": "source",
+      "version": "OTP-29.0.6",
+      "revision": "e07fd07837e5aa845657f5fa340637121e451d47",
+      "tree": "bddab8fbbe44097258572512d689a5be2ec0686f",
+      "origin": "https://github.com/erlang/otp.git",
+      "verification": ["git rev-parse HEAD", "git rev-parse HEAD^{tree}", "git describe --exact-match --tags HEAD"],
+      "materialization_state": "resolved"
+    },
+    {
+      "id": "native-bootstrap",
+      "kind": "build-input",
+      "version": "OTP-29.0.6",
+      "revision": "e07fd07837e5aa845657f5fa340637121e451d47",
+      "origin": "build from the pinned otp-source for the build platform",
+      "expected_identity": "erlang:system_info(otp_release) = 29 and source tag OTP-29.0.6",
+      "verification": [
+        "bootstrap/bin/erl -noshell -eval 'io:format(\"otp=~s erts=~s~n\", [erlang:system_info(otp_release), erlang:system_info(version)]), halt().'",
+        "bootstrap/bin/erlc -o /tmp /tmp/p0_native_bootstrap_probe.erl",
+        "sha256sum bootstrap/bin/erl bootstrap/bin/start_clean.boot bootstrap/lib/kernel/ebin/kernel.app bootstrap/lib/stdlib/ebin/stdlib.app /tmp/p0_native_bootstrap_probe.beam"
+      ],
+      "artifact_digests": {
+        "bootstrap/bin/erl": "sha256:9529b7a56390ed33fc512689ddce492ff13cb6a4e3fa855c88cf56420d9409b4",
+        "bootstrap/bin/start_clean.boot": "sha256:9e7d392c3d2e1be4a9ee9fa860cdfb09d1fd06cdffd48fe3dce58b282d9c4798",
+        "bootstrap/lib/kernel/ebin/kernel.app": "sha256:3c37bebc0f903169bebec3da005638aa7f39131af624260572d0f29b7462f92b",
+        "bootstrap/lib/stdlib/ebin/stdlib.app": "sha256:6fa0f596800a9c57ae27d15317f8c6724ba005a7209224bcbeb280c6f9869be9",
+        "p0_native_bootstrap_probe.beam": "sha256:bd9198b863ee19d251ad3782728cc5e1ad18f2f091a6e1e3c357d74c8679be9b"
+      },
+      "observed_identity": "otp=29 erts=17.0.6",
+      "materialization_state": "materialized-and-identity-verified"
+    },
+    {
+      "id": "emsdk-repository",
+      "kind": "source",
+      "version": "emsdk-selection-2026-09-15",
+      "revision": "5eb0bde7585670252e8ba05e9d361627bffd08b5",
+      "origin": "https://github.com/emscripten-core/emsdk.git",
+      "verification": ["git ls-remote https://github.com/emscripten-core/emsdk.git refs/heads/main"],
+      "materialization_state": "resolved"
+    },
+    {
+      "id": "emscripten-release",
+      "kind": "toolchain",
+      "version": "6.0.9",
+      "revision": "f04ea239d533260dd1db760dd2d668d5f9a88d6b",
+      "origin": "https://chromium.googlesource.com/emscripten-releases",
+      "verification": ["read DEPS at f04ea239d533260dd1db760dd2d668d5f9a88d6b", "emcc --version"],
+      "observed_identity": "emcc 6.0.9 (4e4223852a0835923411059a3929907d7df1232e)",
+      "materialization_state": "materialized-in-pinned-build-image"
+    },
+    {
+      "id": "emscripten-source",
+      "kind": "source",
+      "version": "6.0.9 component",
+      "revision": "4e4223852a0835923411059a3929907d7df1232e",
+      "origin": "https://github.com/emscripten-core/emscripten.git",
+      "verification": ["compare emscripten-releases DEPS"],
+      "materialization_state": "resolved"
+    },
+    {
+      "id": "llvm-project",
+      "kind": "source",
+      "version": "6.0.9 component",
+      "revision": "b158b0ae6c559f87be325b8f427c5588e6a48823",
+      "origin": "https://github.com/llvm/llvm-project.git",
+      "verification": ["compare emscripten-releases DEPS", "/emsdk/upstream/bin/clang --version"],
+      "materialization_state": "resolved"
+    },
+    {
+      "id": "binaryen",
+      "kind": "source",
+      "version": "6.0.9 component",
+      "revision": "d03c25ea43d8f147fc222f9b88ff3bf641abe8da",
+      "origin": "https://github.com/WebAssembly/binaryen.git",
+      "verification": ["compare emscripten-releases DEPS", "/emsdk/upstream/bin/wasm-opt --version"],
+      "materialization_state": "resolved"
+    },
+    {
+      "id": "build-image",
+      "kind": "oci-image",
+      "version": "docker.io/emscripten/emsdk:6.0.9@sha256:96617f27fe16421588241def73908fd348a7f9d260440ed0d00b36dcf7a063cc",
+      "revision": "linux-amd64-manifest-sha256:3ba391c5b1554e06f9af0a69652ff20919dff14e771619339dba988bd62574b5",
+      "origin": "https://hub.docker.com/r/emscripten/emsdk",
+      "verification": [
+        "docker image inspect docker.io/emscripten/emsdk@sha256:96617f27fe16421588241def73908fd348a7f9d260440ed0d00b36dcf7a063cc",
+        "run the pinned image with --platform linux/amd64 and inspect emcc, Clang, wasm-opt, Node, npm, and Python versions"
+      ],
+      "local_image_id": "sha256:7b90ac91350e4443717797ce6e7e85a0aa767ead06e1a269422baff8128e425b",
+      "observed_platform": "linux/amd64",
+      "materialization_state": "materialized-and-digest-verified"
+    },
+    {
+      "id": "chrome-for-testing",
+      "kind": "browser",
+      "version": "153.0.8010.36",
+      "revision": "1681091",
+      "origin": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.36/linux64/chrome-linux64.zip",
+      "verification": ["compare Chrome for Testing last-known-good stable metadata", "chrome --version", "sha256sum chrome-linux64.zip"],
+      "archive_sha256": "167a098c4fdec156b58a9f678c90a84f9072d789f9c6e7b35496a6987b8b7ef8",
+      "observed_identity": "Google Chrome for Testing 153.0.8010.36",
+      "materialization_state": "materialized-and-locally-hashed"
+    },
+    {
+      "id": "firefox",
+      "kind": "browser",
+      "version": "155.0",
+      "revision": "sha256:fd9ec3f5f113d0825ca0bd1ab3c0756fbc40241034eefce6743be953bcca7473",
+      "origin": "https://archive.mozilla.org/pub/firefox/releases/155.0/linux-x86_64/en-US/firefox-155.0.tar.xz",
+      "verification": ["compare official SHA256SUMS", "firefox --version", "sha256sum firefox-155.0.tar.xz"],
+      "archive_sha256": "fd9ec3f5f113d0825ca0bd1ab3c0756fbc40241034eefce6743be953bcca7473",
+      "observed_identity": "Mozilla Firefox 155.0",
+      "materialization_state": "materialized-and-official-checksum-verified"
+    }
   ],
-  "local_observations_not_qualification_inputs": [
-    "native Erlang/OTP is release 27, not the required same-release OTP 29 bootstrap",
-    "emcc and clang are unavailable",
-    "Google Chrome 140.0.7339.80 is installed and does not match the qualification pin",
-    "Firefox 134.0 is installed and does not match the qualification pin",
-    "Docker 28.3.3, Node.js v24.3.0, Python 3.12.12, and cc 13.3.0 are locally observable but are not accepted P0 pins"
+  "initial_local_observations_not_qualification_inputs": [
+    "native Erlang/OTP was release 27, not the required same-release OTP 29 bootstrap",
+    "emcc and clang were unavailable on the host",
+    "Google Chrome 140.0.7339.80 was installed and did not match the qualification pin",
+    "Firefox 134.0 was installed and did not match the qualification pin",
+    "Docker 28.3.3, Node.js v24.3.0, Python 3.12.12, and cc 13.3.0 were locally observable but were not accepted P0 pins"
   ],
-  "unresolved": [
-    "materialize and hash the Chrome-for-Testing archive because its selected metadata does not publish a digest",
-    "build and hash the same-release native OTP bootstrap",
-    "materialize the OCI image and verify its internal emcc, Clang, LLVM, and Binaryen version output",
-    "obtain independent resolution of every pin"
-  ]
+  "materialized_toolchain_observations": {
+    "clang": "24.0.0git 510126255f89d693717c1ce7105b593f995f07c1",
+    "binaryen": "wasm-opt version 132 (version_132-49-gd03c25ea4)",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "python": "3.12.3"
+  },
+  "limitations": [
+    "The native bootstrap and required kernel/stdlib inputs built and ran from the pinned source, but the broader make target later failed in the optional debugger application because wx_object was unavailable under --without-wx; this does not change the native-bootstrap identity and must be considered before selecting a full native oracle recipe.",
+    "Chrome for Testing does not publish an upstream checksum in the selected metadata; the recorded SHA-256 is the digest observed for the exact immutable version URL and must be independently reproduced."
+  ],
+  "unresolved": []
 }

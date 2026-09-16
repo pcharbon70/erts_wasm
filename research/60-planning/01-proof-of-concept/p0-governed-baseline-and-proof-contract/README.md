@@ -54,10 +54,15 @@ here. Compile, instantiate, boot, or compatibility claims do not.
 
 Plan: authored, review pending. Execution: all three phase contracts drafted
 and locally validated. Tests: contract and negative checks pass locally, while
-independent review, clean-environment reproduction, and all runtime tests are
-not run. P0 gate: blocked; formal P1 entry is not unlocked. Evidence-bound
+independent review, pinned-input materialization, and the clean
+experiment-readiness reproduction remain incomplete. Pascal Charbonneau
+(`pcharbon70`) is assigned to the P0 review and experiment-owner roles; no
+review or experiment is complete merely from that assignment. P0 gate: blocked;
+formal P1 entry is not unlocked. Runtime implementation evidence and numeric
+product budgets are explicitly downstream and do not block P0. Evidence-bound
 tasks remain unchecked. ADR-0001 remains proposed until P1 evidence supplies
-its review trigger.
+its review trigger. The [expectation correction](../../../50-journal/2026-09-15-p0-expectation-correction.md)
+records why the gate boundary changed.
 
 ## Authoritative inputs
 
@@ -71,18 +76,18 @@ its review trigger.
 
 | Decision ID | Choice and evaluation criteria | Resolution task / location | Responsible owner | Blocks | State and evidence |
 | --- | --- | --- | --- | --- | --- |
-| P0-D01 | Accept or revise language/toolchain ownership using successful ABI and authority-boundary probes. | `p0-p01-language-ownership`, then P1 evidence | Unassigned architecture reviewer | P2 implementation ownership | Proposed in ADR-0001; not tested. |
-| P0-D02 | Select the root executable trust anchor and delivery policy without claiming that generated glue authenticates itself. | `p0-p03-bootstrap-trust` | Unassigned security reviewer | P1 delivery probe | `secure-origin-tcb-v1` selected for first-proof draft; security/deployment review pending. |
-| P0-D03 | Freeze experimental safety ceilings now and a non-gameable product-budget derivation method before C1. | `p0-p02-experiment-bounds`, `p0-p02-product-budget-method` | Product-budget authority unassigned | P1 measurement and Program B | Draft safety ceilings and method frozen; product values null and approval blocked. |
+| P0-D01 | Accept or revise language/toolchain ownership using successful ABI and authority-boundary probes. | `p0-p01-language-ownership`, then P1 evidence | Pascal Charbonneau (`pcharbon70`), architecture reviewer | P2 implementation ownership | Proposed in ADR-0001; review not run and decision not tested. |
+| P0-D02 | Select the root executable trust anchor and delivery policy without claiming that generated glue authenticates itself. | `p0-p03-bootstrap-trust` | Pascal Charbonneau (`pcharbon70`), security reviewer and deployment owner | P1 delivery probe | `secure-origin-tcb-v1` selected for first-proof draft; security/deployment review pending. |
+| P0-D03 | Freeze experimental safety ceilings now and a non-gameable product-budget derivation method before C1. | `p0-p02-experiment-bounds`, `p0-p02-product-budget-method` | Pascal Charbonneau (`pcharbon70`), P0 method reviewer; product authority deferred post-P6/pre-C1 | P1 measurement and Program B | Draft safety ceilings and method frozen; numeric product approval is a downstream pre-C1 gate, not a P0 blocker. |
 
 ## Gate-to-phase and artifact mapping
 
 | Gate / acceptance ID | Required combined result | Artifact IDs | Owning phase and task IDs | Entry dependencies | Evidence and gate state |
 | --- | --- | --- | --- | --- | --- |
 | P0-A01 | Pinned source, toolchain, browser, trust, language, runtime, and thread-census baseline. | `p0-baseline`, `p0-runtime-inventory`, `p0-thread-census-contract` | [Phase 1](phase-01-baseline-authority-and-runtime-inventory.md): `p0-p01-pins` through `p0-p01-thread-census` | None | [Local validation recorded](../../../50-journal/2026-09-15-p0-phase-01-baseline-authority-execution.md); independent review and materialization checks not run / open. |
-| P0-A02 | Frozen experimental limits, unsupported and bounds inventories, product-budget method, and evidence profiles. | `p0-experiment-bounds`, `p0-unsupported-matrix`, `p0-evidence-profile` | [Phase 2](phase-02-bounds-budgets-and-evidence-contracts.md): `p0-p02-experiment-bounds` through `p0-p02-evidence-profiles` | `p0-p01-handoff` | [Local validation recorded](../../../50-journal/2026-09-15-p0-phase-02-bounds-contracts-execution.md); formal entry, independent review, support probes, and product authority not satisfied / open. |
+| P0-A02 | Frozen experimental limits, unsupported and bounds inventories, product-budget method, and evidence profiles. | `p0-experiment-bounds`, `p0-unsupported-matrix`, `p0-evidence-profile` | [Phase 2](phase-02-bounds-budgets-and-evidence-contracts.md): `p0-p02-experiment-bounds` through `p0-p02-evidence-profiles` | `p0-p01-handoff` | [Local validation recorded](../../../50-journal/2026-09-15-p0-phase-02-bounds-contracts-execution.md); formal entry and independent contract review remain open. Instrumentation results and product-budget approval are deferred to their owning gates. |
 | P0-A03 | Manifest, generation, root-trust, and delivery contracts reject contradictory or out-of-bounds inputs. | `p0-loader-contract`, `p0-bootstrap-trust` | [Phase 3](phase-03-loader-trust-contract-and-p0-acceptance.md): `p0-p03-loader-contract`, `p0-p03-bootstrap-trust` | `p0-p02-handoff` | [Local validation recorded](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md); formal entry, security/protocol review, and deployment tests not satisfied / open. |
-| P0-GATE | Reviewed baseline, asset/dependency/patch ledger, trust anchor, bounds and unsupported-operation inventories, loader protocol, and reproducible empty target environment exist. | All P0 artifacts and the P0 execution record | [Phase 3](phase-03-loader-trust-contract-and-p0-acceptance.md): `p0-p03-integration`, `p0-p03-handoff` | P0-A01 through P0-A03 | Local contract checks pass; [acceptance report](../../../assets/p0-governed-baseline/phase-03/p0-acceptance-report.json) records unresolved reviews, owners, materialization, environment, and runtime evidence / blocked. |
+| P0-GATE | Reviewed baseline, forecast asset/dependency ledger, canonical empty patch baseline, trust anchor, bounds and unsupported-operation inventories, loader protocol, and reproducible P1 experiment-readiness environment exist. | All P0 contracts, readiness receipt, and the P0 execution record | [Phase 3](phase-03-loader-trust-contract-and-p0-acceptance.md): `p0-p03-integration`, `p0-p03-handoff` | P0-A01 through P0-A03 | Local contract checks pass and [roles are assigned](../../../assets/p0-governed-baseline/phase-03/p0-role-assignments.json); the [corrected acceptance report](../../../assets/p0-governed-baseline/phase-03/p0-acceptance-report.json) remains blocked on P0 reviews, pinned-input materialization, and readiness reproduction. P1–P6 outcomes are deferred. |
 
 ## Ordered phases
 
@@ -100,9 +105,15 @@ parallel inside a phase only where task dependencies say `none`.
 
 P0 passes only when the reviewed baseline, asset/dependency/patch ledger, trust
 anchor, bounds and unsupported-operation inventories, loader protocol, and
-reproducible empty target environment exist. The integrated contract review
-must detect missing ownership, unresolved runtime edges, contradictory limits,
-and deployment assumptions that violate the intended trust boundary.
+reproducible experiment-readiness environment exist. The integrated contract
+review must detect missing immediate ownership, unresolved contract edges,
+contradictory limits, and deployment assumptions that violate the intended
+trust boundary.
+
+P0 does not require successful C/Emscripten compilation, built runtime assets,
+ERTS/OTP boot, browser-runtime behavior, a nonempty patch stack, sanitizer or
+fuzz results, semantic compatibility, lifecycle evidence, or numeric product
+budgets. Those outcomes belong to P1–P6 or the post-P6/pre-C1 product gate.
 
 **Claim unlocked:** none; this is governance evidence.
 

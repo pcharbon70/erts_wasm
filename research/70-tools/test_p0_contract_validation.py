@@ -42,6 +42,17 @@ class Phase01ContractTests(unittest.TestCase):
         self.mutate("p0-baseline-lock.json", lambda value: value["pins"][3].update(version="latest"))
         self.assert_code("floating-pin")
 
+    def test_unmaterialized_pin_is_rejected(self) -> None:
+        self.mutate(
+            "p0-baseline-lock.json",
+            lambda value: value["pins"][1].update(materialization_state="required-not-materialized"),
+        )
+        self.assert_code("unmaterialized-pin")
+
+    def test_missing_browser_digest_is_rejected(self) -> None:
+        self.mutate("p0-baseline-lock.json", lambda value: value["pins"][8].update(archive_sha256=""))
+        self.assert_code("missing-browser-digest")
+
     def test_duplicate_authority_is_rejected(self) -> None:
         def duplicate(value: dict) -> None:
             value["zones"].append(copy.deepcopy(value["zones"][0]))
@@ -49,9 +60,39 @@ class Phase01ContractTests(unittest.TestCase):
         self.mutate("p0-trust-scope-matrix.json", duplicate)
         self.assert_code("duplicate-authority")
 
+    def test_unassigned_trust_owner_is_rejected(self) -> None:
+        self.mutate("p0-trust-scope-matrix.json", lambda value: value["zones"][0].update(owner="deployment-owner-unassigned"))
+        self.assert_code("unassigned-trust-owner")
+
+    def test_unassigned_language_owner_is_rejected(self) -> None:
+        self.mutate("p0-language-ownership.json", lambda value: value["owners"][0].update(abi_owner="c-runtime-owner-unassigned"))
+        self.assert_code("unassigned-language-owner")
+
+    def test_missing_typescript_toolchain_pin_is_rejected(self) -> None:
+        self.mutate("p0-language-ownership.json", lambda value: value.pop("browser_host_toolchain"))
+        self.assert_code("missing-typescript-toolchain-pin")
+
+    def test_unassigned_census_reviewer_is_rejected(self) -> None:
+        self.mutate("p0-thread-census-contract.json", lambda value: value["owners"].update(review="runtime-concurrency-reviewer-unassigned"))
+        self.assert_code("unassigned-census-reviewer")
+
     def test_missing_runtime_category_is_rejected(self) -> None:
         self.mutate("p0-runtime-inventory.json", lambda value: value["categories"].pop())
         self.assert_code("missing-runtime-category")
+
+    def test_stale_runtime_source_path_is_rejected(self) -> None:
+        self.mutate(
+            "p0-runtime-inventory.json",
+            lambda value: value["categories"][8]["source_paths"].append("erts/emulator/beam/erl_driver.c"),
+        )
+        self.assert_code("stale-runtime-path")
+
+    def test_stale_preload_count_is_rejected(self) -> None:
+        self.mutate(
+            "p0-runtime-inventory.json",
+            lambda value: value["categories"][3].update(findings=["23 preloaded Erlang source modules are present"]),
+        )
+        self.assert_code("stale-preload-count")
 
     def test_topology_selected_census_is_rejected(self) -> None:
         self.mutate(
@@ -173,6 +214,46 @@ class Phase03ContractTests(unittest.TestCase):
     def test_premature_gate_closure_is_rejected(self) -> None:
         self.mutate("p0-acceptance-report.json", lambda value: value.update(gate_state="passed"))
         self.assert_code("premature-p0-closure")
+
+    def test_missing_project_owner_assignment_is_rejected(self) -> None:
+        self.mutate("p0-role-assignments.json", lambda value: value["assignee"].update(github=""))
+        self.assert_code("missing-role-assignment")
+
+    def test_role_assignment_cannot_claim_review_completion(self) -> None:
+        self.mutate("p0-role-assignments.json", lambda value: value["review_roles"][0].update(state="completed"))
+        self.assert_code("fabricated-role-completion")
+
+    def test_stale_unassigned_owner_blocker_is_rejected(self) -> None:
+        self.mutate(
+            "p0-acceptance-report.json",
+            lambda value: value["blockers"].append("immediate P1 experiment owners are unassigned"),
+        )
+        self.assert_code("stale-owner-blocker")
+
+    def test_downstream_runtime_work_cannot_be_a_p0_blocker(self) -> None:
+        self.mutate(
+            "p0-acceptance-report.json",
+            lambda value: value["blockers"].append("no C/Emscripten compile or runtime evidence exists"),
+        )
+        self.assert_code("downstream-p0-blocker")
+
+    def test_downstream_environment_work_cannot_block_p0(self) -> None:
+        self.mutate(
+            "p0-empty-environment-contract.json",
+            lambda value: value["blockers"].append("target probe does not exist"),
+        )
+        self.assert_code("downstream-environment-blocker")
+
+    def test_product_budget_authority_is_deferred_not_fabricated(self) -> None:
+        product_root = Path(self.temp_dir.name) / "phase-02"
+        shutil.copytree(P0_ROOT / "phase-02", product_root)
+        path = product_root / "p0-product-budget-method.json"
+        value = json.loads(path.read_text(encoding="utf-8"))
+        value["authority"] = "p0-reviewer"
+        path.write_text(json.dumps(value), encoding="utf-8")
+        with self.assertRaises(ContractError) as raised:
+            validate_phase_02(product_root)
+        self.assertEqual("fabricated-product-authority", raised.exception.code)
 
 
 if __name__ == "__main__":
