@@ -52,10 +52,10 @@ here. Compile, instantiate, boot, or compatibility claims do not.
 
 ## Planning and delivery state
 
-Plan: authored. Execution: P0.1 and P0.2 are accepted and P0-A01/P0-A02 pass;
-Phase 3 is owner-accepted for P0-A03 after material corrections. Tests:
-contract and negative checks pass locally, while clean P0-A03 evidence and the
-experiment-readiness reproduction remain incomplete. Pascal Charbonneau
+Plan: authored. Execution: P0.1 through P0.3 are accepted and P0-A01 through
+P0-A03 pass after material corrections. Tests: contract and negative checks
+pass locally, while the experiment-readiness reproduction remains incomplete.
+Pascal Charbonneau
 (`pcharbon70`) is assigned to the remaining P0 review and experiment-owner
 roles. P0 gate: blocked; formal P1 entry is not unlocked. Runtime
 implementation evidence and numeric product budgets are explicitly downstream
@@ -85,8 +85,8 @@ records why the gate boundary changed.
 | --- | --- | --- | --- | --- | --- |
 | P0-A01 | Pinned source, toolchain, browser, trust, language, runtime, and thread-census baseline. | `p0-baseline`, `p0-runtime-inventory`, `p0-thread-census-contract` | [Phase 1](phase-01-baseline-authority-and-runtime-inventory.md): `p0-p01-pins` through `p0-p01-thread-census` | None | **Passed 2026-09-16.** [Independent contract evidence](../../../assets/p0-governed-baseline/phase-01/p0-phase-01-acceptance.planning-evidence.json) binds the owner-accepted baseline and limitations to clean revision `aaff05d`. |
 | P0-A02 | Frozen experimental limits, unsupported and bounds inventories, product-budget method, and evidence profiles. | `p0-experiment-bounds`, `p0-unsupported-matrix`, `p0-evidence-profile` | [Phase 2](phase-02-bounds-budgets-and-evidence-contracts.md): `p0-p02-experiment-bounds` through `p0-p02-evidence-profiles` | `p0-p01-handoff` | **Passed 2026-09-16.** [Independent contract evidence](../../../assets/p0-governed-baseline/phase-02/p0-phase-02-acceptance.planning-evidence.json) binds the owner-accepted contracts and limitations to clean revision `d502eae`. Instrumentation results and product-budget approval remain deferred to their owning gates. |
-| P0-A03 | Manifest, generation, root-trust, and delivery contracts reject contradictory or out-of-bounds inputs. | `p0-loader-contract`, `p0-bootstrap-trust` | [Phase 3](phase-03-loader-trust-contract-and-p0-acceptance.md): `p0-p03-loader-contract`, `p0-p03-bootstrap-trust` | `p0-p02-handoff` | [Owner review accepted](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-owner-review-result.json) after material corrections; clean contract evidence remains pending. |
-| P0-GATE | Reviewed baseline, forecast asset/dependency ledger, canonical empty patch baseline, trust anchor, bounds and unsupported-operation inventories, loader protocol, and reproducible P1 experiment-readiness environment exist. | All P0 contracts, readiness receipt, and the P0 execution record | [Phase 3](phase-03-loader-trust-contract-and-p0-acceptance.md): `p0-p03-integration`, `p0-p03-handoff` | P0-A01 through P0-A03 | P0-A01 and P0-A02 pass; P0-A03 and clean experiment-readiness reproduction remain open in the [corrected acceptance report](../../../assets/p0-governed-baseline/phase-03/p0-acceptance-report.json). P1–P6 outcomes are deferred. |
+| P0-A03 | Manifest, generation, root-trust, and delivery contracts reject contradictory or out-of-bounds inputs. | `p0-loader-contract`, `p0-bootstrap-trust` | [Phase 3](phase-03-loader-trust-contract-and-p0-acceptance.md): `p0-p03-loader-contract`, `p0-p03-bootstrap-trust` | `p0-p02-handoff` | **Passed 2026-09-16.** [Independent contract evidence](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-acceptance.planning-evidence.json) binds the owner-accepted manifest, loader, and trust contracts to clean revision `57b73b2`. |
+| P0-GATE | Reviewed baseline, forecast asset/dependency ledger, canonical empty patch baseline, trust anchor, bounds and unsupported-operation inventories, loader protocol, and reproducible P1 experiment-readiness environment exist. | All P0 contracts, readiness receipt, and the P0 execution record | [Phase 3](phase-03-loader-trust-contract-and-p0-acceptance.md): `p0-p03-integration`, `p0-p03-handoff` | P0-A01 through P0-A03 | P0-A01 through P0-A03 pass; clean experiment-readiness reproduction remains open in the [corrected acceptance report](../../../assets/p0-governed-baseline/phase-03/p0-acceptance-report.json). P1–P6 outcomes are deferred. |
 
 ## Ordered phases
 
@@ -94,7 +94,7 @@ records why the gate boundary changed.
 | --- | --- | --- | --- | --- |
 | [Phase 1 — Baseline authority and runtime inventory](phase-01-baseline-authority-and-runtime-inventory.md) | Freeze identities, ownership boundaries, and the runtime/thread inventory contract. | None | Accepted; P0-A01 passed on 2026-09-16 | [Contract evidence](../../../assets/p0-governed-baseline/phase-01/p0-phase-01-acceptance.planning-evidence.json) and [execution record](../../../50-journal/2026-09-15-p0-phase-01-baseline-authority-execution.md). |
 | [Phase 2 — Bounds, budgets, and evidence contracts](phase-02-bounds-budgets-and-evidence-contracts.md) | Freeze experiment bounds, unsupported behavior, budget derivation, and evidence profiles. | `p0-p01-handoff` | Accepted; P0-A02 passed on 2026-09-16 | [Contract evidence](../../../assets/p0-governed-baseline/phase-02/p0-phase-02-acceptance.planning-evidence.json) and [execution record](../../../50-journal/2026-09-15-p0-phase-02-bounds-contracts-execution.md). |
-| [Phase 3 — Loader trust contract and P0 acceptance](phase-03-loader-trust-contract-and-p0-acceptance.md) | Freeze loading and root-trust authority, then evaluate the combined P0 gate. | `p0-p02-handoff` | P0-A03 owner-accepted with clean evidence pending; P0-GATE clean-environment reproduction remains open | [2026-09-15 execution record](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md). |
+| [Phase 3 — Loader trust contract and P0 acceptance](phase-03-loader-trust-contract-and-p0-acceptance.md) | Freeze loading and root-trust authority, then evaluate the combined P0 gate. | `p0-p02-handoff` | Section 3.1 and P0-A03 passed; Section 3.2 and P0-GATE clean-environment reproduction remain open | [P0-A03 evidence](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-acceptance.planning-evidence.json) and [2026-09-15 execution record](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md). |
 
 The dependency order prevents probe results from choosing their own limits or
 silently changing the trust model. Documentation review may proceed in

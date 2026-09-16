@@ -604,17 +604,39 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
         raise ContractError("downstream-p0-blocker", "downstream implementation or product outcomes cannot block P0")
     if len(report.get("deferred_outcomes_not_blocking_p0", [])) != 6:
         raise ContractError("missing-deferred-outcome", "P0 report must preserve six downstream outcome classes")
-    expected_partial_evidence = (
+    expected_pre_p0_a03_evidence = (
         "P0-A01: research/assets/p0-governed-baseline/phase-01/"
         "p0-phase-01-acceptance.planning-evidence.json; "
         "P0-A02: research/assets/p0-governed-baseline/phase-02/"
         "p0-phase-02-acceptance.planning-evidence.json; "
         "P0-A03 and P0-GATE: none"
     )
+    expected_p0_a03_evidence = (
+        "P0-A01: research/assets/p0-governed-baseline/phase-01/"
+        "p0-phase-01-acceptance.planning-evidence.json; "
+        "P0-A02: research/assets/p0-governed-baseline/phase-02/"
+        "p0-phase-02-acceptance.planning-evidence.json; "
+        "P0-A03: research/assets/p0-governed-baseline/phase-03/"
+        "p0-phase-03-acceptance.planning-evidence.json; P0-GATE: none"
+    )
     local_results = report.get("local_contract_results", {})
     if local_results.get("P0-A01") != "passed-reviewed-evidence-bound" or local_results.get("P0-A02") != "passed-reviewed-evidence-bound":
         raise ContractError("stale-accepted-phase", "P0 acceptance report must retain passed P0-A01 and P0-A02 evidence state")
-    if report.get("gate_state") != "blocked" or report.get("planning_evidence") != expected_partial_evidence:
+    phase_03_evidence_path = root / "p0-phase-03-acceptance.planning-evidence.json"
+    if phase_03_evidence_path.exists():
+        phase_03_evidence = load_json(phase_03_evidence_path)
+        if (
+            local_results.get("P0-A03") != "passed-reviewed-evidence-bound"
+            or report.get("planning_evidence") != expected_p0_a03_evidence
+            or phase_03_evidence.get("outcome") != "pass"
+            or phase_03_evidence.get("evidence_kind") != "contract_research"
+            or phase_03_evidence.get("plan_baseline", {}).get("gate_ids") != ["P0-A03"]
+            or phase_03_evidence.get("candidate", {}).get("dirty_state") != "clean"
+        ):
+            raise ContractError("invalid-p0-a03-evidence", "P0-A03 evidence and acceptance report are not mutually bound")
+    elif local_results.get("P0-A03") not in {"pass-local-producer-reviewed-owner-disposition-pending", "owner-accepted-clean-evidence-pending"} or report.get("planning_evidence") != expected_pre_p0_a03_evidence:
+        raise ContractError("premature-p0-a03-closure", "P0-A03 cannot close without owner-accepted clean contract evidence")
+    if report.get("gate_state") != "blocked":
         raise ContractError("premature-p0-closure", "P0 cannot close with unresolved blockers")
     negative_rows = validation.get("negative_cases", [])
     unique(negative_rows, "id", "duplicate-phase-03-negative")
@@ -709,7 +731,11 @@ def main(argv: list[str]) -> int:
         else:
             print("Acceptance status: independent review pending; P0-A02 remains open")
     else:
-        print("Acceptance status: P0-A01 and P0-A02 passed; P0-A03 and P0-GATE remain open")
+        evidence_path = P0_ROOT / "phase-03" / "p0-phase-03-acceptance.planning-evidence.json"
+        if evidence_path.exists():
+            print("Acceptance status: P0-A01, P0-A02, and P0-A03 passed; P0-GATE remains open")
+        else:
+            print("Acceptance status: P0-A01 and P0-A02 passed; P0-A03 and P0-GATE remain open")
     return 0
 
 

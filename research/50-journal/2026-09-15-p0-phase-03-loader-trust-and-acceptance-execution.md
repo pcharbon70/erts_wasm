@@ -15,9 +15,9 @@ aliases: []
 Phase 3 produced the manifest, loader, root-trust, asset/dependency/patch, and
 empty-environment contracts, then evaluated the complete P0 gate. Local
 contract and negative-case validation passed. P0-GATE is **blocked** and formal
-P1 entry is not unlocked because P0-A03 owner disposition and clean
-experiment-readiness reproduction remain open. Runtime implementation evidence
-is downstream and is not a P0 prerequisite.
+P1 entry is not unlocked because clean experiment-readiness reproduction
+remains open. P0-A03 passed separately on 2026-09-16. Runtime implementation
+evidence is downstream and is not a P0 prerequisite.
 
 **Later correction:** [The P0 expectation correction](2026-09-15-p0-expectation-correction.md)
 removes runtime implementation outcomes from the P0 gate. This journal retains
@@ -46,11 +46,11 @@ executed. The clean environment was specified but not reproduced.
 | Task / case IDs | Fixture and exact argv | Expected result | Actual observation | Result | Raw evidence / artifact identity |
 | --- | --- | --- | --- | --- | --- |
 | `p0-p03-loader-contract`; P0-A03 | `python3 research/70-tools/p0_contract_validation.py phase-03` | Complete, acyclic, generation-owned loader contract with fixed boot inputs and failure behavior | Contract validated locally | pass-local | [`p0-loader-contract.json`](../assets/p0-governed-baseline/phase-03/p0-loader-contract.json), [`p0-runtime-manifest.schema.json`](../assets/p0-governed-baseline/phase-03/p0-runtime-manifest.schema.json) |
-| `p0-p03-bootstrap-trust`; P0-D02/P0-A03 | same validator | One non-circular root, recursive deployment policy, verified Worker/Wasm behavior | `secure-origin-tcb-v1` selected for the proof; security review and deployment test not run | pass-local / review pending | [`p0-bootstrap-trust.json`](../assets/p0-governed-baseline/phase-03/p0-bootstrap-trust.json) |
-| `p0-p03-integration`; P0-A01–P0-A03 | same validator | All required contracts present and internally consistent | All three phase contract validators passed locally | pass-local / acceptance pending | [`p0-acceptance-report.json`](../assets/p0-governed-baseline/phase-03/p0-acceptance-report.json) |
+| `p0-p03-bootstrap-trust`; P0-D02/P0-A03 | same validator | One non-circular root, recursive deployment policy, verified Worker/Wasm behavior | `secure-origin-tcb-v1` later owner-accepted for the proof; deployment execution not run | pass-contract / deployment pending | [`p0-bootstrap-trust.json`](../assets/p0-governed-baseline/phase-03/p0-bootstrap-trust.json) |
+| `p0-p03-integration`; P0-A01–P0-A03 | same validator | All required contracts present and internally consistent | P0-A01 through P0-A03 later passed by reviewed evidence; P0-GATE readiness remains open | contract acceptances pass / integration pending | [`p0-acceptance-report.json`](../assets/p0-governed-baseline/phase-03/p0-acceptance-report.json) |
 | `p0-p03-integration`; P0-GATE | clean readiness recipe and independent reviews | Reproducible materialized experiment environment, accepted reviews, no P0 blockers | Environment not reproduced and immediate owners/reviewers absent; downstream runtime evidence is not required | blocked | [`p0-empty-environment-contract.json`](../assets/p0-governed-baseline/phase-03/p0-empty-environment-contract.json), acceptance report above |
 | `p0-p03-integration`; inherited and Phase 3 negative cases | `python3 -m unittest research/70-tools/test_p0_contract_validation.py` | Reject missing/floating inputs, circular order/trust, mixed identity, ownerless or actionless entries, undeclared modules, missing deployment prerequisites, and premature closure | Deterministic rejection cases passed | pass-local | [`p0-acceptance-contract.json`](../assets/p0-governed-baseline/phase-03/p0-acceptance-contract.json) |
-| `p0-p03-handoff`; formal P0 closure | Not run | Independent milestone reviewer accepts pass-closing evidence | No reviewer or planning-evidence record; nine blocker classes retained | not run / blocked | acceptance report above |
+| `p0-p03-handoff`; formal P0 closure | Not run | Independent milestone reviewer accepts pass-closing P0-GATE evidence | P0-A03 reviewer/evidence now exist; clean readiness evidence and milestone disposition do not | not run / blocked | acceptance report above |
 
 Later assignment: Pascal Charbonneau (`pcharbon70`) accepted assignment to all
 P0 review roles and planned experiment-owner roles on 2026-09-15. This removes
@@ -63,9 +63,10 @@ revision; later PR and merge revisions are transport history.
 
 ## Machine-readable evidence
 
-No `*.planning-evidence.json` was created. The local acceptance report is
-explicitly blocked and therefore cannot close a task, phase, acceptance case,
-or milestone gate.
+The later `p0-phase-03-acceptance.planning-evidence.json` closes the two Section
+3.1 tasks and P0-A03 against clean revision `57b73b2`. It explicitly does not
+close Section 3.2, the phase, P0-GATE, or the P0-to-P1 handoff. The combined
+acceptance report remains blocked.
 
 ## 2026-09-16 producer review
 
@@ -94,8 +95,8 @@ loads. The machine validation contract declares 20 reviewed rejection cases.
 passed locally; the focused suite reported 59 tests.
 
 Pascal Charbonneau accepted the P0.3 owner-review packet and its recorded
-limitations on 2026-09-16. That disposition is recorded separately and awaits
-a clean pass-closing contract-evidence record.
+limitations on 2026-09-16. The resulting clean-revision contract evidence
+closes P0-A03 only.
 P0-GATE remains separately blocked on the complete clean-environment replay,
 empty Chrome and Firefox profiles, and the static secure-context/header/
 service-worker preflight. No C, Emscripten, Wasm, Worker, ERTS, OTP, semantic,

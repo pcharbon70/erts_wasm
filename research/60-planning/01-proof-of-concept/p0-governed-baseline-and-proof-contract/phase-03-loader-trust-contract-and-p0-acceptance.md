@@ -40,8 +40,8 @@ so formal Phase 3 review may begin. The 2026-09-16 producer review aligned the
 manifest with the accepted P0.2 bounds, corrected the manifest/root-trust and
 runtime-generation identities, and expanded deterministic rejection coverage.
 The [owner-review result](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-owner-review-result.json)
-accepts P0-A03 and its recorded limitations; clean pass-closing evidence is
-pending. Clean-environment
+accepts P0-A03 and its recorded limitations. The [clean contract evidence](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-acceptance.planning-evidence.json)
+closes P0-A03 only. Clean-environment
 reproduction and browser deployment execution have not started. This phase
 owns the loader and delivery contract in the corpus, not a browser loader
 implementation.
@@ -64,9 +64,9 @@ the P0 stop condition rather than a silent scope reduction.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p0-p03-loader-contract | research-tools | Pascal Charbonneau (`pcharbon70`), loader/protocol reviewer | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-A03; `p0-loader-contract` | Owner-accepted after material corrections; clean pass-closing evidence pending. |
-| p0-p03-bootstrap-trust | research-tools | Pascal Charbonneau (`pcharbon70`), security reviewer and deployment owner | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-D02, P0-A03; `p0-bootstrap-trust` | First-proof choice owner-accepted; clean pass-closing evidence and deployment execution pending. |
-| p0-p03-integration | cross-cutting | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p03-loader-contract, p0-p03-bootstrap-trust | P0-GATE | P0-A03 clean evidence and clean experiment-readiness reproduction remain open. |
+| p0-p03-loader-contract | research-tools | Pascal Charbonneau (`pcharbon70`), loader/protocol reviewer | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-A03; `p0-loader-contract` | [Passed by owner-accepted clean evidence](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-acceptance.planning-evidence.json). |
+| p0-p03-bootstrap-trust | research-tools | Pascal Charbonneau (`pcharbon70`), security reviewer and deployment owner | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-D02, P0-A03; `p0-bootstrap-trust` | [Passed for the first-proof contract](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-acceptance.planning-evidence.json); deployment execution remains pending. |
+| p0-p03-integration | cross-cutting | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p03-loader-contract, p0-p03-bootstrap-trust | P0-GATE | P0-A03 passes; clean experiment-readiness reproduction remains open. |
 | p0-p03-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p0-p03-integration | P0-GATE | [Dated blocked execution record](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md); no closure evidence. |
 
 ## Planned work
@@ -77,13 +77,13 @@ the P0 stop condition rather than a silent scope reduction.
   contracts compose without an unowned asset, transition, resource, or trust
   assumption.
 
-  - [ ] 3.1 Section — Freeze loading authority and delivery trust.
+  - [x] 3.1 Section — Freeze loading authority and delivery trust.
 
     Specify what the browser may load, in what order, under whose authority,
     and how every failure or stale generation is rejected before runtime
     execution.
 
-    - [ ] 3.1.1 Task [id: p0-p03-loader-contract] [area: research-tools] [after: p0-p02-handoff] — Specify the manifest schema, fixed argv/environment/root/path/cwd, topology-specific loader partial order, immutable module set, loading failure matrix, runtime identity attestation, and generation ownership rules.
+    - [x] 3.1.1 Task [id: p0-p03-loader-contract] [area: research-tools] [after: p0-p02-handoff] — Specify the manifest schema, fixed argv/environment/root/path/cwd, topology-specific loader partial order, immutable module set, loading failure matrix, runtime identity attestation, and generation ownership rules.
 
       Bind every preflight input and loader transition to a versioned schema,
       owner, bound, and failure action. Completion requires explicit states and
@@ -95,7 +95,7 @@ the P0 stop condition rather than a silent scope reduction.
         module closure, generation tokens, cleanup ownership, and malformed,
         stale, duplicate, skewed, and out-of-bounds cases.
 
-    - [ ] 3.1.2 Task [id: p0-p03-bootstrap-trust] [area: research-tools] [after: p0-p02-handoff] — Select the root executable trust anchor and document origin, header, redirect, cache, service-worker, CSP, Worker-integrity, and Wasm streaming policy. Do not claim that a generated loader authenticates itself.
+    - [x] 3.1.2 Task [id: p0-p03-bootstrap-trust] [area: research-tools] [after: p0-p02-handoff] — Select the root executable trust anchor and document origin, header, redirect, cache, service-worker, CSP, Worker-integrity, and Wasm streaming policy. Do not claim that a generated loader authenticates itself.
 
       Compare feasible root-trust choices against the deployment and attacker
       model. Completion requires an explicit decision, trusted-base inventory,

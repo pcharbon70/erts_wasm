@@ -1,0 +1,144 @@
+{
+  "profile": "erts-wasm.planning-evidence.v1",
+  "record_id": "evidence.p0.phase_03.acceptance_2026_09_16",
+  "evidence_kind": "contract_research",
+  "synthetic": false,
+  "producer": "Codex",
+  "reviewer": "Pascal Charbonneau (pcharbon70)",
+  "plan_baseline": {
+    "document_id": "planning.erts_wasm.proof_of_concept.p0.plan",
+    "revision": "57b73b20c52198a98d5f60337286871e6ab5eaa4",
+    "task_ids": ["p0-p03-loader-contract", "p0-p03-bootstrap-trust"],
+    "gate_ids": ["P0-A03"]
+  },
+  "candidate": {
+    "revision": "57b73b20c52198a98d5f60337286871e6ab5eaa4",
+    "dirty_state": "clean",
+    "diff_sha256": null
+  },
+  "execution": {
+    "status": "completed",
+    "tested_revision": "57b73b20c52198a98d5f60337286871e6ab5eaa4",
+    "commands": [
+      {
+        "id": "validate-phase-03",
+        "argv": ["python3", "research/70-tools/p0_contract_validation.py", "phase-03"],
+        "cwd": ".",
+        "exit_code": 0,
+        "stdout_sha256": "d02d4a7d81afa8b62e360215f04ffd14d8ed18d6bfbb4dcff379fdfe213cfa72",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "result_artifact_ids": ["artifact.p0.phase03.owner_review_result", "artifact.p0.phase03.producer_review_receipt"]
+      },
+      {
+        "id": "test-p0-contracts",
+        "argv": ["python3", "-m", "unittest", "discover", "-s", "research/70-tools", "-p", "test_p0_contract_validation.py"],
+        "cwd": ".",
+        "exit_code": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "155cc0f0ba212fed82ddd98e698e352b6086be699ef2747e4086682fb92ef887",
+        "result_artifact_ids": ["artifact.p0.phase03.producer_review_receipt"]
+      },
+      {
+        "id": "check-research-corpus",
+        "argv": ["python3", "research/70-tools/check_all.py"],
+        "cwd": ".",
+        "exit_code": 0,
+        "stdout_sha256": "55c90d3124d606575dddfa13206aea00d06a52e655159027404589802a299879",
+        "stderr_sha256": "a56ba56406288e838a263e79470035019c858a20bb8dfdab88177343128439c7",
+        "result_artifact_ids": ["artifact.p0.phase03.owner_review_result", "artifact.p0.phase03.producer_review_receipt"]
+      }
+    ]
+  },
+  "toolchains": [
+    {
+      "name": "Python corpus and P0 contract validators",
+      "executable": "python3",
+      "version": "3.12.12",
+      "target": "repository contract research",
+      "compile_flags": [],
+      "link_flags": []
+    }
+  ],
+  "sources": [
+    {
+      "id": "source.p0.phase03.runtime_manifest_schema",
+      "role": "owner-accepted immutable profile, trust, artifact, runtime, boot, module, ABI, capability, and bound schema",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-03/p0-runtime-manifest.schema.json",
+      "available": true,
+      "sha256": "2d2cfff01b6d92cd9c5b0a4cb9cfd3a1d9b5daee94e1ca0c0b514b23ce4e43e9",
+      "bytes": 12842
+    },
+    {
+      "id": "source.p0.phase03.loader_contract",
+      "role": "owner-accepted manifest authentication, state, partial-order, identity, admission, ownership, and failure contract",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-03/p0-loader-contract.json",
+      "available": true,
+      "sha256": "ca1c470e41c6d93d185cbb3ed0bc28627f7f44870c405161ba41121986a69628",
+      "bytes": 8882
+    },
+    {
+      "id": "source.p0.phase03.bootstrap_trust",
+      "role": "owner-accepted first-proof external root trust, delivery, header, Worker, and Wasm policy",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-03/p0-bootstrap-trust.json",
+      "available": true,
+      "sha256": "6d650b9c876809330dc926c8871b2b9e8f2ea26fd28aae337b2cbc9d62527d81",
+      "bytes": 5222
+    },
+    {
+      "id": "source.p0.phase03.validation_contract",
+      "role": "positive assertions, 20 reviewed rejection classes, and non-acceptance boundary",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-03/p0-phase-03-validation-contract.json",
+      "available": true,
+      "sha256": "105d739f45104e46f5fdc14c453aeadd72d53b5971231c43a2cf5fbd62ae7b4e",
+      "bytes": 3060
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "artifact.p0.phase03.owner_review_result",
+      "role": "dated independent owner acceptance of P0-A03 and its recorded limitations",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-03/p0-phase-03-owner-review-result.json",
+      "available": true,
+      "sha256": "5586add42b0bb114d31833d7c932670c05f9566bcad9f3db1612e8e3a22f1799",
+      "bytes": 3681
+    },
+    {
+      "id": "artifact.p0.phase03.producer_review_receipt",
+      "role": "review trace, exact input digests, corrections, validation, and limitations",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-03/p0-phase-03-producer-review-receipt.json",
+      "available": true,
+      "sha256": "37e0e7d29ce3ab3559348fed608f55d6f9cbb9dcba381c4450e8ac237e4bfeb9",
+      "bytes": 6998
+    }
+  ],
+  "contract_ref": {
+    "path": "research/assets/p0-governed-baseline/phase-03/p0-phase-03-acceptance-contract.json",
+    "sha256": "fad05b962b1029edc72a70bfe2393563686e944f87fd106246e970d4504f64bb"
+  },
+  "observations": {
+    "kind": "contract_research",
+    "criteria": [
+      {"id": "manifest-bound-and-identity-contract-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase03.owner_review_result", "artifact.p0.phase03.producer_review_receipt"]},
+      {"id": "loader-state-generation-and-admission-contract-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase03.owner_review_result", "artifact.p0.phase03.producer_review_receipt"]},
+      {"id": "bootstrap-trust-policy-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase03.owner_review_result"]},
+      {"id": "static-negative-contract-validation-passed", "outcome": "pass", "artifact_ids": ["artifact.p0.phase03.producer_review_receipt"]}
+    ]
+  },
+  "observation_artifact_ids": ["artifact.p0.phase03.owner_review_result", "artifact.p0.phase03.producer_review_receipt"],
+  "outcome": "pass",
+  "limitations": [
+    "This evidence closes P0-A03 static contract acceptance only; it records no C, Emscripten, Wasm, Worker, browser, ERTS, OTP, semantic, performance, sanitizer, fuzz, or lifecycle execution.",
+    "The secure origin, TLS, root document, bootstrap, and update path remain trusted and can replace the exact externally pinned manifest digest and executable policy.",
+    "The implementation must separately enforce every pre-decode, UTF-8 byte, aggregate, equality, observed-byte, release-expansion, and before-native-parser rule that JSON Schema cannot express.",
+    "Worker descendant-load exclusion, CSP, recursive headers, secure-context isolation, service-worker exclusion, controlled start, and lower-boundary BEAM admission remain executable proof obligations.",
+    "Both Worker topologies remain candidates; no topology, Emscripten seam, or runtime behavior is selected or accepted.",
+    "The clean experiment-readiness environment has not been reproduced, so p0-p03-integration, p0-p03-handoff, P0-GATE, and formal P1 entry remain open."
+  ],
+  "support_refs": ["evidence.p0.phase_01.acceptance_2026_09_16", "evidence.p0.phase_02.acceptance_2026_09_16"]
+}

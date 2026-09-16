@@ -1,0 +1,15 @@
+{
+  "contract_id": "p0-phase-03-acceptance",
+  "acceptance_id": "P0-A03",
+  "task_id": "p0-p03-bootstrap-trust",
+  "expected": {
+    "evidence_kind": "contract_research",
+    "criteria": [
+      {"id": "manifest-bound-and-identity-contract-accepted"},
+      {"id": "loader-state-generation-and-admission-contract-accepted"},
+      {"id": "bootstrap-trust-policy-accepted"},
+      {"id": "static-negative-contract-validation-passed"}
+    ]
+  },
+  "acceptance_boundary": "P0-A03 closes reviewed loader, manifest, generation, root-trust, delivery, and static rejection contracts only; clean experiment-readiness reproduction, browser deployment execution, p0-p03-integration, p0-p03-handoff, P0-GATE, formal P1 entry, topology selection, and runtime behavior remain outside this evidence"
+}
