@@ -38,7 +38,8 @@ Back to milestone: [P1 plan](README.md).
 Entry requires accepted `p1-p02-handoff` evidence from [Phase 2](phase-02-worker-memory-and-controlled-start-probes.md).
 Plan review is pending; execution and tests have not started. Browser-host,
 build/release, and research evidence areas participate; implementation
-locations and named reviewers remain unresolved.
+locations remain unresolved. Pascal Charbonneau (`pcharbon70`) is assigned as
+experiment owner and reviewer.
 
 This phase does not use an inline developer loader, select a final P3 topology,
 or claim ERTS compilation or boot. It must apply the P0 trust anchor and bounds
@@ -56,10 +57,10 @@ to actual browser delivery in pinned Chrome and Firefox.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p1-p03-manifest-delivery | build-release | Loader/delivery reviewer unassigned | [p1-p02-handoff](phase-02-worker-memory-and-controlled-start-probes.md) | P1-A03; `p1-delivery-matrix` | Manifest-bound positive, cancellation, and bounds evidence; not run. |
-| p1-p03-bootstrap-trust | browser-host | Security reviewer unassigned | [p1-p02-handoff](phase-02-worker-memory-and-controlled-start-probes.md) | P1-A03; `p1-bootstrap-negative-matrix` | Trust-root, cache, Worker, streaming, and generation-negative evidence; not run. |
-| p1-p03-integration | cross-cutting | Independent reviewer unassigned | p1-p03-manifest-delivery, p1-p03-bootstrap-trust | P1-GATE | Full Chrome/Firefox P1 matrix and stop-condition assessment; not run. |
-| p1-p03-handoff | research-tools | Milestone reviewer unassigned | p1-p03-integration | P1-GATE | Dated execution record and proceed/revise/blocked decision; not run. |
+| p1-p03-manifest-delivery | build-release | Pascal Charbonneau (`pcharbon70`), experiment owner and loader/delivery reviewer | [p1-p02-handoff](phase-02-worker-memory-and-controlled-start-probes.md) | P1-A03; `p1-delivery-matrix` | Manifest-bound positive, cancellation, and bounds evidence; not run. |
+| p1-p03-bootstrap-trust | browser-host | Pascal Charbonneau (`pcharbon70`), experiment owner and security reviewer | [p1-p02-handoff](phase-02-worker-memory-and-controlled-start-probes.md) | P1-A03; `p1-bootstrap-negative-matrix` | Trust-root, cache, Worker, streaming, and generation-negative evidence; not run. |
+| p1-p03-integration | cross-cutting | Pascal Charbonneau (`pcharbon70`), independent reviewer | p1-p03-manifest-delivery, p1-p03-bootstrap-trust | P1-GATE | Full Chrome/Firefox P1 matrix and stop-condition assessment; not run. |
+| p1-p03-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p1-p03-integration | P1-GATE | Dated execution record and proceed/revise/blocked decision; not run. |
 
 ## Planned work
 

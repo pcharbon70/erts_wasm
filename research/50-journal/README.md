@@ -37,6 +37,7 @@ Time-bound observations and reproducible evidence, including negative results.
 - [2026-09-15 P0 phase 01 baseline authority execution](2026-09-15-p0-phase-01-baseline-authority-execution.md) — pin, trust, language, runtime-inventory, census-contract, validation, and review-pending record.
 - [2026-09-15 P0 phase 02 bounds contracts execution](2026-09-15-p0-phase-02-bounds-contracts-execution.md) — premeasurement safety, unsupported-operation, loader-bound, product-budget, evidence-profile, and review-pending record.
 - [2026-09-15 P0 phase 03 loader trust and acceptance execution](2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md) — loader, root-trust, clean-environment, full P0 validation, and blocked-gate record.
+- [2026-09-15 P0 expectation and evidence-order correction](2026-09-15-p0-expectation-correction.md) — removes downstream implementation and product outcomes from the P0 entry gate while preserving legitimate readiness blockers.
 
 ## Maintaining this index
 

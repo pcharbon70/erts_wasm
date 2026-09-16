@@ -62,9 +62,26 @@ def validate_phase_01(root: Path = P0_ROOT / "phase-01") -> list[str]:
         for field in ("version", "revision", "origin", "verification", "materialization_state"):
             if not pin.get(field):
                 raise ContractError("incomplete-pin", f"{pin['id']} lacks {field}")
+    required_materialization = {
+        "native-bootstrap": "materialized-and-identity-verified",
+        "emscripten-release": "materialized-in-pinned-build-image",
+        "build-image": "materialized-and-digest-verified",
+        "chrome-for-testing": "materialized-and-locally-hashed",
+        "firefox": "materialized-and-official-checksum-verified",
+    }
+    pin_by_id = {pin["id"]: pin for pin in pins}
+    for pin_id, expected_state in required_materialization.items():
+        if pin_by_id[pin_id].get("materialization_state") != expected_state:
+            raise ContractError("unmaterialized-pin", f"{pin_id} is not materialized and verified")
+    for browser_id in ("chrome-for-testing", "firefox"):
+        digest = pin_by_id[browser_id].get("archive_sha256", "")
+        if len(digest) != 64 or any(character not in "0123456789abcdef" for character in digest):
+            raise ContractError("missing-browser-digest", f"{browser_id} lacks an exact SHA-256")
 
     zones = trust.get("zones", [])
     unique(zones, "id", "duplicate-authority")
+    if any(not row.get("owner") or "unassigned" in row.get("owner", "") for row in zones):
+        raise ContractError("unassigned-trust-owner", "every trust zone must bind an assigned owner")
     if trust.get("import_abi", {}).get("default") != "deny":
         raise ContractError("ambient-authority", "import ABI must deny by default")
     if not trust.get("stop_conditions") or not trust.get("quota_owners"):
@@ -75,8 +92,19 @@ def validate_phase_01(root: Path = P0_ROOT / "phase-01") -> list[str]:
     required_languages = {"C", "TypeScript", "Erlang", "Elixir", "Rust", "C++"}
     if {row["language"] for row in language_rows} != required_languages:
         raise ContractError("missing-language-owner", "language ownership set is incomplete")
+    admitted_languages = {"C", "TypeScript", "Erlang", "Elixir"}
+    if any(not row.get("abi_owner") or "unassigned" in row.get("abi_owner", "") for row in language_rows if row.get("language") in admitted_languages):
+        raise ContractError("unassigned-language-owner", "every admitted or deferred language boundary must bind an assigned owner")
     if languages.get("adr_state") != "proposed":
         raise ContractError("premature-adr-acceptance", "ADR-0001 must remain proposed until P1 evidence")
+    browser_toolchain = languages.get("browser_host_toolchain", {})
+    if browser_toolchain.get("node", {}).get("version") != "24.19.0":
+        raise ContractError("missing-typescript-toolchain-pin", "browser-host Node must match the pinned build image")
+    if browser_toolchain.get("package_manager", {}).get("version") != "11.17.0":
+        raise ContractError("missing-typescript-toolchain-pin", "browser-host package manager is not pinned")
+    typescript = browser_toolchain.get("typescript", {})
+    if typescript.get("version") != "6.0.3" or not typescript.get("integrity") or not typescript.get("sha256"):
+        raise ContractError("missing-typescript-toolchain-pin", "TypeScript compiler identity is incomplete")
 
     categories = inventory.get("categories", [])
     unique(categories, "id", "duplicate-runtime-category")
@@ -91,6 +119,11 @@ def validate_phase_01(root: Path = P0_ROOT / "phase-01") -> list[str]:
     for item in categories:
         if not item.get("method") or not item.get("findings") or not item.get("classification"):
             raise ContractError("silent-runtime-category", f"{item['id']} lacks method, findings, or classification")
+        if "erts/emulator/beam/erl_driver.c" in item.get("source_paths", []):
+            raise ContractError("stale-runtime-path", "OTP 29.0.6 has no erts/emulator/beam/erl_driver.c")
+    inventory_by_id = {item["id"]: item for item in categories}
+    if "22 preloaded Erlang source modules are present" not in inventory_by_id["preloads"].get("findings", []):
+        raise ContractError("stale-preload-count", "OTP 29.0.6 preload count must be the reproduced value")
 
     pool_rule = census.get("pool_size_rule", {})
     if pool_rule.get("source") != "measured-full-runtime-high-water-plus-declared-headroom":
@@ -100,6 +133,8 @@ def validate_phase_01(root: Path = P0_ROOT / "phase-01") -> list[str]:
     experiment_ids = {item.get("id") for item in census.get("experiments", [])}
     if experiment_ids != {"P0-THREAD-N", "P0-THREAD-N-1"}:
         raise ContractError("missing-n-minus-one", "thread census needs N and N-1 experiments")
+    if "unassigned" in census.get("owners", {}).get("review", ""):
+        raise ContractError("unassigned-census-reviewer", "thread-census review must bind an assigned reviewer")
 
     return ["pins", "trust-boundary", "language-ownership", "runtime-inventory", "thread-census"]
 
@@ -151,8 +186,8 @@ def validate_phase_02(root: Path = P0_ROOT / "phase-02") -> list[str]:
 
     if product.get("numeric_product_budgets") is not None:
         raise ContractError("premature-product-budget", "numeric product budgets require the actual authority")
-    if product.get("authority") != "unassigned" or product.get("approval_state") != "blocked-authority-unassigned":
-        raise ContractError("fabricated-product-authority", "product authority must remain explicitly unassigned")
+    if product.get("authority") != "unassigned-until-post-p6-pre-c1" or product.get("approval_state") != "method-frozen-product-approval-deferred-pre-c1":
+        raise ContractError("fabricated-product-authority", "P0 must defer numeric product approval and its authority until post-P6/pre-C1")
     if "copy an experimental safety ceiling" not in product.get("forbidden_derivations", []):
         raise ContractError("copied-safety-ceiling", "product method must prohibit copying safety ceilings")
 
@@ -196,6 +231,7 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
     loader = load_json(root / "p0-loader-contract.json")
     trust = load_json(root / "p0-bootstrap-trust.json")
     ledger = load_json(root / "p0-asset-dependency-patch-ledger.json")
+    roles = load_json(root / "p0-role-assignments.json")
     environment = load_json(root / "p0-empty-environment-contract.json")
     acceptance = load_json(root / "p0-acceptance-contract.json")
     report = load_json(root / "p0-acceptance-report.json")
@@ -264,28 +300,88 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
 
     unique(ledger.get("assets", []), "id", "duplicate-asset")
     unique(ledger.get("dependencies", []), "id", "duplicate-dependency")
-    if ledger.get("patch_stack", {}).get("patches") != [] or ledger.get("patch_stack", {}).get("state") != "no-implementation-patches-exist":
+    patch_stack = ledger.get("patch_stack", {})
+    if patch_stack.get("patches") != [] or patch_stack.get("state") != "empty-baseline-frozen":
         raise ContractError("fabricated-patch-stack", "P0 must record that no implementation patch stack exists")
+    if patch_stack.get("digest") != "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855":
+        raise ContractError("invalid-empty-patch-digest", "empty patch stack must use the canonical empty-stream SHA-256")
+    assignee = roles.get("assignee", {})
+    if roles.get("contract_id") != "p0-role-assignments" or assignee.get("name") != "Pascal Charbonneau" or assignee.get("github") != "pcharbon70":
+        raise ContractError("missing-role-assignment", "P0 review and experiment roles must bind the project owner's stable identity")
+    review_roles = roles.get("review_roles", [])
+    experiment_roles = roles.get("experiment_owner_roles", [])
+    unique(review_roles, "id", "duplicate-review-role")
+    unique(experiment_roles, "id", "duplicate-experiment-owner-role")
+    required_review_roles = {
+        "build-reproducibility-reviewer", "security-reviewer", "architecture-reviewer",
+        "erts-c-port-reviewer", "runtime-concurrency-reviewer", "measurement-reviewer",
+        "method-reviewer", "test-evidence-reviewer", "loader-protocol-reviewer",
+        "c-browser-abi-reviewer", "browser-host-reviewer", "browser-wasm-reviewer",
+        "lifecycle-reviewer", "memory-reviewer", "loader-runtime-reviewer",
+        "loader-delivery-reviewer",
+        "integration-reviewer", "milestone-reviewer",
+    }
+    required_experiment_roles = {
+        "c-runtime-owner", "browser-host-owner", "beam-fixture-owner", "build-release-owner",
+        "browser-test-owner", "deployment-owner", "update-owner", "runtime-owner",
+        "renderer-owner", "compatibility-owner",
+    }
+    if {row["id"] for row in review_roles} != required_review_roles or {row["id"] for row in experiment_roles} != required_experiment_roles:
+        raise ContractError("incomplete-role-assignment", "P0 reviewer and experiment-owner role sets are incomplete")
+    if any(row.get("state") != "assigned-review-not-run" for row in review_roles) or any(row.get("state") != "assigned-work-not-started" for row in experiment_roles):
+        raise ContractError("fabricated-role-completion", "role assignment must not claim completed review or experiment work")
+    if "different independent reviewer" not in roles.get("independence_rule", ""):
+        raise ContractError("missing-review-independence", "owner-produced evidence needs a different independent reviewer")
+    assigned_owner = "Pascal Charbonneau (pcharbon70)"
+    if any(row.get("source_owner") != assigned_owner for row in ledger.get("assets", [])) or any(row.get("owner") != assigned_owner for row in ledger.get("dependencies", [])) or patch_stack.get("owner") != assigned_owner:
+        raise ContractError("unassigned-experiment-owner", "forecast assets, dependencies, and patch stack must bind the assigned experiment owner")
     if environment.get("reproduction_state") != "specified-not-run" or not environment.get("blockers"):
         raise ContractError("fabricated-empty-environment", "clean environment is specified but not reproduced")
+    if not environment.get("deferred") or any("target probe" in blocker or "asset and patch digests" in blocker for blocker in environment.get("blockers", [])):
+        raise ContractError("downstream-environment-blocker", "P1+ work must be deferred rather than required by P0 environment readiness")
     required_contracts = {
         "p0-baseline", "p0-trust-model", "p0-language-ownership",
         "p0-runtime-inventory", "p0-thread-census-contract",
         "p0-experiment-bounds", "p0-unsupported-matrix", "p0-loader-bounds",
         "p0-product-budget-method", "p0-evidence-profile",
         "p0-loader-contract", "p0-bootstrap-trust",
-        "p0-asset-dependency-patch-ledger", "p0-empty-target-environment",
+        "p0-asset-dependency-patch-ledger", "p0-role-assignments", "p0-empty-target-environment",
     }
     if set(acceptance.get("required_contracts", [])) != required_contracts:
         raise ContractError("missing-p0-contract", "P0 acceptance contract set is incomplete")
+    required_deferred = {
+        "successful C or Emscripten compilation",
+        "built Wasm, generated JavaScript, Worker, release-pack, or qualification-BEAM artifacts",
+        "ERTS or OTP browser boot",
+        "browser runtime semantics, lifecycle, sanitizer, fuzz, or compatibility results",
+        "a nonempty implementation patch stack",
+        "numeric product budgets or appointment of their post-P6/pre-C1 authority",
+    }
+    if set(acceptance.get("downstream_not_required_for_p0", [])) != required_deferred:
+        raise ContractError("missing-deferred-outcome", "P0 must enumerate downstream outcomes that cannot block entry")
     if report.get("review_complete") is not False or not report.get("blockers"):
         raise ContractError("missing-p0-blocker", "P0 report must retain unresolved review and execution blockers")
-    if report.get("gate_state") != "blocked" or report.get("planning_evidence") != "none; no task or gate may close":
+    assignment_report = report.get("role_assignment", {})
+    if assignment_report.get("contract") != "p0-role-assignments" or assignment_report.get("assignee") != assigned_owner:
+        raise ContractError("missing-role-assignment", "P0 acceptance report must bind the role-assignment contract")
+    if any("owners are unassigned" in blocker for blocker in report.get("blockers", [])):
+        raise ContractError("stale-owner-blocker", "assigned experiment owners cannot remain listed as a P0 blocker")
+    forbidden_blocker_terms = ("no C/Emscripten compile", "product-budget authority", "product values", "runtime evidence")
+    if any(any(term in blocker for term in forbidden_blocker_terms) for blocker in report.get("blockers", [])):
+        raise ContractError("downstream-p0-blocker", "downstream implementation or product outcomes cannot block P0")
+    if len(report.get("deferred_outcomes_not_blocking_p0", [])) != 6:
+        raise ContractError("missing-deferred-outcome", "P0 report must preserve six downstream outcome classes")
+    expected_partial_evidence = (
+        "P0-A01: research/assets/p0-governed-baseline/phase-01/"
+        "p0-phase-01-acceptance.planning-evidence.json; "
+        "P0-A02, P0-A03, and P0-GATE: none"
+    )
+    if report.get("gate_state") != "blocked" or report.get("planning_evidence") != expected_partial_evidence:
         raise ContractError("premature-p0-closure", "P0 cannot close with unresolved blockers")
 
     validate_phase_01()
     validate_phase_02()
-    return ["manifest-schema", "loader-state-and-ownership", "bootstrap-trust", "asset-dependency-patch-ledger", "empty-environment-contract", "blocked-p0-disposition"]
+    return ["manifest-schema", "loader-state-and-ownership", "bootstrap-trust", "asset-dependency-patch-ledger", "role-assignments", "empty-environment-contract", "blocked-p0-disposition"]
 
 
 def main(argv: list[str]) -> int:
@@ -304,7 +400,12 @@ def main(argv: list[str]) -> int:
         print(f"P0 contract validation failed [{exc.code}]: {exc}", file=sys.stderr)
         return 1
     print(f"P0 {phase} contract validation passed: {', '.join(validated)}")
-    print("Acceptance status: independent review pending; no P0 gate closed")
+    if phase == "phase-01":
+        print("Acceptance status: P0-A01 passed by independent reviewed evidence")
+    elif phase == "phase-02":
+        print("Acceptance status: independent review pending; P0-A02 remains open")
+    else:
+        print("Acceptance status: P0-A01 passed; P0-A02, P0-A03, and P0-GATE remain open")
     return 0
 
 

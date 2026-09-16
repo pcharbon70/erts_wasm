@@ -1,20 +1,44 @@
 {
   "report_id": "p0-phase-01-local-validation-2026-09-15",
   "contract_id": "p0-phase-01-validation",
-  "task_ids": ["p0-p01-pins", "p0-p01-trust-boundary", "p0-p01-language-ownership", "p0-p01-runtime-inventory", "p0-p01-thread-census", "p0-p01-integration"],
-  "tested_base_revision": "ccdebe1",
+  "task_ids": [
+    "p0-p01-pins",
+    "p0-p01-trust-boundary",
+    "p0-p01-language-ownership",
+    "p0-p01-runtime-inventory",
+    "p0-p01-thread-census",
+    "p0-p01-integration"
+  ],
+  "tested_base_revision": "1a049f45580af13ea42c31afa40d95320acfe11d",
   "source_revision": "e07fd07837e5aa845657f5fa340637121e451d47",
-  "environment": {"python": "3.12.12", "emcc": "unavailable", "native_otp": "27", "qualification_browsers": "not materialized or run"},
+  "repository_state": "dirty active P0 correction branch; pass-closing evidence requires the eventual committed revision",
+  "environment": {
+    "host_python": "3.12.12",
+    "host_native_otp": "27; not used as the qualification bootstrap",
+    "native_bootstrap": "OTP 29 / ERTS 17.0.6 from the pinned source",
+    "emscripten_image": "linux/amd64 emsdk 6.0.9 by immutable digest",
+    "qualification_browsers": "Chrome for Testing 153.0.8010.36 and Firefox 155.0 materialized and identity-checked; runtime profiles not started"
+  },
   "results": [
     {"case_id": "P0-P01-CONTRACT", "result": "pass-local", "observation": "five component contracts validated"},
-    {"case_id": "P0-P01-NEG-FLOATING", "result": "pass-local", "observation": "floating-pin rejected"},
-    {"case_id": "P0-P01-NEG-AUTHORITY", "result": "pass-local", "observation": "duplicate-authority rejected"},
-    {"case_id": "P0-P01-NEG-RUNTIME", "result": "pass-local", "observation": "missing-runtime-category rejected"},
-    {"case_id": "P0-P01-NEG-TOPOLOGY", "result": "pass-local", "observation": "topology-selected-census rejected"},
-    {"case_id": "P0-P01-NEG-SCHEDULERS", "result": "pass-local", "observation": "scheduler-derived-pool rejected"},
-    {"case_id": "P0-P01-INDEPENDENT-REVIEW", "result": "not-run", "observation": "required reviewers and authorities remain unassigned"},
-    {"case_id": "P0-P01-RUNTIME", "result": "not-run", "observation": "no ERTS/Wasm compile, boot, browser, or lifecycle experiment was attempted"}
+    {"case_id": "P0-P01-MATERIALIZATION", "result": "pass-with-recorded-limitation", "observation": "all Phase 1 input identities materialized or exactly resolved; native bootstrap passed while the broader optional debugger/wx build later failed"},
+    {"case_id": "P0-P01-SOURCE-PATHS", "result": "pass-after-correction", "observation": "every retained runtime-inventory source path exists in the pinned OTP tree; stale erl_driver.c path removed"},
+    {"case_id": "P0-P01-PRELOAD-COUNT", "result": "pass-after-correction", "observation": "22 preloaded Erlang source modules reproduced; stale count of 23 corrected"},
+    {"case_id": "P0-P01-NEG-FLOATING", "result": "pass-local", "observation": "floating pin rejected"},
+    {"case_id": "P0-P01-NEG-UNMATERIALIZED", "result": "pass-local", "observation": "unmaterialized required input rejected"},
+    {"case_id": "P0-P01-NEG-BROWSER-DIGEST", "result": "pass-local", "observation": "missing browser archive digest rejected"},
+    {"case_id": "P0-P01-NEG-AUTHORITY", "result": "pass-local", "observation": "duplicate authority rejected"},
+    {"case_id": "P0-P01-NEG-TYPESCRIPT-PIN", "result": "pass-local", "observation": "missing TypeScript/browser-host toolchain pin rejected"},
+    {"case_id": "P0-P01-NEG-RUNTIME", "result": "pass-local", "observation": "missing runtime category rejected"},
+    {"case_id": "P0-P01-NEG-RUNTIME-PATH", "result": "pass-local", "observation": "known-stale OTP 29 runtime source path rejected"},
+    {"case_id": "P0-P01-NEG-PRELOAD-COUNT", "result": "pass-local", "observation": "stale preload count rejected"},
+    {"case_id": "P0-P01-NEG-TOPOLOGY", "result": "pass-local", "observation": "topology-selected census rejected"},
+    {"case_id": "P0-P01-NEG-SCHEDULERS", "result": "pass-local", "observation": "scheduler-derived pool rejected"},
+    {"case_id": "P0-P01-INDEPENDENT-REVIEW", "result": "pass-review", "observation": "Pascal Charbonneau (pcharbon70) accepted the owner-review packet and its recorded limitations on 2026-09-16"},
+    {"case_id": "P0-P01-WASM-RUNTIME", "result": "not-run-deferred-to-P1-plus", "observation": "no ERTS/Wasm compile, boot, browser-runtime, or lifecycle experiment was attempted"}
   ],
-  "disposition": "draft-progression-authorized-gate-open",
-  "planning_evidence": "none; this report cannot close a task or gate"
+  "focused_test_command": ["python3", "-m", "unittest", "discover", "-s", "research/70-tools", "-p", "test_p0_contract_validation.py"],
+  "focused_test_result": "36 tests passed",
+  "disposition": "owner-accepted-evidence-binding-pending",
+  "planning_evidence": "pending committed-baseline replay and contract_research evidence binding; this report alone cannot close a task or gate"
 }

@@ -2,6 +2,18 @@
   "contract_id": "p0-phase-01-validation",
   "acceptance_id": "P0-A01",
   "task_id": "p0-p01-integration",
+  "expected": {
+    "evidence_kind": "contract_research",
+    "criteria": [
+      {"id": "pins-resolved"},
+      {"id": "trust-boundary-accepted"},
+      {"id": "language-ownership-accepted"},
+      {"id": "runtime-inventory-reproduced"},
+      {"id": "thread-census-accepted"},
+      {"id": "integration-consistency-passed"},
+      {"id": "handoff-accepted"}
+    ]
+  },
   "positive_case": {
     "id": "P0-P01-CONTRACT",
     "command": ["python3", "research/70-tools/p0_contract_validation.py", "phase-01"],
@@ -9,8 +21,13 @@
   },
   "negative_cases": [
     {"id": "P0-P01-NEG-FLOATING", "mutation": "replace exact Emscripten version with latest", "expected_error": "floating-pin"},
+    {"id": "P0-P01-NEG-UNMATERIALIZED", "mutation": "return the native bootstrap to a required-not-materialized state", "expected_error": "unmaterialized-pin"},
+    {"id": "P0-P01-NEG-BROWSER-DIGEST", "mutation": "remove the Chrome archive digest", "expected_error": "missing-browser-digest"},
     {"id": "P0-P01-NEG-AUTHORITY", "mutation": "duplicate a trust-zone authority identity", "expected_error": "duplicate-authority"},
+    {"id": "P0-P01-NEG-TYPESCRIPT-PIN", "mutation": "remove the browser-host compiler and package-manager pin", "expected_error": "missing-typescript-toolchain-pin"},
     {"id": "P0-P01-NEG-RUNTIME", "mutation": "remove one required runtime inventory category", "expected_error": "missing-runtime-category"},
+    {"id": "P0-P01-NEG-RUNTIME-PATH", "mutation": "restore the nonexistent OTP 29 erl_driver.c source path", "expected_error": "stale-runtime-path"},
+    {"id": "P0-P01-NEG-PRELOAD-COUNT", "mutation": "restore the stale count of 23 preloaded Erlang sources", "expected_error": "stale-preload-count"},
     {"id": "P0-P01-NEG-TOPOLOGY", "mutation": "derive pool size from a preselected topology", "expected_error": "topology-selected-census"},
     {"id": "P0-P01-NEG-SCHEDULERS", "mutation": "remove the prohibition on deriving pool size from +S", "expected_error": "scheduler-derived-pool"}
   ],

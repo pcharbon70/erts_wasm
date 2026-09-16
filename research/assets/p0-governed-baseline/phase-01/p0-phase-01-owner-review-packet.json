@@ -1,0 +1,73 @@
+{
+  "packet_id": "p0-phase-01-owner-review-2026-09-15",
+  "acceptance_id": "P0-A01",
+  "producer": "Codex",
+  "reviewer": "Pascal Charbonneau (pcharbon70)",
+  "state": "ready-for-explicit-owner-disposition",
+  "review_items": [
+    {
+      "task_id": "p0-p01-pins",
+      "artifact": "p0-baseline-lock.json",
+      "producer_assessment": "ready-for-acceptance",
+      "review_focus": [
+        "reproduce or inspect every exact source, image, browser, native-bootstrap, and browser-host toolchain identity",
+        "accept the locally reproduced Chrome digest despite the absence of a publisher-supplied checksum",
+        "accept the native bootstrap as the Phase 1 input while retaining the optional debugger/wx full-build failure as a limitation"
+      ]
+    },
+    {
+      "task_id": "p0-p01-trust-boundary",
+      "artifact": "p0-trust-scope-matrix.json",
+      "producer_assessment": "ready-for-acceptance",
+      "review_focus": [
+        "confirm every trust zone has bounded authority and an explicit owner",
+        "confirm no imported power bypasses the deny-by-default capability broker",
+        "confirm topology remains unselected and stop conditions cover deployment, lifecycle, loader, and patch failure"
+      ]
+    },
+    {
+      "task_id": "p0-p01-language-ownership",
+      "artifact": "p0-language-ownership.json and ADR-0001",
+      "producer_assessment": "ready-for-P0-contract-acceptance-ADR-remains-proposed",
+      "review_focus": [
+        "accept C for the upstream-compatible runtime seam, TypeScript for the browser control plane, and Erlang for P0-P6 qualification",
+        "accept Node 24.19.0, npm 11.17.0, and TypeScript 6.0.3 as the first-proof browser-host pins",
+        "keep ADR-0001 proposed until P1 supplies executable compiler, ABI, emitted-output, and authority evidence"
+      ]
+    },
+    {
+      "task_id": "p0-p01-runtime-inventory",
+      "artifact": "p0-runtime-inventory.json",
+      "producer_assessment": "ready-after-corrections",
+      "review_focus": [
+        "confirm all 13 required categories, search methods, source paths, findings, negative findings, and unresolved runtime measurements",
+        "note that source-path and preload-count reproduction found and corrected two stale claims",
+        "confirm no source inspection result is represented as Wasm reachability or runtime evidence"
+      ]
+    },
+    {
+      "task_id": "p0-p01-thread-census",
+      "artifact": "p0-thread-census-contract.json",
+      "producer_assessment": "ready-for-acceptance",
+      "review_focus": [
+        "confirm ERTS roles, pthreads, Worker hosts, pool slots, supervisors, and generations have separate identities",
+        "confirm pool size N is measured from full-runtime high water plus declared headroom rather than scheduler count",
+        "confirm N-1 requires bounded failure, whole-generation termination, and zero remaining owned agents"
+      ]
+    },
+    {
+      "task_id": "p0-p01-integration",
+      "artifact": "p0-phase-01-validation-report.json",
+      "producer_assessment": "ready-after-local-suite",
+      "review_focus": [
+        "confirm exact identities resolve once, all owners are assigned, all runtime categories are explicit, and topology does not determine the census",
+        "inspect deterministic negative cases including unmaterialized inputs, missing browser digests, missing TypeScript pins, stale source paths, and stale preload counts"
+      ]
+    }
+  ],
+  "explicit_disposition_requested": {
+    "acceptable_response": "I accept the P0.1 owner-review packet and its recorded limitations.",
+    "effect": "after that attestation is recorded, an independent contract_research evidence record may bind the reviewed artifacts and the P0.1 task, section, phase, and P0-A01 roll-ups may close",
+    "non_effect": "acceptance does not accept ADR-0001, compile ERTS for Wasm, select a Worker topology, or close P0-A02, P0-A03, or P0-GATE"
+  }
+}

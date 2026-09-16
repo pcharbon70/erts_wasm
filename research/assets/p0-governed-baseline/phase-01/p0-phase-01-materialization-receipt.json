@@ -1,0 +1,116 @@
+{
+  "receipt_id": "p0-phase-01-materialization-2026-09-15",
+  "acceptance_id": "P0-A01",
+  "task_ids": [
+    "p0-p01-pins",
+    "p0-p01-language-ownership",
+    "p0-p01-runtime-inventory",
+    "p0-p01-integration"
+  ],
+  "repository_base_revision": "1a049f45580af13ea42c31afa40d95320acfe11d",
+  "repository_state": "dirty working tree containing the active P0 expectation correction; this is a review receipt, not pass-closing evidence",
+  "producer": "Codex",
+  "designated_independent_reviewer": "Pascal Charbonneau (pcharbon70)",
+  "review_state": "ready-for-owner-review",
+  "materializations": [
+    {
+      "id": "otp-source",
+      "location": "/tmp/erts-wasm-p0-native-otp-29.0.6-source",
+      "ephemeral": true,
+      "commands": [
+        ["git", "rev-parse", "HEAD"],
+        ["git", "rev-parse", "HEAD^{tree}"],
+        ["git", "describe", "--exact-match", "--tags", "HEAD"],
+        ["git", "status", "--short"]
+      ],
+      "observed": {
+        "commit": "e07fd07837e5aa845657f5fa340637121e451d47",
+        "tree": "bddab8fbbe44097258572512d689a5be2ec0686f",
+        "tag": "OTP-29.0.6",
+        "dirty_entries_after_build": 0
+      },
+      "result": "pass"
+    },
+    {
+      "id": "native-bootstrap",
+      "location": "/tmp/erts-wasm-p0-native-otp-29.0.6-source/bootstrap",
+      "ephemeral": true,
+      "configure_argv": [
+        "./configure",
+        "--prefix=/tmp/erts-wasm-p0-native-otp-29.0.6-install",
+        "--without-javac",
+        "--without-wx",
+        "--without-odbc"
+      ],
+      "build_argv": ["make", "-j20"],
+      "probe_observation": "otp=29 erts=17.0.6",
+      "digests": {
+        "bin/x86_64-pc-linux-gnu/beam.smp": "sha256:8cf5264aee884a90abbfa0164378be5582d13a2cc62b42eea477dab9c990de6a",
+        "bootstrap/bin/erl": "sha256:9529b7a56390ed33fc512689ddce492ff13cb6a4e3fa855c88cf56420d9409b4",
+        "bootstrap/bin/start_clean.boot": "sha256:9e7d392c3d2e1be4a9ee9fa860cdfb09d1fd06cdffd48fe3dce58b282d9c4798",
+        "bootstrap/lib/kernel/ebin/kernel.app": "sha256:3c37bebc0f903169bebec3da005638aa7f39131af624260572d0f29b7462f92b",
+        "bootstrap/lib/stdlib/ebin/stdlib.app": "sha256:6fa0f596800a9c57ae27d15317f8c6724ba005a7209224bcbeb280c6f9869be9",
+        "p0_native_bootstrap_probe.beam": "sha256:bd9198b863ee19d251ad3782728cc5e1ad18f2f091a6e1e3c357d74c8679be9b"
+      },
+      "result": "bootstrap-pass-full-make-partial",
+      "limitation": "The required bootstrap, ERTS binary, kernel, and stdlib were produced and the probe passed. The broader top-level make later failed in lib/debugger because warnings were errors and wx_object was unavailable under --without-wx. P0.1 does not treat this as a successful full OTP build."
+    },
+    {
+      "id": "emscripten-build-image",
+      "origin": "docker.io/emscripten/emsdk@sha256:96617f27fe16421588241def73908fd348a7f9d260440ed0d00b36dcf7a063cc",
+      "platform": "linux/amd64",
+      "platform_manifest": "sha256:3ba391c5b1554e06f9af0a69652ff20919dff14e771619339dba988bd62574b5",
+      "local_image_id": "sha256:7b90ac91350e4443717797ce6e7e85a0aa767ead06e1a269422baff8128e425b",
+      "observed": {
+        "emcc": "6.0.9 (4e4223852a0835923411059a3929907d7df1232e)",
+        "clang": "24.0.0git (510126255f89d693717c1ce7105b593f995f07c1)",
+        "wasm_opt": "132 (version_132-49-gd03c25ea4)",
+        "node": "24.19.0",
+        "npm": "11.17.0",
+        "python": "3.12.3"
+      },
+      "result": "pass"
+    },
+    {
+      "id": "chrome-for-testing",
+      "origin": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.36/linux64/chrome-linux64.zip",
+      "archive_sha256": "167a098c4fdec156b58a9f678c90a84f9072d789f9c6e7b35496a6987b8b7ef8",
+      "observed_identity": "Google Chrome for Testing 153.0.8010.36",
+      "result": "pass-local-digest",
+      "limitation": "The selected Chrome for Testing metadata has no publisher-supplied archive checksum; independent review must reproduce the digest from the exact version URL."
+    },
+    {
+      "id": "firefox",
+      "origin": "https://archive.mozilla.org/pub/firefox/releases/155.0/linux-x86_64/en-US/firefox-155.0.tar.xz",
+      "archive_sha256": "fd9ec3f5f113d0825ca0bd1ab3c0756fbc40241034eefce6743be953bcca7473",
+      "checksum_source": "https://archive.mozilla.org/pub/firefox/releases/155.0/SHA256SUMS",
+      "observed_identity": "Mozilla Firefox 155.0",
+      "result": "pass-official-checksum"
+    },
+    {
+      "id": "typescript-browser-host",
+      "origin": "https://registry.npmjs.org/typescript/-/typescript-6.0.3.tgz",
+      "version": "6.0.3",
+      "sha256": "33cd0ee1beaa8c9e9d15a9da836c62ddea4c34a42d7c2d349dbc80d94165d22a",
+      "npm_integrity": "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==",
+      "runtime": "Node 24.19.0 from the pinned build image",
+      "package_manager": "npm 11.17.0 from the pinned build image",
+      "result": "pass-identity-only",
+      "limitation": "Strict compilation and authority separation remain P1 experiments."
+    }
+  ],
+  "inventory_reproduction": {
+    "all_recorded_source_paths_exist": true,
+    "preloaded_erl_source_count": 22,
+    "thread_create_search_matches": 108,
+    "poll_search_matches": 145,
+    "time_search_matches": 10,
+    "loader_search_matches": 13,
+    "on_load_search_matches": 848,
+    "corrections": [
+      "replace the incorrect preload count of 23 with 22",
+      "replace nonexistent erts/emulator/beam/erl_driver.c with erl_bif_ddll.c, io.c, and sys/unix/sys_drivers.c"
+    ]
+  },
+  "acceptance_effect": "none until the designated independent reviewer records an explicit disposition; this receipt cannot close a checkbox or P0-A01"
+}

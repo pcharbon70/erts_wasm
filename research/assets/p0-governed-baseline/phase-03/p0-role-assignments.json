@@ -1,0 +1,46 @@
+{
+  "contract_id": "p0-role-assignments",
+  "acceptance_id": "P0-GATE",
+  "task_id": "p0-p03-integration",
+  "assigned_on": "2026-09-15",
+  "assignment_basis": "project-owner self-assignment",
+  "assignee": {
+    "name": "Pascal Charbonneau",
+    "github": "pcharbon70"
+  },
+  "review_roles": [
+    {"id": "build-reproducibility-reviewer", "scope": "P0 pins and materialization evidence", "state": "assigned-review-not-run"},
+    {"id": "security-reviewer", "scope": "P0/P1 trust boundary, bounds, bootstrap trust, delivery, and deployment assumptions", "state": "assigned-review-not-run"},
+    {"id": "architecture-reviewer", "scope": "P0 language ownership and ABI boundary", "state": "assigned-review-not-run"},
+    {"id": "erts-c-port-reviewer", "scope": "P0 runtime inventory and unsupported-operation boundary plus P1 target probes", "state": "assigned-review-not-run"},
+    {"id": "runtime-concurrency-reviewer", "scope": "P0 thread-census contract and P1 Worker-topology evidence", "state": "assigned-review-not-run"},
+    {"id": "measurement-reviewer", "scope": "P0 experimental ceilings and measurement protocol", "state": "assigned-review-not-run"},
+    {"id": "method-reviewer", "scope": "P0 product-budget derivation and anti-gaming method only", "state": "assigned-review-not-run"},
+    {"id": "test-evidence-reviewer", "scope": "P0 evidence profiles and failure-retention rules", "state": "assigned-review-not-run"},
+    {"id": "loader-protocol-reviewer", "scope": "P0 loader, manifest, and generation protocol", "state": "assigned-review-not-run"},
+    {"id": "c-browser-abi-reviewer", "scope": "P1 fixed-width C/browser ABI and generated-glue evidence", "state": "assigned-review-not-run"},
+    {"id": "browser-host-reviewer", "scope": "P1 TypeScript authority and browser-host boundary", "state": "assigned-review-not-run"},
+    {"id": "browser-wasm-reviewer", "scope": "P1 generated Wasm, memory, and controlled-start behavior", "state": "assigned-review-not-run"},
+    {"id": "lifecycle-reviewer", "scope": "P1 Worker accounting, abort, retry, and cleanup evidence", "state": "assigned-review-not-run"},
+    {"id": "memory-reviewer", "scope": "P1 fixed shared-memory profile and ceiling failures", "state": "assigned-review-not-run"},
+    {"id": "loader-runtime-reviewer", "scope": "P1 controlled-start seam and runtime-entry evidence", "state": "assigned-review-not-run"},
+    {"id": "loader-delivery-reviewer", "scope": "P1 manifest-bound delivery and cancellation evidence", "state": "assigned-review-not-run"},
+    {"id": "integration-reviewer", "scope": "P0/P1 phase integration and contradiction checks", "state": "assigned-review-not-run"},
+    {"id": "milestone-reviewer", "scope": "P0/P1 phase handoffs and milestone-gate dispositions", "state": "assigned-review-not-run"}
+  ],
+  "experiment_owner_roles": [
+    {"id": "c-runtime-owner", "scope": "ERTS C port, target probes, Wasm, generated runtime JavaScript, and patch stack", "state": "assigned-work-not-started"},
+    {"id": "browser-host-owner", "scope": "bootstrap, supervisor, Worker registry, watchdog, capability broker, and browser harness", "state": "assigned-work-not-started"},
+    {"id": "beam-fixture-owner", "scope": "Erlang qualification modules and version-matched BEAM fixtures", "state": "assigned-work-not-started"},
+    {"id": "build-release-owner", "scope": "toolchain image, reproducible build, immutable OTP release pack, SBOM, and provenance", "state": "assigned-work-not-started"},
+    {"id": "browser-test-owner", "scope": "pinned Chrome and Firefox fixtures and browser evidence", "state": "assigned-work-not-started"},
+    {"id": "deployment-owner", "scope": "secure origin, TLS, root document, response headers, and experiment deployment", "state": "assigned-work-not-started"},
+    {"id": "update-owner", "scope": "root trust, signing, delivery, and update-path experiments", "state": "assigned-work-not-started"},
+    {"id": "runtime-owner", "scope": "one ERTS generation and its admitted runtime profile", "state": "assigned-work-not-started"},
+    {"id": "renderer-owner", "scope": "deferred bounded renderer experiments", "state": "assigned-work-not-started"},
+    {"id": "compatibility-owner", "scope": "deferred exact-version OTP and Elixir compatibility qualification", "state": "assigned-work-not-started"}
+  ],
+  "independence_rule": "Pascal Charbonneau may independently review P0 artifacts authored by the research agent. Any later evidence personally produced by Pascal Charbonneau requires a different independent reviewer before it can close a task or gate.",
+  "excluded_assignment": "numeric product-budget authority remains deliberately unassigned until after P6 and before C1",
+  "gate_effect": "the P0 and immediate P1 reviewer and experiment-owner assignment condition is satisfied; reviews, materialization, readiness reproduction, and pass-closing evidence remain open"
+}

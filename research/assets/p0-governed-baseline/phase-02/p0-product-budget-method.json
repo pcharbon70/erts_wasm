@@ -3,8 +3,8 @@
   "decision_id": "P0-D03",
   "acceptance_id": "P0-A02",
   "task_id": "p0-p02-product-budget-method",
-  "approval_state": "blocked-authority-unassigned",
-  "authority": "unassigned",
+  "approval_state": "method-frozen-product-approval-deferred-pre-c1",
+  "authority": "unassigned-until-post-p6-pre-c1",
   "numeric_product_budgets": null,
   "required_inputs": ["accepted POC artifact and compatibility profile identity", "native baseline on named reference hardware", "Chrome and Firefox cold/warm distributions", "compressed and uncompressed artifact sizes", "steady-state and peak memory", "capability latency", "repeated-dispose resource slope", "deployment and accessibility constraints"],
   "allowed_derivations": ["absolute value justified by a documented product constraint", "ratio to the named native baseline with an authority-approved coefficient", "percentile from retained representative runs with an authority-approved margin"],
@@ -13,5 +13,5 @@
   "approval_record_requires": ["named accountable product authority", "metric and unit", "population and percentile", "baseline artifact and environment digests", "derivation", "rationale", "date and immutable revision", "independent technical review"],
   "change_control": "a budget change creates a new decision revision, records evidence and rationale, reruns affected gates, and never rewrites historical dispositions",
   "reopening_triggers": ["supported profile changes", "toolchain or browser pin changes", "reference hardware changes", "delivery compression/cache policy changes", "measurement method changes", "security or accessibility requirement changes"],
-  "blocker": "no actual product-budget authority has been named; P0 can preserve the method but cannot approve product values"
+  "p0_disposition": "the method and anti-gaming rules are P0 inputs; numeric values and their accountable product authority are downstream requirements after P6 and before C1, not P0 blockers"
 }

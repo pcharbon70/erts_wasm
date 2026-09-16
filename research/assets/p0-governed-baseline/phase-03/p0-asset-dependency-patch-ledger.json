@@ -3,22 +3,25 @@
   "acceptance_id": "P0-GATE",
   "task_id": "p0-p03-integration",
   "assets": [
-    {"id": "erts-wasm", "kind": "wasm", "source_owner": "c-runtime-owner-unassigned", "identity_source": "runtime manifest", "state": "not-built"},
-    {"id": "emscripten-runtime-js", "kind": "generated-javascript", "source_owner": "c-runtime-owner-unassigned", "identity_source": "runtime manifest", "state": "not-built"},
-    {"id": "runtime-worker-bundles", "kind": "javascript-worker", "source_owner": "browser-host-owner-unassigned", "identity_source": "runtime manifest", "state": "not-built"},
-    {"id": "otp-release-pack", "kind": "immutable-release", "source_owner": "build-release-owner-unassigned", "identity_source": "runtime manifest", "state": "not-built"},
-    {"id": "qualification-beam", "kind": "beam", "source_owner": "beam-fixture-owner-unassigned", "identity_source": "runtime manifest", "state": "not-built"}
+    {"id": "erts-wasm", "kind": "wasm", "source_owner": "Pascal Charbonneau (pcharbon70)", "identity_source": "runtime manifest", "state": "deferred-to-P2"},
+    {"id": "emscripten-runtime-js", "kind": "generated-javascript", "source_owner": "Pascal Charbonneau (pcharbon70)", "identity_source": "runtime manifest", "state": "deferred-to-P2"},
+    {"id": "runtime-worker-bundles", "kind": "javascript-worker", "source_owner": "Pascal Charbonneau (pcharbon70)", "identity_source": "runtime manifest", "state": "deferred-to-P2"},
+    {"id": "otp-release-pack", "kind": "immutable-release", "source_owner": "Pascal Charbonneau (pcharbon70)", "identity_source": "runtime manifest", "state": "deferred-to-P3"},
+    {"id": "qualification-beam", "kind": "beam", "source_owner": "Pascal Charbonneau (pcharbon70)", "identity_source": "runtime manifest", "state": "deferred-to-P4"}
   ],
   "dependencies": [
-    {"id": "otp-source", "version": "OTP-29.0.6", "revision": "e07fd07837e5aa845657f5fa340637121e451d47", "owner": "erts-port-owner-unassigned", "state": "source-resolved"},
-    {"id": "emscripten", "version": "6.0.9", "revision": "f04ea239d533260dd1db760dd2d668d5f9a88d6b", "owner": "build-release-owner-unassigned", "state": "metadata-resolved-not-materialized"},
-    {"id": "llvm", "version": "emscripten-6.0.9-component", "revision": "b158b0ae6c559f87be325b8f427c5588e6a48823", "owner": "build-release-owner-unassigned", "state": "metadata-resolved-not-materialized"},
-    {"id": "binaryen", "version": "emscripten-6.0.9-component", "revision": "d03c25ea43d8f147fc222f9b88ff3bf641abe8da", "owner": "build-release-owner-unassigned", "state": "metadata-resolved-not-materialized"},
-    {"id": "chrome", "version": "153.0.8010.36", "revision": "1681091", "owner": "browser-test-owner-unassigned", "state": "url-resolved-digest-and-materialization-pending"},
-    {"id": "firefox", "version": "155.0", "revision": "sha256:fd9ec3f5f113d0825ca0bd1ab3c0756fbc40241034eefce6743be953bcca7473", "owner": "browser-test-owner-unassigned", "state": "digest-resolved-not-materialized"}
+    {"id": "otp-source", "version": "OTP-29.0.6", "revision": "e07fd07837e5aa845657f5fa340637121e451d47", "owner": "Pascal Charbonneau (pcharbon70)", "state": "source-resolved"},
+    {"id": "emscripten", "version": "6.0.9", "revision": "f04ea239d533260dd1db760dd2d668d5f9a88d6b", "owner": "Pascal Charbonneau (pcharbon70)", "state": "materialized-in-pinned-linux-amd64-image"},
+    {"id": "llvm", "version": "emscripten-6.0.9-component", "revision": "b158b0ae6c559f87be325b8f427c5588e6a48823", "owner": "Pascal Charbonneau (pcharbon70)", "state": "materialized-in-pinned-linux-amd64-image"},
+    {"id": "binaryen", "version": "emscripten-6.0.9-component", "revision": "d03c25ea43d8f147fc222f9b88ff3bf641abe8da", "owner": "Pascal Charbonneau (pcharbon70)", "state": "materialized-in-pinned-linux-amd64-image"},
+    {"id": "chrome", "version": "153.0.8010.36", "revision": "sha256:167a098c4fdec156b58a9f678c90a84f9072d789f9c6e7b35496a6987b8b7ef8", "owner": "Pascal Charbonneau (pcharbon70)", "state": "materialized-and-identity-verified"},
+    {"id": "firefox", "version": "155.0", "revision": "sha256:fd9ec3f5f113d0825ca0bd1ab3c0756fbc40241034eefce6743be953bcca7473", "owner": "Pascal Charbonneau (pcharbon70)", "state": "materialized-identity-and-official-digest-verified"},
+    {"id": "node", "version": "24.19.0", "revision": "bundled-in-pinned-emscripten-image", "owner": "Pascal Charbonneau (pcharbon70)", "state": "materialized-in-pinned-linux-amd64-image"},
+    {"id": "npm", "version": "11.17.0", "revision": "bundled-in-pinned-emscripten-image", "owner": "Pascal Charbonneau (pcharbon70)", "state": "materialized-in-pinned-linux-amd64-image"},
+    {"id": "typescript", "version": "6.0.3", "revision": "sha256:33cd0ee1beaa8c9e9d15a9da836c62ddea4c34a42d7c2d349dbc80d94165d22a", "owner": "Pascal Charbonneau (pcharbon70)", "state": "archive-materialized-and-integrity-verified"}
   ],
-  "patch_stack": {"base": "e07fd07837e5aa845657f5fa340637121e451d47", "patches": [], "digest": null, "owner": "erts-port-owner-unassigned", "policy": "P1 creates an ordered, reviewable patch series; every patch records upstream seam, reason, tests, and rebase disposition", "state": "no-implementation-patches-exist"},
+  "patch_stack": {"base": "e07fd07837e5aa845657f5fa340637121e451d47", "patches": [], "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "digest_meaning": "SHA-256 of the canonical empty patch stream", "owner": "Pascal Charbonneau (pcharbon70)", "policy": "P1 creates an ordered, reviewable patch series; every patch records upstream seam, reason, tests, and rebase disposition", "state": "empty-baseline-frozen"},
   "sbom_state": "schema-specified-artifact-not-produced",
   "provenance_state": "schema-specified-artifact-not-produced",
-  "gate_effect": "inventory exists, but unbuilt assets, unnamed owners, null patch digest, and unmaterialized dependencies block P0-GATE"
+  "gate_effect": "the forecast inventory, canonical empty patch baseline, assigned project owner, and materialized P1 input identities satisfy P0 shape and immediate ownership requirements; unbuilt downstream artifacts do not block P0, while independent contract review and clean-environment preflight remain open"
 }

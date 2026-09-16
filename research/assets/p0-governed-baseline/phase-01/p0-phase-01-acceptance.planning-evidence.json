@@ -1,0 +1,176 @@
+{
+  "profile": "erts-wasm.planning-evidence.v1",
+  "record_id": "evidence.p0.phase_01.acceptance_2026_09_16",
+  "evidence_kind": "contract_research",
+  "synthetic": false,
+  "producer": "Codex",
+  "reviewer": "Pascal Charbonneau (pcharbon70)",
+  "plan_baseline": {
+    "document_id": "planning.erts_wasm.proof_of_concept.p0.plan",
+    "revision": "aaff05d6801e0a6340d422d5f7a98a8d340264b2",
+    "task_ids": [
+      "p0-p01-pins",
+      "p0-p01-trust-boundary",
+      "p0-p01-language-ownership",
+      "p0-p01-runtime-inventory",
+      "p0-p01-thread-census",
+      "p0-p01-integration",
+      "p0-p01-handoff"
+    ],
+    "gate_ids": ["P0-A01"]
+  },
+  "candidate": {
+    "revision": "aaff05d6801e0a6340d422d5f7a98a8d340264b2",
+    "dirty_state": "clean",
+    "diff_sha256": null
+  },
+  "execution": {
+    "status": "completed",
+    "tested_revision": "aaff05d6801e0a6340d422d5f7a98a8d340264b2",
+    "commands": [
+      {
+        "id": "validate-phase-01",
+        "argv": ["python3", "research/70-tools/p0_contract_validation.py", "phase-01"],
+        "cwd": ".",
+        "exit_code": 0,
+        "stdout_sha256": "d83e12891462cdef1f7256403a80ed545adb0c8a4602bdda59f925da099030e7",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "result_artifact_ids": ["artifact.p0.phase01.validation_report"]
+      },
+      {
+        "id": "test-phase-01-contract",
+        "argv": ["python3", "-m", "unittest", "discover", "-s", "research/70-tools", "-p", "test_p0_contract_validation.py"],
+        "cwd": ".",
+        "exit_code": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "d430c1dc10db8525617586fe3965fc2ffd8ec1e9888b8a2bf089db24e0cd196c",
+        "result_artifact_ids": ["artifact.p0.phase01.validation_report"]
+      },
+      {
+        "id": "check-research-corpus",
+        "argv": ["python3", "research/70-tools/check_all.py"],
+        "cwd": ".",
+        "exit_code": 0,
+        "stdout_sha256": "db665237c05eed059c1d27b8bba6738c813991e7bf75e6d113a120c56ede84a5",
+        "stderr_sha256": "42359fa1295eb945358d22a7070646c4d2f4359cfe1ba3caa8110d2e769b34bb",
+        "result_artifact_ids": [
+          "artifact.p0.phase01.validation_report",
+          "artifact.p0.phase01.owner_review_result"
+        ]
+      }
+    ]
+  },
+  "toolchains": [
+    {
+      "name": "Python corpus and P0 contract validators",
+      "executable": "python3",
+      "version": "3.12.12",
+      "target": "repository contract research",
+      "compile_flags": [],
+      "link_flags": []
+    }
+  ],
+  "sources": [
+    {
+      "id": "source.p0.phase01.baseline_lock",
+      "role": "reviewed exact source, toolchain, browser, and native-bootstrap lock",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-01/p0-baseline-lock.json",
+      "available": true,
+      "sha256": "2ef2c0869275a75f7296688f21381cad7508137c47c110c76d2bb7f686b4a908",
+      "bytes": 7615
+    },
+    {
+      "id": "source.p0.phase01.trust_scope",
+      "role": "reviewed trust and scope matrix",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-01/p0-trust-scope-matrix.json",
+      "available": true,
+      "sha256": "74d9af8a440d629638d9f44a24156c75f9b956a66ab070d9dd2ce4bf0c0546d1",
+      "bytes": 4523
+    },
+    {
+      "id": "source.p0.phase01.language_ownership",
+      "role": "reviewed language, toolchain, generated-artifact, and ABI ownership contract",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-01/p0-language-ownership.json",
+      "available": true,
+      "sha256": "4cb9de3532d179c0452adddbe06c5e203bf47664e0e4b22b0bcf8498759fec8f",
+      "bytes": 3892
+    },
+    {
+      "id": "source.p0.phase01.runtime_inventory",
+      "role": "reproduced and corrected pinned-source runtime inventory",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-01/p0-runtime-inventory.json",
+      "available": true,
+      "sha256": "f5f8d4b30f7650ce8756e2bf90eaf832c07c7cd041e76601b2240843bbdd5c50",
+      "bytes": 6962
+    },
+    {
+      "id": "source.p0.phase01.thread_census",
+      "role": "reviewed thread census and N/N-1 experiment contract",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-01/p0-thread-census-contract.json",
+      "available": true,
+      "sha256": "d660818996e89556f94bb4feb40c4833333cb41d5ab18c852ddeaf92cf1db80f",
+      "bytes": 3491
+    },
+    {
+      "id": "source.p0.phase01.materialization_receipt",
+      "role": "exact input materialization observations and limitations",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-01/p0-phase-01-materialization-receipt.json",
+      "available": true,
+      "sha256": "bc011b36367257248cae6527c819c5fc413502089fa456febc9cd1e05ac9296d",
+      "bytes": 5672
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "artifact.p0.phase01.owner_review_result",
+      "role": "dated independent owner acceptance and accepted limitations",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-01/p0-phase-01-owner-review-result.json",
+      "available": true,
+      "sha256": "514416d5805510371bb4e40403615725b50b00a39a4324e5722961fda2330f6f",
+      "bytes": 2010
+    },
+    {
+      "id": "artifact.p0.phase01.validation_report",
+      "role": "local contract validation, negative cases, and deferred-runtime boundary report",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-01/p0-phase-01-validation-report.json",
+      "available": true,
+      "sha256": "bdf9cda0041c7599c4fee52ee667c78b54a74b7a920179acbfb95ecabf6c2c55",
+      "bytes": 3689
+    }
+  ],
+  "contract_ref": {
+    "path": "research/assets/p0-governed-baseline/phase-01/p0-phase-01-validation-contract.json",
+    "sha256": "05e5eebcf9d01f8a2881434bb3c94f421aaaef8fd2727dc04fd69e91247d3503"
+  },
+  "observations": {
+    "kind": "contract_research",
+    "criteria": [
+      {"id": "pins-resolved", "outcome": "pass", "artifact_ids": ["artifact.p0.phase01.owner_review_result", "artifact.p0.phase01.validation_report"]},
+      {"id": "trust-boundary-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase01.owner_review_result"]},
+      {"id": "language-ownership-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase01.owner_review_result"]},
+      {"id": "runtime-inventory-reproduced", "outcome": "pass", "artifact_ids": ["artifact.p0.phase01.owner_review_result", "artifact.p0.phase01.validation_report"]},
+      {"id": "thread-census-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase01.owner_review_result"]},
+      {"id": "integration-consistency-passed", "outcome": "pass", "artifact_ids": ["artifact.p0.phase01.validation_report"]},
+      {"id": "handoff-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase01.owner_review_result"]}
+    ]
+  },
+  "observation_artifact_ids": [
+    "artifact.p0.phase01.owner_review_result",
+    "artifact.p0.phase01.validation_report"
+  ],
+  "outcome": "pass",
+  "limitations": [
+    "The same-source native bootstrap passes, but the broader optional debugger application did not build without wx.",
+    "The Chrome archive digest is locally reproduced from the exact immutable official URL rather than publisher-supplied metadata.",
+    "This contract evidence establishes no ERTS/Wasm compile, browser runtime, lifecycle, semantic, compatibility, or ADR-0001 acceptance claim."
+  ],
+  "support_refs": []
+}

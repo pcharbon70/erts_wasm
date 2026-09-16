@@ -57,10 +57,10 @@ the P0 stop condition rather than a silent scope reduction.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p0-p03-loader-contract | research-tools | Loader/protocol reviewer unassigned | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-A03; `p0-loader-contract` | Contract drafted and locally validated; independent review pending. |
-| p0-p03-bootstrap-trust | research-tools | Security reviewer unassigned | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-D02, P0-A03; `p0-bootstrap-trust` | First-proof choice locally validated; security/deployment review pending. |
-| p0-p03-integration | cross-cutting | Independent reviewer unassigned | p0-p03-loader-contract, p0-p03-bootstrap-trust | P0-GATE | Local contract/negative report blocked on formal evidence and review. |
-| p0-p03-handoff | research-tools | Milestone reviewer unassigned | p0-p03-integration | P0-GATE | [Dated blocked execution record](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md); no closure evidence. |
+| p0-p03-loader-contract | research-tools | Pascal Charbonneau (`pcharbon70`), loader/protocol reviewer | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-A03; `p0-loader-contract` | Contract drafted and locally validated; independent review pending. |
+| p0-p03-bootstrap-trust | research-tools | Pascal Charbonneau (`pcharbon70`), security reviewer and deployment owner | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-D02, P0-A03; `p0-bootstrap-trust` | First-proof choice locally validated; security/deployment review pending. |
+| p0-p03-integration | cross-cutting | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p03-loader-contract, p0-p03-bootstrap-trust | P0-GATE | Local contract/negative report blocked on formal evidence and review. |
+| p0-p03-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p0-p03-integration | P0-GATE | [Dated blocked execution record](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md); no closure evidence. |
 
 ## Planned work
 
@@ -102,20 +102,24 @@ the P0 stop condition rather than a silent scope reduction.
 
   - [ ] 3.2 Section — Phase 3 Integration Tests.
 
-    Evaluate the complete P0 baseline and the loader/trust contract in a
-    reproducible empty target environment before any P1 probe begins.
+    Evaluate the complete P0 baseline and loader/trust contract in a
+    reproducible experiment-readiness environment before any P1 probe begins.
+    Do not require the runtime artifacts or observations that P1–P6 produce.
 
     - [ ] 3.2.1 Task [id: p0-p03-integration] [area: cross-cutting] [after: p0-p03-loader-contract, p0-p03-bootstrap-trust] — Reviewed baseline, asset/dependency/patch ledger, trust anchor, bounds and unsupported-operation inventories, loader protocol, and reproducible empty target environment exist.
 
-      This is the original P0 gate. Pass only if every earlier P0 artifact is
-      present, mutually consistent, independently reviewable, and reproducible;
-      an unresolved required item or active stop trigger fails or blocks it.
+      This is the original P0 gate. Pass only if every P0 contract is present,
+      mutually consistent, independently accepted, and the pinned P1
+      experiment environment is reproducible. Built runtime artifacts,
+      implementation patches, compile/boot/browser results, and numeric product
+      budgets are downstream outcomes and cannot block P0.
 
       - [x] 3.2.1.1 Subtask — Run the integrated P0 acceptance review.
 
         Assemble P0-A01 through P0-A03 at exact revisions, validate schemas and
-        links, reproduce the empty environment, and record every pass, failure,
-        limitation, command, and artifact identity.
+        links, reproduce the tool/browser/header readiness environment without
+        running P1, and record every pass, failure, limitation, command, and
+        materialized input identity.
 
       - [x] 3.2.1.2 Subtask — Exercise trust, bounds, and contradiction failures.
 

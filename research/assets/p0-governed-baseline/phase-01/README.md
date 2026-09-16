@@ -20,9 +20,10 @@ baseline reviewable and reproducible without claiming an ERTS/Wasm build.
 
 ## What belongs here
 
-Only contract inputs and local source-inspection results for
-`p0-p01-pins` through `p0-p01-thread-census` belong here. Independent review,
-compile, boot, browser, lifecycle, or compatibility evidence is not present.
+Contract inputs, materialization receipts, local source-inspection results, and
+owner-review packets for `p0-p01-pins` through `p0-p01-thread-census` belong
+here. Independent acceptance, ERTS/Wasm compilation, browser runtime,
+lifecycle, and compatibility evidence is not present.
 
 ## Index
 
@@ -36,6 +37,10 @@ compile, boot, browser, lifecycle, or compatibility evidence is not present.
 - [`p0-language-ownership.json`](p0-language-ownership.json) — source-language, generated-artifact, ABI, toolchain, and review-trigger ownership.
 - [`p0-phase-01-validation-contract.json`](p0-phase-01-validation-contract.json) — positive and contradiction cases for the assembled Phase 1 contract.
 - [`p0-phase-01-validation-report.json`](p0-phase-01-validation-report.json) — local results and explicit not-run acceptance cases.
+- [`p0-phase-01-materialization-receipt.json`](p0-phase-01-materialization-receipt.json) — exact native-bootstrap, build-image, browser, TypeScript, and pinned-source reproduction results and limitations.
+- [`p0-phase-01-owner-review-packet.json`](p0-phase-01-owner-review-packet.json) — explicit review items and the attestation required from the assigned independent owner.
+- [`p0-phase-01-owner-review-result.json`](p0-phase-01-owner-review-result.json) — the owner's dated acceptance of the packet and its recorded limitations.
+- [`p0-phase-01-acceptance.planning-evidence.json`](p0-phase-01-acceptance.planning-evidence.json) — pass-closing `contract_research` evidence bound to clean reviewed revision `aaff05d` and P0-A01.
 - [`p0-runtime-inventory.json`](p0-runtime-inventory.json) — categorized observations and commands against the pinned OTP tree.
 - [`p0-thread-census-contract.json`](p0-thread-census-contract.json) — independent logical-role, pthread-host, pool-capacity, and browser-supervisor measurements.
 - [`p0-trust-scope-matrix.json`](p0-trust-scope-matrix.json) — assets, trust zones, authorities, quotas, topology candidates, and stop conditions.
