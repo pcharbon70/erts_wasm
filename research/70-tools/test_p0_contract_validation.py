@@ -139,6 +139,14 @@ class Phase02ContractTests(unittest.TestCase):
         self.mutate("p0-experiment-bounds.json", lambda value: value.update(frozen_before_runtime_measurement=False))
         self.assert_code("post-result-threshold-edit")
 
+    def test_unrecorded_randomization_is_rejected(self) -> None:
+        self.mutate("p0-experiment-bounds.json", lambda value: value["series"].update(randomization_seed_rule=""))
+        self.assert_code("unreproducible-randomization")
+
+    def test_experiment_bound_without_enforcement_is_rejected(self) -> None:
+        self.mutate("p0-experiment-bounds.json", lambda value: value["safety_ceilings"][0].update(enforcement_point=""))
+        self.assert_code("missing-enforcement-point")
+
     def test_missing_resource_owner_is_rejected(self) -> None:
         self.mutate("p0-loader-startup-bounds.json", lambda value: value["bounds"][0].update(owner=""))
         self.assert_code("missing-owner")
@@ -146,6 +154,27 @@ class Phase02ContractTests(unittest.TestCase):
     def test_missing_breach_action_is_rejected(self) -> None:
         self.mutate("p0-loader-startup-bounds.json", lambda value: value["bounds"][0].update(breach_action=""))
         self.assert_code("missing-breach-action")
+
+    def test_missing_expanded_release_bound_is_rejected(self) -> None:
+        self.mutate(
+            "p0-loader-startup-bounds.json",
+            lambda value: value["bounds"].__setitem__(slice(None), [item for item in value["bounds"] if item["id"] != "release-expanded-bytes"]),
+        )
+        self.assert_code("missing-loader-bound")
+
+    def test_growable_poc_memory_is_rejected(self) -> None:
+        self.mutate(
+            "p0-loader-startup-bounds.json",
+            lambda value: next(item for item in value["bounds"] if item["id"] == "initial-shared-memory").update(limit=268435456),
+        )
+        self.assert_code("growable-poc-memory")
+
+    def test_cross_contract_safety_bound_drift_is_rejected(self) -> None:
+        self.mutate(
+            "p0-loader-startup-bounds.json",
+            lambda value: next(item for item in value["bounds"] if item["id"] == "worker-agents").update(limit=63),
+        )
+        self.assert_code("inconsistent-safety-bound")
 
     def test_infinite_or_nonfinite_series_is_rejected(self) -> None:
         self.mutate("p0-experiment-bounds.json", lambda value: value["series"].update(maximum_total_cycles_per_run=0))
@@ -155,6 +184,17 @@ class Phase02ContractTests(unittest.TestCase):
         self.mutate("p0-evidence-profiles.json", lambda value: value["profiles"].pop())
         self.assert_code("silent-instrumentation-omission")
 
+    def test_c_sanitizers_on_typescript_host_profile_are_rejected(self) -> None:
+        self.mutate(
+            "p0-evidence-profiles.json",
+            lambda value: next(item for item in value["profiles"] if item["id"] == "browser-host-fuzz").update(sanitizers=["address"]),
+        )
+        self.assert_code("wrong-host-instrumentation")
+
+    def test_missing_profile_toolchain_is_rejected(self) -> None:
+        self.mutate("p0-evidence-profiles.json", lambda value: value["toolchains"].pop("typescript"))
+        self.assert_code("incomplete-evidence-toolchain")
+
     def test_orphaned_fuzz_failure_is_rejected(self) -> None:
         self.mutate("p0-evidence-profiles.json", lambda value: value["failure_minimization"].pop("orphan_rule"))
         self.assert_code("orphaned-fuzz-failure")
@@ -162,6 +202,29 @@ class Phase02ContractTests(unittest.TestCase):
     def test_copying_safety_ceiling_to_product_budget_is_rejected(self) -> None:
         self.mutate("p0-product-budget-method.json", lambda value: value.update(forbidden_derivations=[]))
         self.assert_code("copied-safety-ceiling")
+
+    def test_post_result_statistical_selection_is_rejected(self) -> None:
+        self.mutate(
+            "p0-product-budget-method.json",
+            lambda value: value.update(forbidden_derivations=["copy an experimental safety ceiling"]),
+        )
+        self.assert_code("post-result-selection")
+
+    def test_missing_required_unsupported_operation_is_rejected(self) -> None:
+        self.mutate("p0-unsupported-operations.json", lambda value: value["operations"].pop())
+        self.assert_code("missing-unsupported-operation")
+
+    def test_missing_rebuild_comparison_is_rejected(self) -> None:
+        self.mutate("p0-evidence-profiles.json", lambda value: value.pop("reproducibility"))
+        self.assert_code("missing-rebuild-comparison")
+
+    def test_incomplete_validation_contract_is_rejected(self) -> None:
+        self.mutate("p0-phase-02-validation-contract.json", lambda value: value["negative_cases"].pop())
+        self.assert_code("incomplete-validation-contract")
+
+    def test_invalid_owner_attestation_is_rejected(self) -> None:
+        self.mutate("p0-phase-02-owner-review-result.json", lambda value: value.update(reviewer_statement="accepted"))
+        self.assert_code("invalid-owner-attestation")
 
 
 class Phase03ContractTests(unittest.TestCase):
@@ -233,6 +296,13 @@ class Phase03ContractTests(unittest.TestCase):
             lambda value: value["blockers"].append("immediate P1 experiment owners are unassigned"),
         )
         self.assert_code("stale-owner-blocker")
+
+    def test_accepted_phase_evidence_state_cannot_regress(self) -> None:
+        self.mutate(
+            "p0-acceptance-report.json",
+            lambda value: value["local_contract_results"].__setitem__("P0-A02", "pass-local-review-pending"),
+        )
+        self.assert_code("stale-accepted-phase")
 
     def test_downstream_runtime_work_cannot_be_a_p0_blocker(self) -> None:
         self.mutate(

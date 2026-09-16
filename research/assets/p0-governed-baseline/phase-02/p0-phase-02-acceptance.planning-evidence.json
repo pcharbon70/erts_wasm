@@ -1,0 +1,168 @@
+{
+  "profile": "erts-wasm.planning-evidence.v1",
+  "record_id": "evidence.p0.phase_02.acceptance_2026_09_16",
+  "evidence_kind": "contract_research",
+  "synthetic": false,
+  "producer": "Codex",
+  "reviewer": "Pascal Charbonneau (pcharbon70)",
+  "plan_baseline": {
+    "document_id": "planning.erts_wasm.proof_of_concept.p0.plan",
+    "revision": "d502eae0405413776e6e6e12eb2f5ec0d68642b9",
+    "task_ids": [
+      "p0-p02-experiment-bounds",
+      "p0-p02-unsupported-bounds",
+      "p0-p02-product-budget-method",
+      "p0-p02-evidence-profiles",
+      "p0-p02-integration",
+      "p0-p02-handoff"
+    ],
+    "gate_ids": ["P0-A02"]
+  },
+  "candidate": {
+    "revision": "d502eae0405413776e6e6e12eb2f5ec0d68642b9",
+    "dirty_state": "clean",
+    "diff_sha256": null
+  },
+  "execution": {
+    "status": "completed",
+    "tested_revision": "d502eae0405413776e6e6e12eb2f5ec0d68642b9",
+    "commands": [
+      {
+        "id": "validate-phase-02",
+        "argv": ["python3", "research/70-tools/p0_contract_validation.py", "phase-02"],
+        "cwd": ".",
+        "exit_code": 0,
+        "stdout_sha256": "65eabd84360fc07734f3488235efea40e380254a6eaeaebba02f86e6fed4d506",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "result_artifact_ids": ["artifact.p0.phase02.producer_review_receipt"]
+      },
+      {
+        "id": "test-p0-contracts",
+        "argv": ["python3", "-m", "unittest", "discover", "-s", "research/70-tools", "-p", "test_p0_contract_validation.py"],
+        "cwd": ".",
+        "exit_code": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "fc5e096a1efefe730c864f8271e453325f07bebd9491d3500b685dcf26011f67",
+        "result_artifact_ids": ["artifact.p0.phase02.producer_review_receipt"]
+      },
+      {
+        "id": "check-research-corpus",
+        "argv": ["python3", "research/70-tools/check_all.py"],
+        "cwd": ".",
+        "exit_code": 0,
+        "stdout_sha256": "df0f1a9e9a1112392546c3e3937eacbe384bbd45b64fbf1c87f0b1ad2c8fa93e",
+        "stderr_sha256": "9e3c5dc0571fc52966ec588a9e5d97c571f768c52d1cca1d733a631be858c293",
+        "result_artifact_ids": [
+          "artifact.p0.phase02.owner_review_result",
+          "artifact.p0.phase02.producer_review_receipt"
+        ]
+      }
+    ]
+  },
+  "toolchains": [
+    {
+      "name": "Python corpus and P0 contract validators",
+      "executable": "python3",
+      "version": "3.12.12",
+      "target": "repository contract research",
+      "compile_flags": [],
+      "link_flags": []
+    }
+  ],
+  "sources": [
+    {
+      "id": "source.p0.phase02.experiment_bounds",
+      "role": "owner-accepted finite experiment, safety, settling, and semantic-comparison contract",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-02/p0-experiment-bounds.json",
+      "available": true,
+      "sha256": "cf1fb782a6a923778e28b23d86a40ea545d63fc0f90b4c63368117de22e2d5f3",
+      "bytes": 4403
+    },
+    {
+      "id": "source.p0.phase02.unsupported_operations",
+      "role": "owner-accepted finite deny-by-default POC unsupported-operation inventory",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-02/p0-unsupported-operations.json",
+      "available": true,
+      "sha256": "4bea0a152b53b0fd5488022f3f3148bb1136ce7499c277337e3b894203701423",
+      "bytes": 4933
+    },
+    {
+      "id": "source.p0.phase02.loader_bounds",
+      "role": "owner-accepted encoded, expanded, startup, memory, Worker, and queue bound matrix",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-02/p0-loader-startup-bounds.json",
+      "available": true,
+      "sha256": "bdc9924e7af66f94977d6077cf80e6ed41f3453c63117f15f53d79b4f3becd28",
+      "bytes": 8528
+    },
+    {
+      "id": "source.p0.phase02.product_budget_method",
+      "role": "owner-accepted anti-gaming derivation method with product values and authority deferred",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-02/p0-product-budget-method.json",
+      "available": true,
+      "sha256": "062cb8c45abfa81112ac62898978eadf36a16b2c040fbb33bf2eb3cf4fb3e790",
+      "bytes": 3445
+    },
+    {
+      "id": "source.p0.phase02.evidence_profiles",
+      "role": "owner-accepted native, Wasm, TypeScript, fuzz, SBOM, provenance, and rebuild evidence contract",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-02/p0-evidence-profiles.json",
+      "available": true,
+      "sha256": "cf5a88b8f29533e5bb5f2efe794372ca45f51c5f6267655a4642dfbedf970b72",
+      "bytes": 7429
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "artifact.p0.phase02.owner_review_result",
+      "role": "dated independent owner acceptance and accepted limitations",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-02/p0-phase-02-owner-review-result.json",
+      "available": true,
+      "sha256": "d63145e119c1472e78ed5a5a42a117ff88db34ac19bac452f6b698e1490e92ef",
+      "bytes": 2691
+    },
+    {
+      "id": "artifact.p0.phase02.producer_review_receipt",
+      "role": "review trace, exact input digests, corrections, validation, and limitations",
+      "applicability": "applicable",
+      "path": "research/assets/p0-governed-baseline/phase-02/p0-phase-02-producer-review-receipt.json",
+      "available": true,
+      "sha256": "ed08339d06a197e2cb08fb9f04d36297280a98ca3dcf746ec7bbcf7f8883bf42",
+      "bytes": 5700
+    }
+  ],
+  "contract_ref": {
+    "path": "research/assets/p0-governed-baseline/phase-02/p0-phase-02-acceptance-contract.json",
+    "sha256": "3df285255e88ae2dc5684c1de8da601348ecc1169363568498d90632f50a010c"
+  },
+  "observations": {
+    "kind": "contract_research",
+    "criteria": [
+      {"id": "experiment-bounds-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase02.owner_review_result", "artifact.p0.phase02.producer_review_receipt"]},
+      {"id": "unsupported-and-loader-bounds-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase02.owner_review_result", "artifact.p0.phase02.producer_review_receipt"]},
+      {"id": "product-budget-method-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase02.owner_review_result"]},
+      {"id": "evidence-profiles-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase02.owner_review_result", "artifact.p0.phase02.producer_review_receipt"]},
+      {"id": "integration-consistency-passed", "outcome": "pass", "artifact_ids": ["artifact.p0.phase02.producer_review_receipt"]},
+      {"id": "handoff-accepted", "outcome": "pass", "artifact_ids": ["artifact.p0.phase02.owner_review_result"]}
+    ]
+  },
+  "observation_artifact_ids": [
+    "artifact.p0.phase02.owner_review_result",
+    "artifact.p0.phase02.producer_review_receipt"
+  ],
+  "outcome": "pass",
+  "limitations": [
+    "The accepted numeric values are experiment-safety ceilings, not product qualification budgets or evidence of useful runtime performance.",
+    "No C, Emscripten, sanitizer, fuzzer, Wasm, browser, semantic, performance, or lifecycle experiment was executed by P0.2.",
+    "Instrumentation combinations remain subject to later support probes, whose negative results must be retained.",
+    "The Phase 3 manifest schema must be aligned with the accepted granular Phase 2 bounds before P0-A03 can pass.",
+    "Browser-process RSS requires an external harness sampler whose identity and resolution remain later experiment evidence.",
+    "Numeric product budgets and their accountable authority remain deferred until after P6 and before C1."
+  ],
+  "support_refs": ["evidence.p0.phase_01.acceptance_2026_09_16"]
+}

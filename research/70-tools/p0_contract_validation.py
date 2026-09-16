@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import sys
 from pathlib import Path
 
@@ -28,6 +29,14 @@ def load_json(path: Path) -> dict:
     if not isinstance(value, dict):
         raise ContractError("invalid-root", f"{path}: root must be an object")
     return value
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def unique(items: list[dict], key: str, code: str) -> None:
@@ -144,30 +153,70 @@ def finite_positive(value: object, code: str, label: str) -> None:
         raise ContractError(code, f"{label} must be a finite positive number")
 
 
+def finite_positive_integer(value: object, code: str, label: str) -> None:
+    if not isinstance(value, int) or isinstance(value, bool) or value <= 0:
+        raise ContractError(code, f"{label} must be a finite positive integer")
+
+
 def validate_phase_02(root: Path = P0_ROOT / "phase-02") -> list[str]:
     experiments = load_json(root / "p0-experiment-bounds.json")
     unsupported = load_json(root / "p0-unsupported-operations.json")
     loader = load_json(root / "p0-loader-startup-bounds.json")
     product = load_json(root / "p0-product-budget-method.json")
     evidence = load_json(root / "p0-evidence-profiles.json")
+    validation = load_json(root / "p0-phase-02-validation-contract.json")
 
     series = experiments.get("series", {})
     for field in ("cold_boot_attempts", "warmup_cycles_discarded", "measured_boot_dispose_cycles", "maximum_total_cycles_per_run"):
-        finite_positive(series.get(field), "infinite-test-series", field)
+        finite_positive_integer(series.get(field), "infinite-test-series", field)
     if sum(series[field] for field in ("cold_boot_attempts", "warmup_cycles_discarded", "measured_boot_dispose_cycles")) > series["maximum_total_cycles_per_run"]:
         raise ContractError("inconsistent-test-series", "component cycle counts exceed the total ceiling")
     if not experiments.get("frozen_before_runtime_measurement"):
         raise ContractError("post-result-threshold-edit", "experiment bounds must be frozen before measurement")
+    if series.get("randomized_order") is not True or not series.get("randomization_seed_rule") or not series.get("series_identity_rule"):
+        raise ContractError("unreproducible-randomization", "randomized series must retain a predeclared seed, order, and complete identity")
+    settling = experiments.get("settling", {})
+    offsets = settling.get("post_dispose_sample_offsets_ms", [])
+    if (
+        not isinstance(offsets, list)
+        or len(offsets) < 3
+        or any(not isinstance(value, int) or isinstance(value, bool) or value < 0 for value in offsets)
+        or offsets != sorted(set(offsets))
+        or settling.get("maximum_settling_ms") != offsets[-1]
+        or not settling.get("sample_rule")
+        or not settling.get("quiescence_rule")
+    ):
+        raise ContractError("invalid-settling-series", "settling samples must be ordered, finite, retained, and end at the declared maximum")
     ceilings = experiments.get("safety_ceilings", [])
     unique(ceilings, "id", "duplicate-experiment-bound")
+    required_ceilings = {
+        "run-wall-clock", "single-startup", "generation-workers",
+        "shared-memory", "aggregate-artifacts", "browser-host-rss-observation",
+    }
+    if {item["id"] for item in ceilings} != required_ceilings:
+        raise ContractError("missing-experiment-bound", "experimental safety ceiling set is incomplete")
     for item in ceilings:
         finite_positive(item.get("limit"), "unbounded-resource", item.get("id", "resource"))
-        for field in ("unit", "owner", "breach_action"):
+        for field in ("unit", "owner", "enforcement_point", "mechanism", "breach_action"):
             if not item.get(field):
                 raise ContractError(f"missing-{field.replace('_', '-')}", f"{item['id']} lacks {field}")
+    comparison = experiments.get("semantic_comparison", {})
+    if not comparison.get("oracle") or not comparison.get("normalization_allowlist") or not comparison.get("required_exact_fields") or not comparison.get("mismatch_disposition"):
+        raise ContractError("incomplete-semantic-comparison", "semantic comparison requires an oracle, closed normalization, exact fields, and mismatch disposition")
 
     operations = unsupported.get("operations", [])
     unique(operations, "id", "duplicate-unsupported-operation")
+    required_operations = {
+        "dynamic-nif", "dynamic-driver", "os-process-port", "fork-exec",
+        "raw-tcp-udp", "distribution", "shell-terminal", "eval",
+        "runtime-compiler", "arbitrary-code-loading", "ambient-host-filesystem",
+        "general-posix-signals", "unlisted-on-load", "hot-code-replacement",
+        "dynamic-side-module", "wasm-memory-growth", "generic-javascript",
+        "dom-access", "browser-network-capability", "browser-persistence-capability",
+        "browser-cryptography-capability", "external-term-browser-boundary",
+    }
+    if {item["id"] for item in operations} != required_operations:
+        raise ContractError("missing-unsupported-operation", "unsupported-operation inventory is incomplete")
     for item in operations:
         for field in ("request_surface", "owner", "expected_result"):
             if not item.get(field):
@@ -175,7 +224,16 @@ def validate_phase_02(root: Path = P0_ROOT / "phase-02") -> list[str]:
 
     bounds = loader.get("bounds", [])
     unique(bounds, "id", "duplicate-loader-bound")
-    required_resources = {"manifest-bytes", "artifact-count", "artifact-bytes", "aggregate-artifact-bytes", "path-bytes", "worker-agents", "shared-memory", "pre-ready-message-queue", "concurrent-fetches", "startup-timers", "startup-wall-clock"}
+    required_resources = {
+        "manifest-bytes", "manifest-depth", "manifest-record-count", "artifact-count",
+        "artifact-encoded-bytes", "aggregate-encoded-artifact-bytes",
+        "release-expanded-bytes", "release-entry-count", "release-entry-expanded-bytes",
+        "beam-module-bytes", "artifact-url-bytes", "path-bytes", "code-path-count",
+        "argv-count", "argv-entry-bytes", "worker-agents", "initial-shared-memory",
+        "maximum-shared-memory", "pre-ready-message-queue", "pre-ready-message-bytes",
+        "pre-ready-queued-bytes", "concurrent-fetches", "startup-timers",
+        "startup-wall-clock",
+    }
     if not required_resources.issubset({item["id"] for item in bounds}):
         raise ContractError("missing-loader-bound", "loader/startup bounds omit a required resource")
     for item in bounds:
@@ -183,23 +241,111 @@ def validate_phase_02(root: Path = P0_ROOT / "phase-02") -> list[str]:
         for field in ("resource", "owner", "unit", "enforcement_point", "mechanism", "breach_action"):
             if not item.get(field):
                 raise ContractError(f"missing-{field.replace('_', '-')}", f"{item['id']} lacks {field}")
+    bound_by_id = {item["id"]: item for item in bounds}
+    if bound_by_id["initial-shared-memory"]["limit"] != bound_by_id["maximum-shared-memory"]["limit"] or not loader.get("memory_rule"):
+        raise ContractError("growable-poc-memory", "POC initial and maximum shared-memory bounds must match and prohibit growth")
+    if not loader.get("content_encoding_rule"):
+        raise ContractError("missing-expanded-byte-accounting", "transport bytes and expanded release bytes require separate accounting")
+    ceiling_by_id = {item["id"]: item for item in ceilings}
+    consistent_limits = (
+        ceiling_by_id["single-startup"]["limit"] * 1000 == bound_by_id["startup-wall-clock"]["limit"]
+        and ceiling_by_id["generation-workers"]["limit"] == bound_by_id["worker-agents"]["limit"]
+        and ceiling_by_id["shared-memory"]["limit"] == bound_by_id["initial-shared-memory"]["limit"] == bound_by_id["maximum-shared-memory"]["limit"]
+        and ceiling_by_id["aggregate-artifacts"]["limit"] == bound_by_id["aggregate-encoded-artifact-bytes"]["limit"]
+    )
+    if not consistent_limits:
+        raise ContractError("inconsistent-safety-bound", "experiment and loader safety ceilings disagree")
 
     if product.get("numeric_product_budgets") is not None:
         raise ContractError("premature-product-budget", "numeric product budgets require the actual authority")
-    if product.get("authority") != "unassigned-until-post-p6-pre-c1" or product.get("approval_state") != "method-frozen-product-approval-deferred-pre-c1":
+    if product.get("authority") != "unassigned-until-post-p6-pre-c1" or product.get("approval_state") != "producer-reviewed-owner-disposition-pending-product-approval-deferred-pre-c1":
         raise ContractError("fabricated-product-authority", "P0 must defer numeric product approval and its authority until post-P6/pre-C1")
-    if "copy an experimental safety ceiling" not in product.get("forbidden_derivations", []):
+    forbidden_derivations = product.get("forbidden_derivations", [])
+    if "copy an experimental safety ceiling" not in forbidden_derivations:
         raise ContractError("copied-safety-ceiling", "product method must prohibit copying safety ceilings")
+    if not any("baseline, coefficient, percentile, margin, sample count, population, or exclusion" in rule for rule in forbidden_derivations):
+        raise ContractError("post-result-selection", "product method must prohibit post-result selection of statistical inputs")
+    if not product.get("entry_requirements") or not product.get("metric_contract_requires") or not product.get("insufficient_evidence_rule"):
+        raise ContractError("incomplete-product-method", "product budget method requires entry, metric, and insufficient-evidence rules")
 
     profiles = evidence.get("profiles", [])
     unique(profiles, "id", "duplicate-evidence-profile")
-    required_profiles = {"native-debug", "native-release", "wasm-debug", "wasm-release", "host-parser-fuzz", "c-boundary-fuzz"}
+    required_profiles = {
+        "native-debug", "native-release", "wasm-debug", "wasm-release",
+        "browser-host-fuzz", "native-c-boundary-fuzz", "wasm-boundary-replay",
+    }
     if {item["id"] for item in profiles} != required_profiles:
         raise ContractError("silent-instrumentation-omission", "required evidence profile set is incomplete")
     if not evidence.get("unsupported_combination_rule"):
         raise ContractError("silent-sanitizer-omission", "unsupported instrumentation needs an explicit disposition")
     if not evidence.get("failure_minimization", {}).get("orphan_rule"):
         raise ContractError("orphaned-fuzz-failure", "fuzz failures require retained ownership and reproduction")
+    profiles_by_id = {item["id"]: item for item in profiles}
+    toolchains = evidence.get("toolchains", {})
+    required_toolchains = {"native-clang", "emscripten", "node", "typescript", "chrome", "firefox"}
+    if set(toolchains) != required_toolchains or any(not toolchains[key] for key in required_toolchains):
+        raise ContractError("incomplete-evidence-toolchain", "evidence profiles require exact native, Wasm, host, and browser identities")
+    configurations = evidence.get("profile_configurations", {})
+    if set(configurations) != required_profiles:
+        raise ContractError("missing-profile-configuration", "every evidence profile requires a matching toolchain and flag configuration")
+    for profile_id, configuration in configurations.items():
+        if (
+            not configuration.get("toolchain_refs")
+            or not configuration.get("required_flags")
+            or not configuration.get("parameter_rule")
+            or any(reference not in toolchains for reference in configuration.get("toolchain_refs", []))
+        ):
+            raise ContractError("incomplete-profile-configuration", f"{profile_id} has an incomplete toolchain or flag configuration")
+    for item in profiles:
+        for field in ("target", "purpose", "required_features", "sanitizers", "status"):
+            if field not in item or item[field] in (None, "", [] if field == "required_features" else None):
+                raise ContractError("incomplete-evidence-profile", f"{item['id']} lacks {field}")
+    if profiles_by_id["browser-host-fuzz"].get("sanitizers") != []:
+        raise ContractError("wrong-host-instrumentation", "TypeScript host fuzzing cannot claim C address/undefined sanitizers")
+    if set(profiles_by_id["native-c-boundary-fuzz"].get("sanitizers", [])) != {"address", "undefined"}:
+        raise ContractError("missing-native-sanitizer", "native C boundary fuzzing requires address and undefined sanitizers")
+    if not evidence.get("sbom", {}).get("format", "").startswith("SPDX") or not evidence.get("sbom", {}).get("required_fields"):
+        raise ContractError("incomplete-sbom-profile", "POC SBOM profile must name SPDX and required fields")
+    if evidence.get("provenance", {}).get("compatibility") != "SLSA-compatible provenance statement" or not evidence.get("provenance", {}).get("required_fields"):
+        raise ContractError("incomplete-provenance-profile", "POC provenance must be SLSA-compatible and declare required fields")
+    if not evidence.get("reproducibility", {}).get("rule") or evidence.get("reproducibility", {}).get("unexplained_difference") != "fails evidence handoff":
+        raise ContractError("missing-rebuild-comparison", "evidence profile must require independent rebuild comparison")
+
+    positive = validation.get("positive_case", {})
+    if positive.get("command") != ["python3", "research/70-tools/p0_contract_validation.py", "phase-02"]:
+        raise ContractError("stale-validation-command", "Phase 2 positive validation command is stale")
+    negative_cases = validation.get("negative_cases", [])
+    unique(negative_cases, "id", "duplicate-validation-case")
+    required_negative_errors = {
+        "post-result-threshold-edit", "unreproducible-randomization",
+        "missing-enforcement-point", "missing-owner", "infinite-test-series",
+        "missing-loader-bound", "growable-poc-memory",
+        "inconsistent-safety-bound",
+        "silent-instrumentation-omission", "wrong-host-instrumentation",
+        "incomplete-evidence-toolchain",
+        "orphaned-fuzz-failure", "copied-safety-ceiling", "post-result-selection",
+        "missing-unsupported-operation", "missing-rebuild-comparison",
+    }
+    if {item.get("expected_error") for item in negative_cases} != required_negative_errors:
+        raise ContractError("incomplete-validation-contract", "Phase 2 validation contract does not cover every required rejection")
+    if not validation.get("acceptance_boundary"):
+        raise ContractError("missing-acceptance-boundary", "Phase 2 validation must preserve its non-acceptance boundary")
+
+    owner_result_path = root / "p0-phase-02-owner-review-result.json"
+    if owner_result_path.exists():
+        owner_result = load_json(owner_result_path)
+        if (
+            owner_result.get("reviewer") != "Pascal Charbonneau (pcharbon70)"
+            or owner_result.get("reviewer_statement") != "I accept the P0.2 owner-review packet and its recorded limitations."
+            or owner_result.get("outcome") != "accepted"
+        ):
+            raise ContractError("invalid-owner-attestation", "P0.2 owner result does not contain the exact accepted disposition")
+        reviewed_packet = owner_result.get("reviewed_packet", {})
+        producer_receipt = owner_result.get("producer_review_receipt", {})
+        packet_path = root / "p0-phase-02-owner-review-packet.json"
+        receipt_path = root / "p0-phase-02-producer-review-receipt.json"
+        if reviewed_packet.get("sha256") != sha256_file(packet_path) or producer_receipt.get("sha256") != sha256_file(receipt_path):
+            raise ContractError("stale-owner-attestation", "P0.2 owner result does not bind the reviewed packet and producer receipt")
 
     return ["experiment-bounds", "unsupported-operations", "loader-bounds", "product-budget-method", "evidence-profiles"]
 
@@ -374,8 +520,13 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
     expected_partial_evidence = (
         "P0-A01: research/assets/p0-governed-baseline/phase-01/"
         "p0-phase-01-acceptance.planning-evidence.json; "
-        "P0-A02, P0-A03, and P0-GATE: none"
+        "P0-A02: research/assets/p0-governed-baseline/phase-02/"
+        "p0-phase-02-acceptance.planning-evidence.json; "
+        "P0-A03 and P0-GATE: none"
     )
+    local_results = report.get("local_contract_results", {})
+    if local_results.get("P0-A01") != "passed-reviewed-evidence-bound" or local_results.get("P0-A02") != "passed-reviewed-evidence-bound":
+        raise ContractError("stale-accepted-phase", "P0 acceptance report must retain passed P0-A01 and P0-A02 evidence state")
     if report.get("gate_state") != "blocked" or report.get("planning_evidence") != expected_partial_evidence:
         raise ContractError("premature-p0-closure", "P0 cannot close with unresolved blockers")
 
@@ -403,9 +554,16 @@ def main(argv: list[str]) -> int:
     if phase == "phase-01":
         print("Acceptance status: P0-A01 passed by independent reviewed evidence")
     elif phase == "phase-02":
-        print("Acceptance status: independent review pending; P0-A02 remains open")
+        evidence_path = P0_ROOT / "phase-02" / "p0-phase-02-acceptance.planning-evidence.json"
+        owner_result_path = P0_ROOT / "phase-02" / "p0-phase-02-owner-review-result.json"
+        if evidence_path.exists():
+            print("Acceptance status: P0-A02 passed by independent reviewed evidence")
+        elif owner_result_path.exists():
+            print("Acceptance status: owner review accepted; clean pass-closing evidence pending")
+        else:
+            print("Acceptance status: independent review pending; P0-A02 remains open")
     else:
-        print("Acceptance status: P0-A01 passed; P0-A02, P0-A03, and P0-GATE remain open")
+        print("Acceptance status: P0-A01 and P0-A02 passed; P0-A03 and P0-GATE remain open")
     return 0
 
 

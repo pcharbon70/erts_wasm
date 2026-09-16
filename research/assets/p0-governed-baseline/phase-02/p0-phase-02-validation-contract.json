@@ -5,11 +5,21 @@
   "positive_case": {"id": "P0-P02-CONTRACT", "command": ["python3", "research/70-tools/p0_contract_validation.py", "phase-02"], "expected": "all five Phase 2 contracts validate and acceptance remains review-pending"},
   "negative_cases": [
     {"id": "P0-P02-NEG-POSTRESULT", "mutation": "mark bounds as frozen after measurement", "expected_error": "post-result-threshold-edit"},
+    {"id": "P0-P02-NEG-RANDOMIZATION", "mutation": "remove the retained randomization seed rule", "expected_error": "unreproducible-randomization"},
+    {"id": "P0-P02-NEG-EXPERIMENT-ENFORCEMENT", "mutation": "remove an experimental ceiling enforcement point", "expected_error": "missing-enforcement-point"},
     {"id": "P0-P02-NEG-OWNER", "mutation": "remove a loader-bound owner", "expected_error": "missing-owner"},
     {"id": "P0-P02-NEG-INFINITE", "mutation": "set the maximum test series to a non-positive value", "expected_error": "infinite-test-series"},
+    {"id": "P0-P02-NEG-EXPANDED", "mutation": "remove the expanded release byte bound", "expected_error": "missing-loader-bound"},
+    {"id": "P0-P02-NEG-MEMORY-GROWTH", "mutation": "make the initial shared-memory ceiling differ from the maximum", "expected_error": "growable-poc-memory"},
+    {"id": "P0-P02-NEG-CROSS-CONTRACT", "mutation": "make an experiment safety ceiling disagree with its loader enforcement bound", "expected_error": "inconsistent-safety-bound"},
     {"id": "P0-P02-NEG-SANITIZER", "mutation": "remove a required evidence profile", "expected_error": "silent-instrumentation-omission"},
+    {"id": "P0-P02-NEG-HOST-INSTRUMENTATION", "mutation": "claim C address sanitizer coverage for the TypeScript host fuzzer", "expected_error": "wrong-host-instrumentation"},
+    {"id": "P0-P02-NEG-TOOLCHAIN", "mutation": "remove a required evidence-profile toolchain identity", "expected_error": "incomplete-evidence-toolchain"},
     {"id": "P0-P02-NEG-ORPHAN", "mutation": "remove the fuzz-failure ownership rule", "expected_error": "orphaned-fuzz-failure"},
-    {"id": "P0-P02-NEG-COPY", "mutation": "remove the prohibition on copying an experimental ceiling", "expected_error": "copied-safety-ceiling"}
+    {"id": "P0-P02-NEG-COPY", "mutation": "remove the prohibition on copying an experimental ceiling", "expected_error": "copied-safety-ceiling"},
+    {"id": "P0-P02-NEG-SELECTION", "mutation": "allow statistical inputs to be selected after observing candidate results", "expected_error": "post-result-selection"},
+    {"id": "P0-P02-NEG-UNSUPPORTED", "mutation": "remove a required unsupported operation", "expected_error": "missing-unsupported-operation"},
+    {"id": "P0-P02-NEG-REBUILD", "mutation": "remove the independent rebuild comparison contract", "expected_error": "missing-rebuild-comparison"}
   ],
   "acceptance_boundary": "local validation proves internal contract consistency only; it does not approve the safety values, assign product authority, qualify instrumentation, or close P0-A02"
 }

@@ -34,11 +34,13 @@ Back to milestone: [P0 plan](README.md).
 ## Entry, scope, and dependencies
 
 Formal entry requires accepted `p0-p02-handoff` evidence from [Phase 2](phase-02-bounds-budgets-and-evidence-contracts.md).
-That evidence remains open. The user authorized draft progression with the
-dependency open; contract drafting and local validation are in progress, while
-independent acceptance and browser execution have not started. This phase owns
-the loader and delivery contract in the corpus, not a browser loader
-implementation.
+P0-A02 passed on 2026-09-16 through its [independent contract
+evidence](../../../assets/p0-governed-baseline/phase-02/p0-phase-02-acceptance.planning-evidence.json),
+so formal Phase 3 review may begin. The existing draft contracts and local
+validation predate that handoff; independent acceptance, bounds-schema
+alignment, clean-environment reproduction, and browser execution have not
+started. This phase owns the loader and delivery contract in the corpus, not a
+browser loader implementation.
 
 The root trust choice remains open until its decision task is reviewed. A
 secure context, cross-origin isolation, recursive Worker delivery policy, and

@@ -33,11 +33,16 @@ runtime results are not.
 
 ### Documents
 
+- [`p0-phase-02-acceptance.planning-evidence.json`](p0-phase-02-acceptance.planning-evidence.json) — clean-revision reviewed contract evidence closing the Phase 2 tasks and P0-A02.
+- [`p0-phase-02-acceptance-contract.json`](p0-phase-02-acceptance-contract.json) — digest-bound expected research criteria and the P0-A02 acceptance boundary.
 - [`p0-evidence-profiles.json`](p0-evidence-profiles.json) — native/Wasm build, sanitizer, fuzz, minimization, SBOM, and provenance retention rules.
 - [`p0-experiment-bounds.json`](p0-experiment-bounds.json) — finite cycle, settling, noise, safety, and semantic-comparison protocol.
 - [`p0-loader-startup-bounds.json`](p0-loader-startup-bounds.json) — pre-ready resource owners, units, ceilings, enforcement points, and breach actions.
-- [`p0-phase-02-validation-contract.json`](p0-phase-02-validation-contract.json) — assembled positive case and six anti-gaming/malformed cases.
+- [`p0-phase-02-validation-contract.json`](p0-phase-02-validation-contract.json) — assembled positive case and sixteen anti-gaming/malformed cases.
 - [`p0-phase-02-validation-report.json`](p0-phase-02-validation-report.json) — local validation results and explicit not-run authority cases.
+- [`p0-phase-02-producer-review-receipt.json`](p0-phase-02-producer-review-receipt.json) — traced producer review, corrections, validation, and limitations before owner disposition.
+- [`p0-phase-02-owner-review-packet.json`](p0-phase-02-owner-review-packet.json) — bounded P0-A02 review questions and the exact requested owner disposition.
+- [`p0-phase-02-owner-review-result.json`](p0-phase-02-owner-review-result.json) — the project owner's exact acceptance statement, reviewed packet identities, criteria, and accepted limitations.
 - [`p0-product-budget-method.json`](p0-product-budget-method.json) — anti-gaming method frozen in P0 with numeric approval and product authority deferred post-P6/pre-C1.
 - [`p0-unsupported-operations.json`](p0-unsupported-operations.json) — finite deny-by-default POC operation inventory.
 

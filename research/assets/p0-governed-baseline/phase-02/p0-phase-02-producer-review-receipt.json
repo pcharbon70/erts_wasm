@@ -1,0 +1,62 @@
+{
+  "receipt_id": "p0-phase-02-producer-review-2026-09-16",
+  "acceptance_id": "P0-A02",
+  "producer": "Codex",
+  "designated_independent_reviewer": "Pascal Charbonneau (pcharbon70)",
+  "review_state": "ready-for-explicit-owner-disposition",
+  "repository_base_revision": "2fe6991bbc8f7894f8b5e29d52605c0b6eec583c",
+  "repository_state": "dirty working tree containing the active P0.2 producer review; this receipt is not pass-closing evidence",
+  "entry_evidence": {
+    "gate": "P0-A01",
+    "path": "research/assets/p0-governed-baseline/phase-01/p0-phase-01-acceptance.planning-evidence.json",
+    "sha256": "7e9aad8b83ce693f5187e6b7c72b7c07d6b6486eaca0936cd6afead243b27c34",
+    "outcome": "pass"
+  },
+  "reviewed_contracts": [
+    {"task_id": "p0-p02-experiment-bounds", "path": "research/assets/p0-governed-baseline/phase-02/p0-experiment-bounds.json", "sha256": "cf1fb782a6a923778e28b23d86a40ea545d63fc0f90b4c63368117de22e2d5f3"},
+    {"task_id": "p0-p02-unsupported-bounds", "path": "research/assets/p0-governed-baseline/phase-02/p0-unsupported-operations.json", "sha256": "4bea0a152b53b0fd5488022f3f3148bb1136ce7499c277337e3b894203701423"},
+    {"task_id": "p0-p02-unsupported-bounds", "path": "research/assets/p0-governed-baseline/phase-02/p0-loader-startup-bounds.json", "sha256": "bdc9924e7af66f94977d6077cf80e6ed41f3453c63117f15f53d79b4f3becd28"},
+    {"task_id": "p0-p02-product-budget-method", "path": "research/assets/p0-governed-baseline/phase-02/p0-product-budget-method.json", "sha256": "062cb8c45abfa81112ac62898978eadf36a16b2c040fbb33bf2eb3cf4fb3e790"},
+    {"task_id": "p0-p02-evidence-profiles", "path": "research/assets/p0-governed-baseline/phase-02/p0-evidence-profiles.json", "sha256": "cf5a88b8f29533e5bb5f2efe794372ca45f51c5f6267655a4642dfbedf970b72"},
+    {"task_id": "p0-p02-integration", "path": "research/assets/p0-governed-baseline/phase-02/p0-phase-02-validation-contract.json", "sha256": "a0f716c07d855073fdc75af1f31c6be5d51c712d9f65601919181ff85ee07b67"}
+  ],
+  "review_method": [
+    "read the planning convention and all three planning templates required for phase review",
+    "trace P0-D03 and P0-A02 to the canonical architecture, minimum-platform inquiry, security evidence model, and accepted P0.1 language/toolchain ownership",
+    "check numeric safety ceilings for units, owners, enforcement points, mechanisms, breach actions, and cross-contract equality",
+    "check unsupported scope against the POC exclusions and deny-by-default host-authority model",
+    "check product-budget derivation for premeasurement population selection, anti-gaming, accountable approval, and insufficient-evidence behavior",
+    "check evidence profiles against C, TypeScript, native, Emscripten, browser, fuzz, SBOM, provenance, and reproducibility ownership",
+    "run the positive validator and all P0 contract unit tests after correction"
+  ],
+  "corrections": [
+    "added reproducible randomization identity, raw settling-sample retention, and enforceable experiment-ceiling metadata",
+    "added separate encoded-artifact, expanded-release, release-entry, BEAM-file, URL, code-path, fixed-memory, and queued-message byte bounds",
+    "expanded the finite POC unsupported inventory to include hot replacement, side modules, memory growth, generic JavaScript, DOM, browser capabilities, and external-term input",
+    "strengthened future product-budget entry, metric, population, selection-bias, and insufficient-evidence rules without adding product numbers or appointing product authority",
+    "separated TypeScript host generative testing from native C sanitizer fuzzing and Wasm/browser corpus replay",
+    "bound evidence profiles to the accepted P0.1 toolchain identities, concrete flag families, SPDX SBOM, SLSA-compatible provenance, and independent rebuild comparison",
+    "expanded the validation contract from six to sixteen negative cases and made the validator enforce the meta-contract"
+  ],
+  "validation": [
+    {
+      "argv": ["python3", "research/70-tools/p0_contract_validation.py", "phase-02"],
+      "result": "pass-local",
+      "observation": "all five Phase 2 contracts validated and P0-A02 remained review-pending"
+    },
+    {
+      "argv": ["python3", "-m", "unittest", "discover", "-s", "research/70-tools", "-p", "test_p0_contract_validation.py"],
+      "result": "pass-local",
+      "observation": "48 tests passed, including all sixteen declared Phase 2 rejection classes"
+    }
+  ],
+  "limitations": [
+    "The numeric values are deliberately permissive experiment-safety ceilings. They are not evidence that the runtime meets a useful product size, startup, memory, or lifecycle budget.",
+    "No C, Emscripten, sanitizer, fuzzer, Wasm, browser, semantic, performance, or lifecycle experiment was run for this review.",
+    "The exact native/Wasm instrumentation combinations remain subject to later support probes; an unsupported combination must be retained as a reviewed negative result rather than silently omitted.",
+    "The Phase 3 draft manifest schema still models the earlier coarse artifact and memory fields. P0.3 review must align it with the accepted encoded/expanded, per-BEAM, fixed-memory, URL, and message-byte bounds before P0-A03 can pass.",
+    "Browser-process RSS is an external harness observation, not a portable in-page browser API; its exact sampler and resolution must be recorded by the owning later experiment.",
+    "Numeric product budgets and their accountable authority remain intentionally deferred until after P6 and before C1."
+  ],
+  "acceptance_effect": "none until the designated independent reviewer records an explicit disposition; this receipt cannot close a task, checkbox, or P0-A02"
+}

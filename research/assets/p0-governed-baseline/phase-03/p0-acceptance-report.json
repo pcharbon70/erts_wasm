@@ -2,14 +2,13 @@
   "report_id": "p0-local-acceptance-review-2026-09-15",
   "contract_id": "p0-acceptance",
   "tested_base_revision": "aaff05d6801e0a6340d422d5f7a98a8d340264b2",
-  "local_contract_results": {"P0-A01": "passed-reviewed-evidence-bound", "P0-A02": "pass-local-review-pending", "P0-A03": "pass-local-review-pending", "P0-GATE": "blocked"},
+  "local_contract_results": {"P0-A01": "passed-reviewed-evidence-bound", "P0-A02": "passed-reviewed-evidence-bound", "P0-A03": "pass-local-review-pending", "P0-GATE": "blocked"},
   "gate_state": "blocked",
   "review_complete": false,
   "runtime_execution": "not-run",
   "empty_environment_reproduction": "not-run",
-  "role_assignment": {"contract": "p0-role-assignments", "assignee": "Pascal Charbonneau (pcharbon70)", "state": "Phase 1 reviews accepted; Phase 2 and Phase 3 reviews and experiment work remain open"},
+  "role_assignment": {"contract": "p0-role-assignments", "assignee": "Pascal Charbonneau (pcharbon70)", "state": "Phase 1 and Phase 2 reviews accepted; Phase 3 reviews and experiment work remain open"},
   "blockers": [
-    "Phase 2 independent experiment-contract, bounds/security, and evidence-profile reviews are not run",
     "Phase 3 loader/protocol and root-trust security reviews are not run",
     "clean experiment-readiness static preflight and empty browser profiles have been specified but not reproduced"
   ],
@@ -24,5 +23,5 @@
   "stop_trigger_state": "none-confirmed-deployment-prerequisites-untested",
   "disposition": "blocked-formal-P1-entry-not-unlocked",
   "expectation_correction": {"date": "2026-09-15", "baseline_revision": "1a049f45580af13ea42c31afa40d95320acfe11d", "reason": "remove circular requirements for downstream implementation outcomes from the P0 entry gate"},
-  "planning_evidence": "P0-A01: research/assets/p0-governed-baseline/phase-01/p0-phase-01-acceptance.planning-evidence.json; P0-A02, P0-A03, and P0-GATE: none"
+  "planning_evidence": "P0-A01: research/assets/p0-governed-baseline/phase-01/p0-phase-01-acceptance.planning-evidence.json; P0-A02: research/assets/p0-governed-baseline/phase-02/p0-phase-02-acceptance.planning-evidence.json; P0-A03 and P0-GATE: none"
 }
