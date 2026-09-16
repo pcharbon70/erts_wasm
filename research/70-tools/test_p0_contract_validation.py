@@ -297,6 +297,13 @@ class Phase03ContractTests(unittest.TestCase):
         )
         self.assert_code("stale-owner-blocker")
 
+    def test_accepted_phase_evidence_state_cannot_regress(self) -> None:
+        self.mutate(
+            "p0-acceptance-report.json",
+            lambda value: value["local_contract_results"].__setitem__("P0-A02", "pass-local-review-pending"),
+        )
+        self.assert_code("stale-accepted-phase")
+
     def test_downstream_runtime_work_cannot_be_a_p0_blocker(self) -> None:
         self.mutate(
             "p0-acceptance-report.json",

@@ -114,10 +114,17 @@ This completes the human review event but does not close P0-A02 until the
 accepted contracts are committed, replayed cleanly, and bound by valid
 `contract_research` evidence.
 
+The accepted baseline was committed as `d502eae`, then replayed from a clean
+worktree. The Phase 2 validator, all 49 P0 contract tests, and the full 112-test
+corpus suite passed. The resulting [pass-closing contract
+evidence](../assets/p0-governed-baseline/phase-02/p0-phase-02-acceptance.planning-evidence.json)
+binds all six Phase 2 task IDs and P0-A02 to that revision, the owner-review
+result, reviewed contract digests, exact command-output hashes, and the
+accepted limitations. P0-A02 passed on 2026-09-16; P0-A03 and P0-GATE remain
+open.
+
 ## Follow-ups
 
-- Obtain the assigned owner's explicit P0.2 disposition and, if accepted,
-  produce clean-revision pass-closing contract evidence.
 - Align the Phase 3 manifest schema with the accepted Phase 2 bounds during the
   P0.3 review.
 - Qualify sanitizer and fuzz combinations rather than silently dropping them.

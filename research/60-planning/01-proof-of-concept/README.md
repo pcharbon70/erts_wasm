@@ -37,8 +37,8 @@ readiness, and long-term support do not belong in the proof claim.
 
 ## Program state and ordering
 
-P0.1 is accepted and P0-A01 passes. P0-GATE remains blocked on P0-A02/P0-A03
-independent review and clean-environment readiness evidence. Pascal Charbonneau
+P0.1 and P0.2 are accepted and P0-A01/P0-A02 pass. P0-GATE remains blocked on
+P0-A03 independent review and clean-environment readiness evidence. Pascal Charbonneau
 (`pcharbon70`) has accepted the remaining review and experiment-owner roles.
 Runtime implementation results are explicitly deferred to P1–P6. P1 has
 authored phase plans. P2–P6 retain substantive milestone definitions but remain

@@ -33,6 +33,8 @@ runtime results are not.
 
 ### Documents
 
+- [`p0-phase-02-acceptance.planning-evidence.json`](p0-phase-02-acceptance.planning-evidence.json) — clean-revision reviewed contract evidence closing the Phase 2 tasks and P0-A02.
+- [`p0-phase-02-acceptance-contract.json`](p0-phase-02-acceptance-contract.json) — digest-bound expected research criteria and the P0-A02 acceptance boundary.
 - [`p0-evidence-profiles.json`](p0-evidence-profiles.json) — native/Wasm build, sanitizer, fuzz, minimization, SBOM, and provenance retention rules.
 - [`p0-experiment-bounds.json`](p0-experiment-bounds.json) — finite cycle, settling, noise, safety, and semantic-comparison protocol.
 - [`p0-loader-startup-bounds.json`](p0-loader-startup-bounds.json) — pre-ready resource owners, units, ceilings, enforcement points, and breach actions.

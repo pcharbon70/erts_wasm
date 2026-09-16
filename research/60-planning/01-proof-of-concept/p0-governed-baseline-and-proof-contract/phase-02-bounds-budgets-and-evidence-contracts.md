@@ -41,8 +41,8 @@ Formal entry requires the reviewed `p0-p01-handoff` record from [Phase 1](phase-
 P0-A01 passed on 2026-09-16 through its [independent contract
 evidence](../../../assets/p0-governed-baseline/phase-01/p0-phase-01-acceptance.planning-evidence.json),
 so that entry dependency is satisfied. Contract drafting, correction, producer
-review, local validation, and explicit owner disposition are complete;
-clean-revision pass-closing evidence remains pending. Runtime tests have not started. This
+review, local validation, explicit owner disposition, and clean-revision
+pass-closing evidence are complete. Runtime tests have not started. This
 phase defines research and test contracts, not implementation or product
 approval.
 
@@ -63,28 +63,28 @@ implementation and evidence locations remain unresolved.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p0-p02-experiment-bounds | research-tools | Pascal Charbonneau (`pcharbon70`), measurement reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-D03, P0-A02; `p0-experiment-bounds` | Owner-accepted premeasurement protocol and local validation; clean pass-closing evidence pending. |
-| p0-p02-unsupported-bounds | research-tools | Pascal Charbonneau (`pcharbon70`), ERTS C-port and security reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-unsupported-matrix`, `p0-loader-bounds` | Owner-accepted inventories and negative checks; clean pass-closing evidence pending. |
-| p0-p02-product-budget-method | research-tools | Pascal Charbonneau (`pcharbon70`), method reviewer; final product authority deferred post-P6/pre-C1 | p0-p02-experiment-bounds | P0-D03, P0-A02; `p0-product-budget-method` | Owner-accepted method and downstream approval point; clean pass-closing evidence pending and product numbers remain deferred. |
-| p0-p02-evidence-profiles | research-tools | Pascal Charbonneau (`pcharbon70`), test/evidence reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-evidence-profile` | Owner-accepted native/Wasm/host evidence profiles; clean pass-closing evidence pending and profiles not run. |
-| p0-p02-integration | research-tools | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p02-experiment-bounds, p0-p02-unsupported-bounds, p0-p02-product-budget-method, p0-p02-evidence-profiles | P0-A02 | Positive validation and sixteen negative contract classes owner-accepted; clean pass-closing evidence pending. |
-| p0-p02-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p0-p02-integration | P0-A02 | Owner disposition recorded; clean-revision evidence and final roll-up pending. |
+| p0-p02-experiment-bounds | research-tools | Pascal Charbonneau (`pcharbon70`), measurement reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-D03, P0-A02; `p0-experiment-bounds` | [Pass-closing evidence](../../../assets/p0-governed-baseline/phase-02/p0-phase-02-acceptance.planning-evidence.json) binds the owner-accepted premeasurement protocol. |
+| p0-p02-unsupported-bounds | research-tools | Pascal Charbonneau (`pcharbon70`), ERTS C-port and security reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-unsupported-matrix`, `p0-loader-bounds` | The pass-closing evidence binds the owner-accepted inventories and negative checks. |
+| p0-p02-product-budget-method | research-tools | Pascal Charbonneau (`pcharbon70`), method reviewer; final product authority deferred post-P6/pre-C1 | p0-p02-experiment-bounds | P0-D03, P0-A02; `p0-product-budget-method` | The pass-closing evidence binds the owner-accepted method; product values and authority remain deferred. |
+| p0-p02-evidence-profiles | research-tools | Pascal Charbonneau (`pcharbon70`), test/evidence reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-evidence-profile` | The pass-closing evidence binds the owner-accepted profiles; runtime profiles remain not run. |
+| p0-p02-integration | research-tools | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p02-experiment-bounds, p0-p02-unsupported-bounds, p0-p02-product-budget-method, p0-p02-evidence-profiles | P0-A02 | Clean-revision positive validation and sixteen negative contract classes pass in the evidence record. |
+| p0-p02-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p0-p02-integration | P0-A02 | Owner disposition and pass-closing evidence recorded; P0-A02 passed on 2026-09-16. |
 
 ## Planned work
 
-- [ ] 2 Phase — Bounds, budgets, and evidence contracts.
+- [x] 2 Phase — Bounds, budgets, and evidence contracts.
 
   Establish immutable premeasurement rules so later success, failure, size,
   latency, resource, sanitizer, and fuzz results cannot silently redefine the
   proof.
 
-  - [ ] 2.1 Section — Define bounded experiments and evidence ownership.
+  - [x] 2.1 Section — Define bounded experiments and evidence ownership.
 
     Specify quantitative limits, breach behavior, unsupported facilities,
     product-budget governance, and retention requirements as one coherent
     contract.
 
-    - [ ] 2.1.1 Task [id: p0-p02-experiment-bounds] [area: research-tools] [after: p0-p01-handoff] — Set the finite boot/dispose cycle count, settling interval, noise envelope, experimental safety ceilings, and semantic comparison rules before measurement. These ceilings protect the experiment; they are not product qualification budgets.
+    - [x] 2.1.1 Task [id: p0-p02-experiment-bounds] [area: research-tools] [after: p0-p01-handoff] — Set the finite boot/dispose cycle count, settling interval, noise envelope, experimental safety ceilings, and semantic comparison rules before measurement. These ceilings protect the experiment; they are not product qualification budgets.
 
       Define units, sampling, warm/cold separation, tolerated environmental
       variation, stop behavior, and review authority. Completion requires a
@@ -96,7 +96,7 @@ implementation and evidence locations remain unresolved.
         and breach disposition; verify timestamps and revision history show the
         values were frozen before results.
 
-    - [ ] 2.1.2 Task [id: p0-p02-unsupported-bounds] [area: research-tools] [after: p0-p01-handoff] — Create a finite machine-readable unsupported-operation inventory for the POC and a loader/startup bounds matrix naming each resource's owner, unit, limit, enforcement point, mechanism, and breach action.
+    - [x] 2.1.2 Task [id: p0-p02-unsupported-bounds] [area: research-tools] [after: p0-p01-handoff] — Create a finite machine-readable unsupported-operation inventory for the POC and a loader/startup bounds matrix naming each resource's owner, unit, limit, enforcement point, mechanism, and breach action.
 
       Turn negative scope and resource ownership into enumerable inputs rather
       than prose-only promises. Completion requires schema-valid inventories
@@ -108,7 +108,7 @@ implementation and evidence locations remain unresolved.
         Worker, memory, queue, request, timer, and path bound; reject missing
         units, ambiguous owners, duplicate IDs, and absent breach actions.
 
-    - [ ] 2.1.3 Task [id: p0-p02-product-budget-method] [area: research-tools] [after: p0-p02-experiment-bounds] — Define how product qualification budgets will be approved from named POC and native baselines before Program B, so later thresholds cannot be chosen to fit a completed implementation.
+    - [x] 2.1.3 Task [id: p0-p02-product-budget-method] [area: research-tools] [after: p0-p02-experiment-bounds] — Define how product qualification budgets will be approved from named POC and native baselines before Program B, so later thresholds cannot be chosen to fit a completed implementation.
 
       Separate experimental safety from product acceptance and name the inputs,
       approval point, and anti-gaming rule. P0 completion requires independent
@@ -121,7 +121,7 @@ implementation and evidence locations remain unresolved.
         freeze point, and change/reopening process without inventing numeric
         product values or an approver.
 
-    - [ ] 2.1.4 Task [id: p0-p02-evidence-profiles] [area: research-tools] [after: p0-p01-handoff] — Define native and Wasm assertion/sanitizer/fuzz profiles, seed-corpus and coverage retention, failure minimization, and the POC SBOM/provenance schema.
+    - [x] 2.1.4 Task [id: p0-p02-evidence-profiles] [area: research-tools] [after: p0-p01-handoff] — Define native and Wasm assertion/sanitizer/fuzz profiles, seed-corpus and coverage retention, failure minimization, and the POC SBOM/provenance schema.
 
       Define supported and unsupported instrumentation combinations and the
       evidence needed to reproduce, minimize, and compare failures across
@@ -133,13 +133,13 @@ implementation and evidence locations remain unresolved.
         outputs, minimization records, SBOM fields, provenance links, and the
         handling of unsupported combinations.
 
-  - [ ] 2.2 Section — Phase 2 Integration Tests.
+  - [x] 2.2 Section — Phase 2 Integration Tests.
 
     Validate the bounds and evidence contracts together so each measurable
     resource, unsupported behavior, test profile, and future product decision
     has one owner and non-circular acceptance rule.
 
-    - [ ] 2.2.1 Task [id: p0-p02-integration] [area: research-tools] [after: p0-p02-experiment-bounds, p0-p02-unsupported-bounds, p0-p02-product-budget-method, p0-p02-evidence-profiles] — Verify the integrated bounds, budget, and evidence contract.
+    - [x] 2.2.1 Task [id: p0-p02-integration] [area: research-tools] [after: p0-p02-experiment-bounds, p0-p02-unsupported-bounds, p0-p02-product-budget-method, p0-p02-evidence-profiles] — Verify the integrated bounds, budget, and evidence contract.
 
       Pass only if every value is frozen before measurement, experimental and
       product criteria are distinct, all bounded resources and unsupported
@@ -157,7 +157,7 @@ implementation and evidence locations remain unresolved.
         test series, silent sanitizer omission, orphaned fuzz failures, and
         product budgets copied from experimental safety ceilings.
 
-    - [ ] 2.2.2 Task [id: p0-p02-handoff] [area: research-tools] [after: p0-p02-integration] — Record evidence and decide the Phase 2 handoff.
+    - [x] 2.2.2 Task [id: p0-p02-handoff] [area: research-tools] [after: p0-p02-integration] — Record evidence and decide the Phase 2 handoff.
 
       Preserve actual validation output and a proceed/revise/blocked decision.
       The product authority and numeric values remain explicitly deferred; they
@@ -168,7 +168,7 @@ implementation and evidence locations remain unresolved.
         Link evidence to P0-A02 and task IDs with exact revisions, commands,
         schema versions, results, failures, and limitations.
 
-      - [ ] 2.2.2.2 Subtask — Review completion and update the milestone.
+      - [x] 2.2.2.2 Subtask — Review completion and update the milestone.
 
         Confirm Phase 3 receives immutable experiment and evidence contracts;
         leave any unproved or unapproved item unchecked.

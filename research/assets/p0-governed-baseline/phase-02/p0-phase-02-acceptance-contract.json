@@ -1,0 +1,17 @@
+{
+  "contract_id": "p0-phase-02-acceptance",
+  "acceptance_id": "P0-A02",
+  "task_id": "p0-p02-handoff",
+  "expected": {
+    "evidence_kind": "contract_research",
+    "criteria": [
+      {"id": "experiment-bounds-accepted"},
+      {"id": "unsupported-and-loader-bounds-accepted"},
+      {"id": "product-budget-method-accepted"},
+      {"id": "evidence-profiles-accepted"},
+      {"id": "integration-consistency-passed"},
+      {"id": "handoff-accepted"}
+    ]
+  },
+  "acceptance_boundary": "P0-A02 closes reviewed research contracts only; runtime execution, instrumentation qualification, Phase 3 loader acceptance, P0-GATE, and product-budget approval remain outside this evidence"
+}

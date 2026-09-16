@@ -520,8 +520,13 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
     expected_partial_evidence = (
         "P0-A01: research/assets/p0-governed-baseline/phase-01/"
         "p0-phase-01-acceptance.planning-evidence.json; "
-        "P0-A02, P0-A03, and P0-GATE: none"
+        "P0-A02: research/assets/p0-governed-baseline/phase-02/"
+        "p0-phase-02-acceptance.planning-evidence.json; "
+        "P0-A03 and P0-GATE: none"
     )
+    local_results = report.get("local_contract_results", {})
+    if local_results.get("P0-A01") != "passed-reviewed-evidence-bound" or local_results.get("P0-A02") != "passed-reviewed-evidence-bound":
+        raise ContractError("stale-accepted-phase", "P0 acceptance report must retain passed P0-A01 and P0-A02 evidence state")
     if report.get("gate_state") != "blocked" or report.get("planning_evidence") != expected_partial_evidence:
         raise ContractError("premature-p0-closure", "P0 cannot close with unresolved blockers")
 
@@ -558,7 +563,7 @@ def main(argv: list[str]) -> int:
         else:
             print("Acceptance status: independent review pending; P0-A02 remains open")
     else:
-        print("Acceptance status: P0-A01 passed; P0-A02, P0-A03, and P0-GATE remain open")
+        print("Acceptance status: P0-A01 and P0-A02 passed; P0-A03 and P0-GATE remain open")
     return 0
 
 
