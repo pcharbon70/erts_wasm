@@ -28,10 +28,11 @@ Detailed obligations, phase ownership, gates, and evidence state live in the
 numbered planning hierarchy. This roadmap authorizes no implementation and
 records no completed work.
 
-The runtime program remains prospective. P0 now has locally validated contract
-drafts but a blocked gate; every P0–P6 and C1–C10 stable task and gate is
-unchecked or not run until its named executable evidence exists and has been
-reviewed.
+The runtime program remains prospective. P0-A01 through P0-A03 have reviewed
+contract evidence, but P0-GATE remains blocked on the unrun clean-environment
+reproduction. All remaining P0 tasks and every P1–P6 and C1–C10 task and gate
+stay unchecked or not run until their named executable evidence exists and has
+been reviewed.
 
 ## Program A — minimal proof of concept
 
@@ -40,7 +41,7 @@ meaningful proof of concept.
 
 | Milestone | Outcome | Planning state |
 | --- | --- | --- |
-| [P0](01-proof-of-concept/p0-governed-baseline-and-proof-contract/README.md) | Governed baseline and proof contract | P0.1–P0.3 accepted and P0-A01–P0-A03 passed; P0-GATE remains blocked on clean experiment readiness—not downstream implementation results. |
+| [P0](01-proof-of-concept/p0-governed-baseline-and-proof-contract/README.md) | Governed baseline and proof contract | P0.1–P0.3 accepted and P0-A01–P0-A03 passed; supporting Phases 4–6 are authored and unrun; P0-GATE remains blocked on clean experiment readiness—not downstream implementation results. |
 | [P1](01-proof-of-concept/p1-target-and-dependency-probes/README.md) | Target and dependency probes | Three authored phases; not started. |
 | [P2](01-proof-of-concept/p2-interpreter-artifact-and-outer-loader/README.md) | Interpreter artifact and outer loader | Decomposition pending P1 evidence. |
 | [P3](01-proof-of-concept/p3-immutable-erts-and-otp-cold-boot/README.md) | Immutable ERTS and OTP cold boot | Decomposition pending P2 evidence. |
@@ -82,12 +83,13 @@ milestone cannot defer its loading consequences to a later integration pass.
 ## Preservation ledger
 
 The hierarchy preserves all source obligations from the former monolithic
-plan: P0.1 tasks and P0-A01 are evidence-closed while later P0–P6 tasks and
-gates remain open; 35 unchecked C1–C10 work items, and ten C1–C10
-gate statements. It also preserves every objective, runtime-loading
-obligation, claim boundary, stop trigger, Program B entry rule, and global
-ordering rule. Structural phase, integration, and handoff tasks add planning
-detail but do not weaken or complete those obligations.
+plan: P0.1 through P0.3 contract tasks and P0-A01 through P0-A03 are
+evidence-closed, while the supporting P0 readiness tasks, P0-GATE, and all
+P1–P6 tasks and gates remain open; it also retains 35 unchecked C1–C10 work
+items and ten C1–C10 gate statements. It preserves every objective,
+runtime-loading obligation, claim boundary, stop trigger, Program B entry
+rule, and global ordering rule. Structural phase, integration, and handoff
+tasks add planning detail but do not weaken or complete those obligations.
 
 ## Global ordering rules
 

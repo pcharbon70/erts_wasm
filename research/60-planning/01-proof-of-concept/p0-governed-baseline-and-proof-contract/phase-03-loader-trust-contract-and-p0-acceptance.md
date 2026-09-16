@@ -24,6 +24,9 @@ relations:
   - subject: planning.erts_wasm.proof_of_concept.p0.phase_03
     predicate: belongs_to
     object: planning.erts_wasm.proof_of_concept.p0.plan
+  - subject: planning.erts_wasm.proof_of_concept.p0.phase_03
+    predicate: precedes
+    object: planning.erts_wasm.proof_of_concept.p0.phase_04
 ```
 
 Freeze the manifest, generation, and executable-root trust contracts, then
@@ -41,7 +44,11 @@ manifest with the accepted P0.2 bounds, corrected the manifest/root-trust and
 runtime-generation identities, and expanded deterministic rejection coverage.
 The [owner-review result](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-owner-review-result.json)
 accepts P0-A03 and its recorded limitations. The [clean contract evidence](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-acceptance.planning-evidence.json)
-closes P0-A03 only. Clean-environment
+closes P0-A03 only. Section 3.1 is therefore complete, while Section 3.2 is
+deliberately suspended until [Phase 4](phase-04-readiness-harness-and-isolation-contract.md),
+[Phase 5](phase-05-clean-input-and-container-replay.md), and
+[Phase 6](phase-06-pinned-browser-readiness-and-p0-gate.md) return the clean
+environment-readiness evidence through `p0-p06-handoff`. Clean-environment
 reproduction and browser deployment execution have not started. This phase
 owns the loader and delivery contract in the corpus, not a browser loader
 implementation.
@@ -66,7 +73,7 @@ the P0 stop condition rather than a silent scope reduction.
 | --- | --- | --- | --- | --- | --- |
 | p0-p03-loader-contract | research-tools | Pascal Charbonneau (`pcharbon70`), loader/protocol reviewer | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-A03; `p0-loader-contract` | [Passed by owner-accepted clean evidence](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-acceptance.planning-evidence.json). |
 | p0-p03-bootstrap-trust | research-tools | Pascal Charbonneau (`pcharbon70`), security reviewer and deployment owner | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-D02, P0-A03; `p0-bootstrap-trust` | [Passed for the first-proof contract](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-acceptance.planning-evidence.json); deployment execution remains pending. |
-| p0-p03-integration | cross-cutting | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p03-loader-contract, p0-p03-bootstrap-trust | P0-GATE | P0-A03 passes; clean experiment-readiness reproduction remains open. |
+| p0-p03-integration | cross-cutting | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p03-loader-contract, p0-p03-bootstrap-trust, p0-p06-handoff | P0-GATE | P0-A03 passes; clean experiment-readiness reproduction remains open. |
 | p0-p03-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p0-p03-integration | P0-GATE | [Dated blocked execution record](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md); no closure evidence. |
 
 ## Planned work
@@ -113,7 +120,7 @@ the P0 stop condition rather than a silent scope reduction.
     reproducible experiment-readiness environment before any P1 probe begins.
     Do not require the runtime artifacts or observations that P1–P6 produce.
 
-    - [ ] 3.2.1 Task [id: p0-p03-integration] [area: cross-cutting] [after: p0-p03-loader-contract, p0-p03-bootstrap-trust] — Reviewed baseline, asset/dependency/patch ledger, trust anchor, bounds and unsupported-operation inventories, loader protocol, and reproducible empty target environment exist.
+    - [ ] 3.2.1 Task [id: p0-p03-integration] [area: cross-cutting] [after: p0-p03-loader-contract, p0-p03-bootstrap-trust, p0-p06-handoff] — Reviewed baseline, asset/dependency/patch ledger, trust anchor, bounds and unsupported-operation inventories, loader protocol, and reproducible empty target environment exist.
 
       This is the original P0 gate. Pass only if every P0 contract is present,
       mutually consistent, independently accepted, and the pinned P1
@@ -121,19 +128,22 @@ the P0 stop condition rather than a silent scope reduction.
       implementation patches, compile/boot/browser results, and numeric product
       budgets are downstream outcomes and cannot block P0.
 
-      - [x] 3.2.1.1 Subtask — Run the integrated P0 acceptance review.
+      - [ ] 3.2.1.1 Subtask — Run the integrated P0 acceptance review.
 
         Assemble P0-A01 through P0-A03 at exact revisions, validate schemas and
-        links, reproduce the tool/browser/header readiness environment without
-        running P1, and record every pass, failure, limitation, command, and
-        materialized input identity.
+        links, consume the reviewed Phase 4 through Phase 6 readiness receipt,
+        confirm its clean tool/browser/header reproduction without running P1,
+        and record every pass, failure, limitation, command, and materialized
+        input identity.
 
-      - [x] 3.2.1.2 Subtask — Exercise trust, bounds, and contradiction failures.
+      - [ ] 3.2.1.2 Subtask — Exercise trust, bounds, and contradiction failures.
 
         Require deterministic rejection for missing or floating inputs,
         circular loader trust, mixed identities, ownerless resources, bounds
-        without breach actions, undeclared modules, and unsupported deployment
-        prerequisites.
+        without breach actions, undeclared modules, unsupported deployment
+        prerequisites, browser substitution, ambient host dependencies, and
+        incomplete readiness evidence. Static contract tests alone do not
+        satisfy this subtask.
 
     - [ ] 3.2.2 Task [id: p0-p03-handoff] [area: research-tools] [after: p0-p03-integration] — Record evidence and decide the P0-to-P1 handoff.
 
