@@ -38,10 +38,13 @@ Back to milestone: [P0 plan](README.md).
 ## Entry, scope, and dependencies
 
 Formal entry requires the reviewed `p0-p01-handoff` record from [Phase 1](phase-01-baseline-authority-and-runtime-inventory.md).
-That review remains pending. The user authorized draft progression with the
-dependency open; contract drafting and local validation are in progress, while
-independent acceptance and runtime tests have not started. This phase defines
-research and test contracts, not implementation or product approval.
+P0-A01 passed on 2026-09-16 through its [independent contract
+evidence](../../../assets/p0-governed-baseline/phase-01/p0-phase-01-acceptance.planning-evidence.json),
+so that entry dependency is satisfied. Contract drafting, correction, producer
+review, local validation, and explicit owner disposition are complete;
+clean-revision pass-closing evidence remains pending. Runtime tests have not started. This
+phase defines research and test contracts, not implementation or product
+approval.
 
 The experimental ceilings protect the proof environment. They do not assert
 performance or become product budgets. P0 freezes only the product-budget
@@ -60,12 +63,12 @@ implementation and evidence locations remain unresolved.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p0-p02-experiment-bounds | research-tools | Pascal Charbonneau (`pcharbon70`), measurement reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-D03, P0-A02; `p0-experiment-bounds` | Reviewed premeasurement protocol; not run. |
-| p0-p02-unsupported-bounds | research-tools | Pascal Charbonneau (`pcharbon70`), ERTS C-port and security reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-unsupported-matrix`, `p0-loader-bounds` | Machine-readable inventories and schema checks; not run. |
-| p0-p02-product-budget-method | research-tools | Pascal Charbonneau (`pcharbon70`), method reviewer; final product authority deferred post-P6/pre-C1 | p0-p02-experiment-bounds | P0-D03, P0-A02; `p0-product-budget-method` | Independently reviewed method and explicit downstream approval point; product numbers are not P0 evidence. |
-| p0-p02-evidence-profiles | unresolved | Pascal Charbonneau (`pcharbon70`), test/evidence reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-evidence-profile` | Reviewed native/Wasm evidence schema and profiles; not run. |
-| p0-p02-integration | research-tools | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p02-experiment-bounds, p0-p02-unsupported-bounds, p0-p02-product-budget-method, p0-p02-evidence-profiles | P0-A02 | Integrated limits and evidence-contract report; not run. |
-| p0-p02-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p0-p02-integration | P0-A02 | Dated execution record and proceed/revise/blocked decision; not run. |
+| p0-p02-experiment-bounds | research-tools | Pascal Charbonneau (`pcharbon70`), measurement reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-D03, P0-A02; `p0-experiment-bounds` | Owner-accepted premeasurement protocol and local validation; clean pass-closing evidence pending. |
+| p0-p02-unsupported-bounds | research-tools | Pascal Charbonneau (`pcharbon70`), ERTS C-port and security reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-unsupported-matrix`, `p0-loader-bounds` | Owner-accepted inventories and negative checks; clean pass-closing evidence pending. |
+| p0-p02-product-budget-method | research-tools | Pascal Charbonneau (`pcharbon70`), method reviewer; final product authority deferred post-P6/pre-C1 | p0-p02-experiment-bounds | P0-D03, P0-A02; `p0-product-budget-method` | Owner-accepted method and downstream approval point; clean pass-closing evidence pending and product numbers remain deferred. |
+| p0-p02-evidence-profiles | research-tools | Pascal Charbonneau (`pcharbon70`), test/evidence reviewer | [p0-p01-handoff](phase-01-baseline-authority-and-runtime-inventory.md) | P0-A02; `p0-evidence-profile` | Owner-accepted native/Wasm/host evidence profiles; clean pass-closing evidence pending and profiles not run. |
+| p0-p02-integration | research-tools | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p02-experiment-bounds, p0-p02-unsupported-bounds, p0-p02-product-budget-method, p0-p02-evidence-profiles | P0-A02 | Positive validation and sixteen negative contract classes owner-accepted; clean pass-closing evidence pending. |
+| p0-p02-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p0-p02-integration | P0-A02 | Owner disposition recorded; clean-revision evidence and final roll-up pending. |
 
 ## Planned work
 
@@ -118,7 +121,7 @@ implementation and evidence locations remain unresolved.
         freeze point, and change/reopening process without inventing numeric
         product values or an approver.
 
-    - [ ] 2.1.4 Task [id: p0-p02-evidence-profiles] [area: unresolved] [after: p0-p01-handoff] — Define native and Wasm assertion/sanitizer/fuzz profiles, seed-corpus and coverage retention, failure minimization, and the POC SBOM/provenance schema.
+    - [ ] 2.1.4 Task [id: p0-p02-evidence-profiles] [area: research-tools] [after: p0-p01-handoff] — Define native and Wasm assertion/sanitizer/fuzz profiles, seed-corpus and coverage retention, failure minimization, and the POC SBOM/provenance schema.
 
       Define supported and unsupported instrumentation combinations and the
       evidence needed to reproduce, minimize, and compare failures across

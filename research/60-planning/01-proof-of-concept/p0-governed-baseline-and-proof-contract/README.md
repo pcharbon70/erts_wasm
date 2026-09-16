@@ -52,9 +52,11 @@ here. Compile, instantiate, boot, or compatibility claims do not.
 
 ## Planning and delivery state
 
-Plan: authored. Execution: P0.1 is accepted and P0-A01 passes; Phase 2 and
-Phase 3 contracts remain locally validated drafts. Tests: contract and negative
-checks pass locally, while P0-A02/P0-A03 independent review and the clean
+Plan: authored. Execution: P0.1 is accepted and P0-A01 passes; Phase 2's
+corrected owner-review packet and limitations are accepted with clean
+pass-closing evidence pending, and Phase 3
+remains a locally validated draft. Tests: contract and negative checks pass
+locally, while P0-A02/P0-A03 independent acceptance and the clean
 experiment-readiness reproduction remain incomplete. Pascal Charbonneau
 (`pcharbon70`) is assigned to the remaining P0 review and experiment-owner
 roles. P0 gate: blocked; formal P1 entry is not unlocked. Runtime
@@ -84,7 +86,7 @@ records why the gate boundary changed.
 | Gate / acceptance ID | Required combined result | Artifact IDs | Owning phase and task IDs | Entry dependencies | Evidence and gate state |
 | --- | --- | --- | --- | --- | --- |
 | P0-A01 | Pinned source, toolchain, browser, trust, language, runtime, and thread-census baseline. | `p0-baseline`, `p0-runtime-inventory`, `p0-thread-census-contract` | [Phase 1](phase-01-baseline-authority-and-runtime-inventory.md): `p0-p01-pins` through `p0-p01-thread-census` | None | **Passed 2026-09-16.** [Independent contract evidence](../../../assets/p0-governed-baseline/phase-01/p0-phase-01-acceptance.planning-evidence.json) binds the owner-accepted baseline and limitations to clean revision `aaff05d`. |
-| P0-A02 | Frozen experimental limits, unsupported and bounds inventories, product-budget method, and evidence profiles. | `p0-experiment-bounds`, `p0-unsupported-matrix`, `p0-evidence-profile` | [Phase 2](phase-02-bounds-budgets-and-evidence-contracts.md): `p0-p02-experiment-bounds` through `p0-p02-evidence-profiles` | `p0-p01-handoff` | [Local validation recorded](../../../50-journal/2026-09-15-p0-phase-02-bounds-contracts-execution.md); formal entry and independent contract review remain open. Instrumentation results and product-budget approval are deferred to their owning gates. |
+| P0-A02 | Frozen experimental limits, unsupported and bounds inventories, product-budget method, and evidence profiles. | `p0-experiment-bounds`, `p0-unsupported-matrix`, `p0-evidence-profile` | [Phase 2](phase-02-bounds-budgets-and-evidence-contracts.md): `p0-p02-experiment-bounds` through `p0-p02-evidence-profiles` | `p0-p01-handoff` | Formal entry is satisfied, and the [owner-review result](../../../assets/p0-governed-baseline/phase-02/p0-phase-02-owner-review-result.json) accepts the corrected packet and limitations. Clean pass-closing evidence remains open. Instrumentation results and product-budget approval are deferred to their owning gates. |
 | P0-A03 | Manifest, generation, root-trust, and delivery contracts reject contradictory or out-of-bounds inputs. | `p0-loader-contract`, `p0-bootstrap-trust` | [Phase 3](phase-03-loader-trust-contract-and-p0-acceptance.md): `p0-p03-loader-contract`, `p0-p03-bootstrap-trust` | `p0-p02-handoff` | [Local validation recorded](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md); formal entry, security/protocol review, and deployment tests not satisfied / open. |
 | P0-GATE | Reviewed baseline, forecast asset/dependency ledger, canonical empty patch baseline, trust anchor, bounds and unsupported-operation inventories, loader protocol, and reproducible P1 experiment-readiness environment exist. | All P0 contracts, readiness receipt, and the P0 execution record | [Phase 3](phase-03-loader-trust-contract-and-p0-acceptance.md): `p0-p03-integration`, `p0-p03-handoff` | P0-A01 through P0-A03 | P0-A01 passes; P0-A02, P0-A03, and clean experiment-readiness reproduction remain open in the [corrected acceptance report](../../../assets/p0-governed-baseline/phase-03/p0-acceptance-report.json). P1–P6 outcomes are deferred. |
 
@@ -93,7 +95,7 @@ records why the gate boundary changed.
 | Phase | Outcome | Entry dependency | Plan / execution state | Evidence |
 | --- | --- | --- | --- | --- |
 | [Phase 1 — Baseline authority and runtime inventory](phase-01-baseline-authority-and-runtime-inventory.md) | Freeze identities, ownership boundaries, and the runtime/thread inventory contract. | None | Accepted; P0-A01 passed on 2026-09-16 | [Contract evidence](../../../assets/p0-governed-baseline/phase-01/p0-phase-01-acceptance.planning-evidence.json) and [execution record](../../../50-journal/2026-09-15-p0-phase-01-baseline-authority-execution.md). |
-| [Phase 2 — Bounds, budgets, and evidence contracts](phase-02-bounds-budgets-and-evidence-contracts.md) | Freeze experiment bounds, unsupported behavior, budget derivation, and evidence profiles. | `p0-p01-handoff` | Authored / draft implemented and locally validated under authorized progression; independent acceptance pending | [2026-09-15 execution record](../../../50-journal/2026-09-15-p0-phase-02-bounds-contracts-execution.md). |
+| [Phase 2 — Bounds, budgets, and evidence contracts](phase-02-bounds-budgets-and-evidence-contracts.md) | Freeze experiment bounds, unsupported behavior, budget derivation, and evidence profiles. | `p0-p01-handoff` | Authored, corrected, locally validated, and owner-accepted; clean pass-closing evidence pending | [2026-09-15 execution record](../../../50-journal/2026-09-15-p0-phase-02-bounds-contracts-execution.md) and [owner-review result](../../../assets/p0-governed-baseline/phase-02/p0-phase-02-owner-review-result.json). |
 | [Phase 3 — Loader trust contract and P0 acceptance](phase-03-loader-trust-contract-and-p0-acceptance.md) | Freeze loading and root-trust authority, then evaluate the combined P0 gate. | `p0-p02-handoff` | Authored / draft implemented and locally validated under authorized progression; P0 blocked | [2026-09-15 execution record](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md). |
 
 The dependency order prevents probe results from choosing their own limits or

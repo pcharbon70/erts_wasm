@@ -78,10 +78,47 @@ Any edit after runtime results, any missing owner/unit/breach action, any
 silent instrumentation omission, or any product value copied from a safety
 ceiling reopens and fails the relevant contract.
 
+## 2026-09-16 producer review
+
+P0-A01 subsequently passed, satisfying this phase's formal entry dependency.
+The producer review traced the five Phase 2 contracts against the accepted
+P0.1 language/toolchain boundary, canonical loader requirements, security
+evidence model, and product-budget separation rule. It found and corrected two
+material defects: the loader matrix did not separately bound encoded and
+expanded release data or individual BEAM files, and the host-parser fuzz
+profile incorrectly assigned C sanitizers to the TypeScript control plane.
+
+The correction also added reproducible randomization identity, pre-effect
+enforcement metadata for experimental ceilings, queue byte limits, a complete
+22-entry unsupported inventory, fixed-memory cross-contract equality,
+predeclared product-population rules, exact evidence toolchain/flag profiles,
+SPDX/SLSA requirements, and independent rebuild comparison. The integrated
+validation contract now declares sixteen negative classes. The positive
+validator and all 48 P0 contract unit tests passed locally.
+
+The [producer review
+receipt](../assets/p0-governed-baseline/phase-02/p0-phase-02-producer-review-receipt.json)
+records the exact reviewed artifact digests, corrections, commands, and
+limitations. The [owner-review
+packet](../assets/p0-governed-baseline/phase-02/p0-phase-02-owner-review-packet.json)
+is ready for explicit disposition. Neither artifact closes P0-A02. The Phase 3
+manifest schema still reflects the older coarse bounds and must be aligned
+during P0.3 review before P0-A03 can pass.
+
+Pascal Charbonneau (`pcharbon70`) then supplied the exact requested statement,
+“I accept the P0.2 owner-review packet and its recorded limitations.” The
+[owner-review
+result](../assets/p0-governed-baseline/phase-02/p0-phase-02-owner-review-result.json)
+binds that disposition to the packet and producer-review receipt digests.
+This completes the human review event but does not close P0-A02 until the
+accepted contracts are committed, replayed cleanly, and bound by valid
+`contract_research` evidence.
+
 ## Follow-ups
 
-- Assign P0 measurement-contract, ERTS/security, and test/evidence reviewers;
-  defer the product authority until the post-P6/pre-C1 gate.
-- Materialize Phase 1 inputs before P1 measurements.
+- Obtain the assigned owner's explicit P0.2 disposition and, if accepted,
+  produce clean-revision pass-closing contract evidence.
+- Align the Phase 3 manifest schema with the accepted Phase 2 bounds during the
+  P0.3 review.
 - Qualify sanitizer and fuzz combinations rather than silently dropping them.
 - Keep product budget approval deferred until the post-P6 pre-C1 approval point.

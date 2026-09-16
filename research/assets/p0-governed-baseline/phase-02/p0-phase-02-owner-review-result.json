@@ -1,0 +1,34 @@
+{
+  "review_id": "p0-phase-02-owner-review-result-2026-09-16",
+  "acceptance_id": "P0-A02",
+  "producer": "Codex",
+  "reviewer": "Pascal Charbonneau (pcharbon70)",
+  "reviewed_at": "2026-09-16",
+  "reviewed_packet": {
+    "path": "research/assets/p0-governed-baseline/phase-02/p0-phase-02-owner-review-packet.json",
+    "sha256": "fa3fd8e18aea90b7494360219409ccf01e053fde8513fb9716bdc80eabbb119e"
+  },
+  "producer_review_receipt": {
+    "path": "research/assets/p0-governed-baseline/phase-02/p0-phase-02-producer-review-receipt.json",
+    "sha256": "ed08339d06a197e2cb08fb9f04d36297280a98ca3dcf746ec7bbcf7f8883bf42"
+  },
+  "reviewer_statement": "I accept the P0.2 owner-review packet and its recorded limitations.",
+  "criteria": [
+    {"id": "experiment-bounds-accepted", "outcome": "accepted-as-poc-safety-and-comparison-contract"},
+    {"id": "unsupported-and-loader-bounds-accepted", "outcome": "accepted-after-recorded-corrections"},
+    {"id": "product-budget-method-accepted", "outcome": "accepted-method-only-product-values-and-authority-remain-deferred"},
+    {"id": "evidence-profiles-accepted", "outcome": "accepted-as-later-executable-contract-support-probes-not-run"},
+    {"id": "integration-consistency-passed", "outcome": "accepted"},
+    {"id": "handoff-accepted", "outcome": "accepted-for-p0-a02-only"}
+  ],
+  "accepted_limitations": [
+    "The numeric values are deliberately permissive experiment-safety ceilings. They are not evidence that the runtime meets a useful product size, startup, memory, or lifecycle budget.",
+    "No C, Emscripten, sanitizer, fuzzer, Wasm, browser, semantic, performance, or lifecycle experiment was run for this review.",
+    "The exact native/Wasm instrumentation combinations remain subject to later support probes; an unsupported combination must be retained as a reviewed negative result rather than silently omitted.",
+    "The Phase 3 draft manifest schema still models the earlier coarse artifact and memory fields. P0.3 review must align it with the accepted encoded/expanded, per-BEAM, fixed-memory, URL, and message-byte bounds before P0-A03 can pass.",
+    "Browser-process RSS is an external harness observation, not a portable in-page browser API; its exact sampler and resolution must be recorded by the owning later experiment.",
+    "Numeric product budgets and their accountable authority remain intentionally deferred until after P6 and before C1."
+  ],
+  "outcome": "accepted",
+  "scope_effect": "P0-A02 may close only after a valid contract_research evidence record binds the clean committed reviewed inputs; P0-A03, P0-GATE, runtime execution, instrumentation qualification, and product-budget approval remain open."
+}

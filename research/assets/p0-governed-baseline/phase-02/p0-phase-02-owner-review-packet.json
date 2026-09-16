@@ -1,0 +1,73 @@
+{
+  "packet_id": "p0-phase-02-owner-review-2026-09-16",
+  "acceptance_id": "P0-A02",
+  "producer": "Codex",
+  "reviewer": "Pascal Charbonneau (pcharbon70)",
+  "state": "ready-for-explicit-owner-disposition",
+  "producer_review_receipt": {
+    "path": "research/assets/p0-governed-baseline/phase-02/p0-phase-02-producer-review-receipt.json",
+    "sha256": "ed08339d06a197e2cb08fb9f04d36297280a98ca3dcf746ec7bbcf7f8883bf42"
+  },
+  "review_items": [
+    {
+      "task_id": "p0-p02-experiment-bounds",
+      "artifact": "p0-experiment-bounds.json",
+      "producer_assessment": "ready-for-acceptance-after-corrections",
+      "review_focus": [
+        "accept 10 cold attempts, 5 discarded warmups, 30 measured boot/dispose cycles, and a 45-cycle maximum as finite POC experiment rules rather than statistical product qualification",
+        "accept the 30-minute run, 120-second startup, 64-agent, 512-MiB shared-memory, 256-MiB encoded-artifact, and 2-GiB observed browser-process safety ceilings and their abort behavior",
+        "confirm randomized order is reproducible from a retained pre-run seed and raw settling samples retain source, unit, timestamp, and resolution",
+        "confirm semantic mismatches fail unless a normalization was approved before observation"
+      ]
+    },
+    {
+      "task_id": "p0-p02-unsupported-bounds",
+      "artifact": "p0-unsupported-operations.json and p0-loader-startup-bounds.json",
+      "producer_assessment": "ready-for-acceptance-after-material-scope-and-bound-corrections",
+      "review_focus": [
+        "confirm the 22-entry deny-by-default unsupported inventory matches the POC exclusions, including no generic JavaScript, DOM, browser capabilities, external-term input, memory growth, side modules, or post-qualification code replacement",
+        "confirm all 24 loader/startup bounds have a finite limit, owner, unit, pre-effect enforcement point, mechanism, and breach action",
+        "accept separate accounting for fetched representation bytes, expanded release bytes and members, individual BEAM files, and aggregate queued message bytes",
+        "accept fixed initial-equals-maximum shared memory and cross-contract equality for startup, Worker, memory, and artifact ceilings"
+      ]
+    },
+    {
+      "task_id": "p0-p02-product-budget-method",
+      "artifact": "p0-product-budget-method.json",
+      "producer_assessment": "ready-for-P0-method-acceptance-product-values-and-authority-remain-deferred",
+      "review_focus": [
+        "confirm product budgets cannot be derived until P6 is accepted and the candidate profile and target population are frozen",
+        "confirm every later metric names its user or product constraint, unit, source, resolution, population, percentile, sample count, environment matrix, exclusions, and failure disposition before measurement",
+        "confirm a later authority cannot select baselines, margins, populations, exclusions, or the best run after observing candidate results",
+        "confirm missing evidence forces revise or stop rather than an after-the-fact waiver"
+      ]
+    },
+    {
+      "task_id": "p0-p02-evidence-profiles",
+      "artifact": "p0-evidence-profiles.json",
+      "producer_assessment": "ready-for-contract-acceptance-later-execution-and-support-probes-not-run",
+      "review_focus": [
+        "accept seven distinct native, Wasm, TypeScript-host, native-C-fuzz, and browser-replay profiles bound to the P0.1 compiler, host, and browser identities",
+        "confirm C sanitizers apply to C profiles while the TypeScript host uses seeded runtime-schema generative testing in Node and both pinned browsers",
+        "confirm unsupported Wasm sanitizer combinations are retained with reasons and do not disappear from the matrix",
+        "confirm corpus, coverage, minimized failure, SPDX SBOM, SLSA-compatible provenance, private source-map, and independent rebuild evidence is retained"
+      ]
+    },
+    {
+      "task_id": "p0-p02-integration",
+      "artifact": "p0-phase-02-validation-contract.json and p0-phase-02-producer-review-receipt.json",
+      "producer_assessment": "ready-after-positive-and-sixteen-negative-contract-cases",
+      "review_focus": [
+        "confirm the validator enforces the reviewed contracts and their cross-contract equalities rather than only checking that fields exist",
+        "confirm all sixteen malformed, omission, drift, instrumentation, anti-gaming, and reproducibility rejection classes are declared and tested",
+        "accept that local validation proves contract consistency only and supplies no runtime or product claim",
+        "accept the recorded limitations, including required Phase 3 manifest-schema alignment"
+      ]
+    }
+  ],
+  "explicit_disposition_requested": {
+    "acceptable_response": "I accept the P0.2 owner-review packet and its recorded limitations.",
+    "effect": "after that attestation is recorded, a clean committed contract_research evidence record may bind the reviewed artifacts; the P0.2 task, section, phase, and P0-A02 roll-ups may then close",
+    "non_effect": "acceptance does not execute any runtime profile, qualify a sanitizer or fuzzer, approve numeric product budgets, appoint post-P6 product authority, align or accept the Phase 3 loader manifest, close P0-A03 or P0-GATE, or unlock P1"
+  }
+}

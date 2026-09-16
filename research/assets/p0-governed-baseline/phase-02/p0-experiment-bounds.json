@@ -5,7 +5,7 @@
   "task_id": "p0-p02-experiment-bounds",
   "frozen_at": "2026-09-15T00:00:00Z",
   "frozen_before_runtime_measurement": true,
-  "review_state": "measurement-review-pending",
+  "review_state": "producer-reviewed-owner-disposition-pending",
   "scope": "experimental safety and comparison protocol, not product qualification",
   "series": {
     "cold_boot_attempts": 10,
@@ -13,26 +13,29 @@
     "measured_boot_dispose_cycles": 30,
     "maximum_total_cycles_per_run": 45,
     "randomized_order": true,
+    "randomization_seed_rule": "generate one 256-bit seed before the series, record it with the ordered case list, and reuse it only for an exact replay",
+    "series_identity_rule": "bind the seed, ordered cases, artifact digests, browser identity, environment fields, and all contract revisions before the first attempt",
     "abort_on_safety_breach": true
   },
   "settling": {
     "post_dispose_sample_offsets_ms": [0, 250, 1000, 2000, 5000],
     "maximum_settling_ms": 5000,
-    "quiescence_rule": "all generation-owned counters reach zero and the final three heap/Worker samples show no positive slope beyond measurement resolution"
+    "sample_rule": "retain every raw sample, its monotonic timestamp, source, unit, and declared measurement resolution",
+    "quiescence_rule": "all discrete generation-owned counters reach zero and the final three memory samples show no positive slope greater than the recorded measurement resolution"
   },
   "noise": {
     "report": ["median", "p95", "minimum", "maximum", "median-absolute-deviation"],
     "environment_fields": ["browser-version", "cpu-logical-count", "cross-origin-isolated", "visibility-state", "power-mode", "toolchain-digests"],
-    "rerun_trigger": "median-absolute-deviation exceeds 20 percent of the median or visibility/power state changes",
+    "rerun_trigger": "for a strictly positive median, median-absolute-deviation exceeds 20 percent of the median; for a zero median, any nonzero deviation triggers; visibility or power state change always triggers",
     "rerun_disposition": "retain noisy run, classify inconclusive, then run a newly identified series"
   },
   "safety_ceilings": [
-    {"id": "run-wall-clock", "limit": 1800, "unit": "seconds", "owner": "test-harness", "breach_action": "abort series and preserve partial evidence"},
-    {"id": "single-startup", "limit": 120, "unit": "seconds", "owner": "generation-supervisor", "breach_action": "terminate generation and classify startup-timeout"},
-    {"id": "generation-workers", "limit": 64, "unit": "agents", "owner": "generation-supervisor", "breach_action": "refuse creation and terminate generation"},
-    {"id": "shared-memory", "limit": 536870912, "unit": "bytes", "owner": "runtime-generation", "breach_action": "refuse instantiation"},
-    {"id": "aggregate-artifacts", "limit": 268435456, "unit": "bytes", "owner": "loader", "breach_action": "reject before allocation"},
-    {"id": "browser-host-rss-observation", "limit": 2147483648, "unit": "bytes", "owner": "test-harness", "breach_action": "terminate browser fixture and preserve partial evidence"}
+    {"id": "run-wall-clock", "limit": 1800, "unit": "seconds", "owner": "test-harness", "enforcement_point": "series supervisor before each case and on its monotonic deadline", "mechanism": "supervisor-owned monotonic deadline", "breach_action": "abort series and preserve partial evidence"},
+    {"id": "single-startup", "limit": 120, "unit": "seconds", "owner": "generation-supervisor", "enforcement_point": "generation creation", "mechanism": "independently scheduled monotonic watchdog", "breach_action": "terminate generation and classify startup-timeout"},
+    {"id": "generation-workers", "limit": 64, "unit": "agents", "owner": "generation-supervisor", "enforcement_point": "registry reservation before Worker construction", "mechanism": "fixed-capacity generation registry", "breach_action": "refuse creation and terminate generation"},
+    {"id": "shared-memory", "limit": 536870912, "unit": "bytes", "owner": "runtime-generation", "enforcement_point": "before WebAssembly.Memory construction", "mechanism": "manifest maximum and initial-equals-maximum validation", "breach_action": "refuse instantiation"},
+    {"id": "aggregate-artifacts", "limit": 268435456, "unit": "bytes", "owner": "loader", "enforcement_point": "manifest validation and bounded fetch accounting", "mechanism": "overflow-checked declared sum plus observed byte counters", "breach_action": "reject before allocation or cancel the active fetch"},
+    {"id": "browser-host-rss-observation", "limit": 2147483648, "unit": "bytes", "owner": "test-harness", "enforcement_point": "external browser-process sampler", "mechanism": "harness polling at each declared sample point", "breach_action": "terminate browser fixture and preserve partial evidence"}
   ],
   "semantic_comparison": {
     "oracle": "same OTP source, same BEAM digests, native bootstrap versus browser Wasm",

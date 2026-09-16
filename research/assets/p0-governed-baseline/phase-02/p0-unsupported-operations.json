@@ -2,6 +2,7 @@
   "contract_id": "p0-unsupported-matrix",
   "acceptance_id": "P0-A02",
   "task_id": "p0-p02-unsupported-bounds",
+  "review_state": "producer-reviewed-owner-disposition-pending",
   "default": "unsupported unless explicitly admitted by the immutable profile",
   "operations": [
     {"id": "dynamic-nif", "request_surface": "erlang:load_nif/2", "owner": "runtime-profile", "expected_result": "deterministic unsupported error before native loading"},
@@ -16,7 +17,16 @@
     {"id": "arbitrary-code-loading", "request_surface": "code server outside single qualification authorization", "owner": "loader", "expected_result": "reject before native parser entry"},
     {"id": "ambient-host-filesystem", "request_surface": "absolute or host-relative file paths", "owner": "loader", "expected_result": "only sealed virtual release paths exist"},
     {"id": "general-posix-signals", "request_surface": "signal registration and delivery", "owner": "c-platform-adapter", "expected_result": "unimported or explicit target stub; required internal wakeups use a separate mechanism"},
-    {"id": "unlisted-on-load", "request_surface": "module on_load hook", "owner": "loader", "expected_result": "module rejected unless hook and native edges are manifest-qualified"}
+    {"id": "unlisted-on-load", "request_surface": "module on_load hook", "owner": "loader", "expected_result": "module rejected unless hook and native edges are manifest-qualified"},
+    {"id": "hot-code-replacement", "request_surface": "load, replace, purge, or delete code after the one pre-ready qualification admission", "owner": "loader", "expected_result": "all admission paths remain closed and the request is rejected"},
+    {"id": "dynamic-side-module", "request_surface": "Emscripten dynamic linking or WebAssembly side-module loading", "owner": "runtime-profile", "expected_result": "not linked, not imported, and not admitted"},
+    {"id": "wasm-memory-growth", "request_surface": "WebAssembly.Memory growth or unequal initial and maximum memory", "owner": "runtime-generation", "expected_result": "instantiation rejected; the POC uses equal fixed memory limits"},
+    {"id": "generic-javascript", "request_surface": "eval, Function, arbitrary property dispatch, or a generic JavaScript host-call escape", "owner": "browser-host", "expected_result": "surface absent from imports and host protocol"},
+    {"id": "dom-access", "request_surface": "DOM objects, selectors, HTML, events, or rendering operations", "owner": "browser-host", "expected_result": "renderer and DOM authority absent from the POC Worker profile"},
+    {"id": "browser-network-capability", "request_surface": "fetch, WebSocket, WebTransport, or other browser networking granted to BEAM", "owner": "capability-broker", "expected_result": "no network capability is granted in the POC profile"},
+    {"id": "browser-persistence-capability", "request_surface": "IndexedDB, Cache Storage, local storage, file handles, or other browser persistence granted to BEAM", "owner": "capability-broker", "expected_result": "no persistence capability is granted in the POC profile"},
+    {"id": "browser-cryptography-capability", "request_surface": "Web Crypto keys or operations granted to BEAM", "owner": "capability-broker", "expected_result": "no cryptographic capability is granted in the POC profile"},
+    {"id": "external-term-browser-boundary", "request_surface": "Erlang External Term Format accepted from browser, network, storage, or page input", "owner": "browser-host", "expected_result": "ETF decoder is absent from the browser boundary; bounded typed frames are required"}
   ],
-  "negative_validation": ["duplicate IDs rejected", "missing owner rejected", "missing request surface rejected", "missing expected result rejected", "operation outside allowlist remains unsupported"]
+  "negative_validation": ["duplicate IDs rejected", "missing required operation rejected", "missing owner rejected", "missing request surface rejected", "missing expected result rejected", "operation outside allowlist remains unsupported"]
 }

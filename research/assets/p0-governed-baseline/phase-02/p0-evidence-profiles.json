@@ -2,19 +2,38 @@
   "contract_id": "p0-evidence-profile",
   "acceptance_id": "P0-A02",
   "task_id": "p0-p02-evidence-profiles",
-  "review_state": "test-evidence-review-pending",
+  "review_state": "producer-reviewed-owner-disposition-pending",
+  "toolchains": {
+    "native-clang": "Clang 24.0.0git (510126255f89d693717c1ce7105b593f995f07c1) from p0-baseline:build-image",
+    "emscripten": "emcc 6.0.9 (4e4223852a0835923411059a3929907d7df1232e) from p0-baseline:emscripten-release",
+    "node": "Node 24.19.0 from p0-language-ownership:browser_host_toolchain",
+    "typescript": "TypeScript 6.0.3 sha256:33cd0ee1beaa8c9e9d15a9da836c62ddea4c34a42d7c2d349dbc80d94165d22a",
+    "chrome": "Chrome for Testing 153.0.8010.36 archive sha256:167a098c4fdec156b58a9f678c90a84f9072d789f9c6e7b35496a6987b8b7ef8",
+    "firefox": "Firefox 155.0 archive sha256:fd9ec3f5f113d0825ca0bd1ab3c0756fbc40241034eefce6743be953bcca7473"
+  },
+  "profile_configurations": {
+    "native-debug": {"toolchain_refs": ["native-clang"], "required_flags": ["-O1", "-g3", "-fno-omit-frame-pointer", "-fsanitize=address,undefined"], "parameter_rule": "record exact configure, compile, and link argv; sanitizer flags must appear in compile and link steps"},
+    "native-release": {"toolchain_refs": ["native-clang"], "required_flags": ["-O2", "-g1"], "parameter_rule": "hash unstripped and stripped outputs separately and record the strip tool identity"},
+    "wasm-debug": {"toolchain_refs": ["emscripten", "node", "chrome", "firefox"], "required_flags": ["-O1", "-gsource-map", "-pthread", "-sASSERTIONS=2", "-sSAFE_HEAP=1", "-sINVOKE_RUN=0"], "parameter_rule": "resolve initial memory, maximum memory, and pthread pool from the accepted manifest and record the exact tokenized argv"},
+    "wasm-release": {"toolchain_refs": ["emscripten", "node", "chrome", "firefox"], "required_flags": ["-O2", "-pthread", "-sASSERTIONS=0", "-sSAFE_HEAP=0", "-sINVOKE_RUN=0"], "parameter_rule": "resolve initial memory, maximum memory, and pthread pool from the accepted manifest and record the exact tokenized argv"},
+    "browser-host-fuzz": {"toolchain_refs": ["node", "typescript", "chrome", "firefox"], "required_flags": ["tsc --strict", "node --test"], "parameter_rule": "use a repository-owned deterministic seeded generator and runtime schemas; introduce no unpinned property-testing dependency"},
+    "native-c-boundary-fuzz": {"toolchain_refs": ["native-clang"], "required_flags": ["-O1", "-g3", "-fno-omit-frame-pointer", "-fsanitize=fuzzer,address,undefined"], "parameter_rule": "record corpus, timeout, memory, run-count, and worker parameters before execution"},
+    "wasm-boundary-replay": {"toolchain_refs": ["emscripten", "node", "chrome", "firefox"], "required_flags": ["-O1", "-gsource-map", "-pthread", "-sASSERTIONS=2", "-sINVOKE_RUN=0"], "parameter_rule": "replay the identical content-addressed corpus; record SAFE_HEAP and sanitizer support-probe dispositions rather than silently changing the profile"}
+  },
   "profiles": [
     {"id": "native-debug", "target": "native", "purpose": "assertion and oracle run", "required_features": ["ERTS assertions", "debug symbols", "deterministic case IDs"], "sanitizers": ["address", "undefined"], "status": "specified-not-run"},
     {"id": "native-release", "target": "native", "purpose": "matching optimized semantic and performance baseline", "required_features": ["pinned optimization flags", "stripped/unstripped artifact hashes"], "sanitizers": [], "status": "specified-not-run"},
     {"id": "wasm-debug", "target": "emscripten-wasm", "purpose": "assertion, import/export, and supported sanitizer run", "required_features": ["ASSERTIONS", "SAFE_HEAP where compatible", "source maps retained privately", "exact generated JavaScript hash"], "sanitizers": ["address-if-qualified", "undefined-if-qualified"], "status": "specified-support-probe-required"},
     {"id": "wasm-release", "target": "emscripten-wasm", "purpose": "browser semantic and product-measurement candidate", "required_features": ["fixed memory", "pthreads", "controlled start", "import/export ledger", "artifact hashes"], "sanitizers": [], "status": "specified-not-run"},
-    {"id": "host-parser-fuzz", "target": "native-host-tooling", "purpose": "manifest and message decoder fuzzing", "required_features": ["seed-corpus hash", "coverage output", "crash artifact", "minimized reproducer"], "sanitizers": ["address", "undefined"], "status": "specified-not-run"},
-    {"id": "c-boundary-fuzz", "target": "native-and-wasm-where-supported", "purpose": "loader and byte-ABI boundary fuzzing", "required_features": ["same seed identities", "target-specific coverage", "cross-target disposition"], "sanitizers": ["address-where-supported", "undefined-where-supported"], "status": "specified-support-probe-required"}
+    {"id": "browser-host-fuzz", "target": "node-and-pinned-browsers", "purpose": "TypeScript manifest, Worker-message, lifecycle-state, and frame decoder generative testing", "required_features": ["runtime schemas rather than TypeScript types alone", "seed-corpus hash", "generator and runner identity", "coverage output", "malformed corpus replay", "crash artifact", "minimized reproducer"], "sanitizers": [], "status": "specified-not-run"},
+    {"id": "native-c-boundary-fuzz", "target": "native-c-harness", "purpose": "loader, release-member, BEAM-admission, and byte-ABI boundary fuzzing under native instrumentation", "required_features": ["seed-corpus hash", "coverage output", "crash artifact", "minimized reproducer", "same-input identity for later browser replay"], "sanitizers": ["address", "undefined"], "status": "specified-not-run"},
+    {"id": "wasm-boundary-replay", "target": "emscripten-wasm-in-pinned-browsers", "purpose": "replay the shared boundary corpus and every minimized native failure through Wasm and browser host boundaries", "required_features": ["same seed identities", "Chrome and Firefox results", "assertion and SAFE_HEAP disposition", "browser crash and console artifact retention", "cross-target disposition"], "sanitizers": ["address-if-qualified", "undefined-if-qualified"], "status": "specified-support-probe-required"}
   ],
   "unsupported_combination_rule": "retain the toolchain probe and mark unsupported with reason; never omit a requested sanitizer or fuzz target silently and never treat another profile as equivalent",
   "seed_and_coverage": {"seed_identity": "sha256 per input plus ordered corpus manifest digest", "coverage": ["tool and version", "instrumented artifact digest", "raw coverage file digest", "summary", "known blind spots"], "retention": "content-addressed research/assets path linked from the execution journal"},
   "failure_minimization": {"required": ["original input digest", "minimized input digest", "exact reproducer argv", "toolchain and artifact digests", "determinism count", "failure signature", "owner and disposition"], "orphan_rule": "a crash without a retained reproducer and owner fails evidence handoff"},
-  "sbom_fields": ["document format and version", "component name and version", "source revision", "download location", "license", "artifact digest", "dependency relation", "generated-by tool identity"],
-  "provenance_fields": ["source repository and revision", "dirty state", "builder image digest", "toolchain component revisions", "tokenized commands", "environment allowlist", "input and output digests", "timestamp", "attestation signer or explicit unsigned state"],
+  "sbom": {"format": "SPDX JSON with an explicit reviewed specification version", "required_fields": ["document namespace", "creation information and generator identity", "component name and version", "source revision", "download location", "license concluded or explicit NOASSERTION with reason", "artifact digest", "dependency relation", "generated-by tool identity"]},
+  "provenance": {"compatibility": "SLSA-compatible provenance statement", "required_fields": ["source repository and revision", "dirty state", "builder image digest", "toolchain component revisions", "tokenized commands", "environment allowlist", "input and output digests", "timestamp", "attestation signer or explicit unsigned state"]},
+  "reproducibility": {"rule": "perform an independently invoked rebuild from the recorded inputs, compare every output digest, and retain any differing bytes and explained nondeterministic fields", "unexplained_difference": "fails evidence handoff"},
   "required_execution_fields": ["plan revision", "task and case IDs", "profile ID", "target", "flags", "browser", "seed", "limits", "result", "raw artifact links", "reviewer", "limitations"]
 }
