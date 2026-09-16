@@ -15,8 +15,9 @@ aliases: []
 Phase 3 produced the manifest, loader, root-trust, asset/dependency/patch, and
 empty-environment contracts, then evaluated the complete P0 gate. Local
 contract and negative-case validation passed. P0-GATE is **blocked** and formal
-P1 entry is not unlocked because independent review, materialized inputs, and
-runtime evidence do not exist.
+P1 entry is not unlocked because P0-A03 owner disposition and clean
+experiment-readiness reproduction remain open. Runtime implementation evidence
+is downstream and is not a P0 prerequisite.
 
 **Later correction:** [The P0 expectation correction](2026-09-15-p0-expectation-correction.md)
 removes runtime implementation outcomes from the P0 gate. This journal retains
@@ -65,6 +66,40 @@ revision; later PR and merge revisions are transport history.
 No `*.planning-evidence.json` was created. The local acceptance report is
 explicitly blocked and therefore cannot close a task, phase, acceptance case,
 or milestone gate.
+
+## 2026-09-16 producer review
+
+Formal P0.3 producer review ran after the accepted P0-A02 handoff. It found the
+draft manifest schema materially inconsistent with the accepted 24-bound
+loader/startup contract and found two identity ambiguities: the manifest
+contained a self-digest field, and the immutable manifest identity was not
+cleanly separated from the fresh runtime-generation token.
+
+The review corrected those issues by binding all 24 P0.2 bounds at the accepted
+contract digest, adding the missing encoded/expanded, per-entry, per-BEAM,
+fixed-memory, URL/path, Worker, message-byte, fetch, timer, and deadline rules,
+and preserving the non-JSON-schema enforcement obligations for UTF-8 byte
+lengths, aggregates, equality, observed bytes, and parser-entry checks. The
+trusted root bootstrap now pins the manifest URL and exact SHA-256 outside the
+manifest. The supervisor creates a fresh external 256-bit runtime-generation
+token only after authentication. The first-proof manifest admits no optional
+browser capability and uses identity content encoding so the hashed
+representation is unambiguous.
+
+The loader failure matrix now separately covers untrusted manifests, release
+expansion, fixed-memory mismatch, ambient capabilities, and Worker descendant
+loads. The machine validation contract declares 20 reviewed rejection cases.
+`python3 research/70-tools/p0_contract_validation.py phase-03` and
+`python3 -m unittest discover -s research/70-tools -p test_p0_contract_validation.py`
+passed locally; the focused suite reported 59 tests.
+
+Pascal Charbonneau accepted the P0.3 owner-review packet and its recorded
+limitations on 2026-09-16. That disposition is recorded separately and awaits
+a clean pass-closing contract-evidence record.
+P0-GATE remains separately blocked on the complete clean-environment replay,
+empty Chrome and Firefox profiles, and the static secure-context/header/
+service-worker preflight. No C, Emscripten, Wasm, Worker, ERTS, OTP, semantic,
+performance, or lifecycle execution was performed.
 
 ## Review and handoff
 

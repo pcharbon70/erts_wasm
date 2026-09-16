@@ -262,9 +262,46 @@ class Phase03ContractTests(unittest.TestCase):
         self.mutate("p0-runtime-manifest.schema.json", lambda value: value["properties"]["format"].update(const="erts-wasm-manifest-v2"))
         self.assert_code("mixed-manifest-identity")
 
+    def test_self_authenticating_manifest_is_rejected(self) -> None:
+        self.mutate(
+            "p0-runtime-manifest.schema.json",
+            lambda value: value["properties"]["trust"]["required"].append("manifest_digest"),
+        )
+        self.assert_code("self-authenticating-manifest")
+
+    def test_stale_bounds_digest_is_rejected(self) -> None:
+        self.mutate(
+            "p0-runtime-manifest.schema.json",
+            lambda value: value["x-p0-bound-bindings"].update(contract_sha256="0" * 64),
+        )
+        self.assert_code("stale-manifest-bounds")
+
+    def test_missing_bound_binding_is_rejected(self) -> None:
+        self.mutate("p0-runtime-manifest.schema.json", lambda value: value["x-p0-bound-bindings"]["bound_ids"].pop())
+        self.assert_code("stale-manifest-bounds")
+
+    def test_manifest_bound_drift_is_rejected(self) -> None:
+        self.mutate(
+            "p0-runtime-manifest.schema.json",
+            lambda value: value["properties"]["bounds"]["properties"]["pre_ready_message_bytes"].update(maximum=1),
+        )
+        self.assert_code("manifest-bound-drift")
+
+    def test_ambient_poc_capability_is_rejected(self) -> None:
+        self.mutate("p0-runtime-manifest.schema.json", lambda value: value["properties"]["capabilities"].update(maxItems=1))
+        self.assert_code("ambient-poc-capability")
+
+    def test_incomplete_build_identity_is_rejected(self) -> None:
+        self.mutate("p0-runtime-manifest.schema.json", lambda value: value["properties"]["sources"]["required"].remove("build_flags_digest"))
+        self.assert_code("incomplete-build-identity")
+
     def test_ownerless_loader_failure_is_rejected(self) -> None:
         self.mutate("p0-loader-contract.json", lambda value: value["failure_matrix"][0].update(owner=""))
         self.assert_code("ownerless-loader-failure")
+
+    def test_manifest_owned_generation_token_is_rejected(self) -> None:
+        self.mutate("p0-loader-contract.json", lambda value: value["generation_ownership"].update(token="manifest generation field"))
+        self.assert_code("manifest-owned-generation-token")
 
     def test_undeclared_module_policy_is_rejected(self) -> None:
         self.mutate("p0-loader-contract.json", lambda value: value["module_policy"].update(qualification_module="other"))
@@ -273,6 +310,10 @@ class Phase03ContractTests(unittest.TestCase):
     def test_missing_deployment_header_is_rejected(self) -> None:
         self.mutate("p0-bootstrap-trust.json", lambda value: value["headers"].pop("Cross-Origin-Opener-Policy"))
         self.assert_code("missing-deployment-prerequisite")
+
+    def test_incomplete_worker_integrity_is_rejected(self) -> None:
+        self.mutate("p0-bootstrap-trust.json", lambda value: value.update(worker_integrity="verify bytes"))
+        self.assert_code("incomplete-worker-integrity")
 
     def test_premature_gate_closure_is_rejected(self) -> None:
         self.mutate("p0-acceptance-report.json", lambda value: value.update(gate_state="passed"))
@@ -317,6 +358,14 @@ class Phase03ContractTests(unittest.TestCase):
             lambda value: value["blockers"].append("target probe does not exist"),
         )
         self.assert_code("downstream-environment-blocker")
+
+    def test_incomplete_phase_03_validation_contract_is_rejected(self) -> None:
+        self.mutate("p0-phase-03-validation-contract.json", lambda value: value["negative_cases"].pop())
+        self.assert_code("incomplete-phase-03-validation")
+
+    def test_invalid_phase_03_owner_attestation_is_rejected(self) -> None:
+        self.mutate("p0-phase-03-owner-review-result.json", lambda value: value.update(reviewer_statement="accepted"))
+        self.assert_code("invalid-owner-attestation")
 
     def test_product_budget_authority_is_deferred_not_fabricated(self) -> None:
         product_root = Path(self.temp_dir.name) / "phase-02"

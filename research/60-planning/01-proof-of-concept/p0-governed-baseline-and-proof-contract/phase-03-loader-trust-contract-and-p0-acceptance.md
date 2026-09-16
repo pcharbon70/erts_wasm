@@ -36,13 +36,18 @@ Back to milestone: [P0 plan](README.md).
 Formal entry requires accepted `p0-p02-handoff` evidence from [Phase 2](phase-02-bounds-budgets-and-evidence-contracts.md).
 P0-A02 passed on 2026-09-16 through its [independent contract
 evidence](../../../assets/p0-governed-baseline/phase-02/p0-phase-02-acceptance.planning-evidence.json),
-so formal Phase 3 review may begin. The existing draft contracts and local
-validation predate that handoff; independent acceptance, bounds-schema
-alignment, clean-environment reproduction, and browser execution have not
-started. This phase owns the loader and delivery contract in the corpus, not a
-browser loader implementation.
+so formal Phase 3 review may begin. The 2026-09-16 producer review aligned the
+manifest with the accepted P0.2 bounds, corrected the manifest/root-trust and
+runtime-generation identities, and expanded deterministic rejection coverage.
+The [owner-review result](../../../assets/p0-governed-baseline/phase-03/p0-phase-03-owner-review-result.json)
+accepts P0-A03 and its recorded limitations; clean pass-closing evidence is
+pending. Clean-environment
+reproduction and browser deployment execution have not started. This phase
+owns the loader and delivery contract in the corpus, not a browser loader
+implementation.
 
-The root trust choice remains open until its decision task is reviewed. A
+The owner accepted `secure-origin-tcb-v1` for the first proof within the
+recorded limitations. A
 secure context, cross-origin isolation, recursive Worker delivery policy, and
 the required trust boundary are mandatory; inability to support them triggers
 the P0 stop condition rather than a silent scope reduction.
@@ -59,9 +64,9 @@ the P0 stop condition rather than a silent scope reduction.
 
 | Task ID | Area | Responsible owner | Requires | Requirement / artifact / acceptance IDs | Completion evidence |
 | --- | --- | --- | --- | --- | --- |
-| p0-p03-loader-contract | research-tools | Pascal Charbonneau (`pcharbon70`), loader/protocol reviewer | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-A03; `p0-loader-contract` | Contract drafted and locally validated; independent review pending. |
-| p0-p03-bootstrap-trust | research-tools | Pascal Charbonneau (`pcharbon70`), security reviewer and deployment owner | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-D02, P0-A03; `p0-bootstrap-trust` | First-proof choice locally validated; security/deployment review pending. |
-| p0-p03-integration | cross-cutting | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p03-loader-contract, p0-p03-bootstrap-trust | P0-GATE | Local contract/negative report blocked on formal evidence and review. |
+| p0-p03-loader-contract | research-tools | Pascal Charbonneau (`pcharbon70`), loader/protocol reviewer | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-A03; `p0-loader-contract` | Owner-accepted after material corrections; clean pass-closing evidence pending. |
+| p0-p03-bootstrap-trust | research-tools | Pascal Charbonneau (`pcharbon70`), security reviewer and deployment owner | [p0-p02-handoff](phase-02-bounds-budgets-and-evidence-contracts.md) | P0-D02, P0-A03; `p0-bootstrap-trust` | First-proof choice owner-accepted; clean pass-closing evidence and deployment execution pending. |
+| p0-p03-integration | cross-cutting | Pascal Charbonneau (`pcharbon70`), independent reviewer | p0-p03-loader-contract, p0-p03-bootstrap-trust | P0-GATE | P0-A03 clean evidence and clean experiment-readiness reproduction remain open. |
 | p0-p03-handoff | research-tools | Pascal Charbonneau (`pcharbon70`), milestone reviewer | p0-p03-integration | P0-GATE | [Dated blocked execution record](../../../50-journal/2026-09-15-p0-phase-03-loader-trust-and-acceptance-execution.md); no closure evidence. |
 
 ## Planned work

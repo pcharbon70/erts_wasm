@@ -1,31 +1,32 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://erts-wasm.invalid/schema/runtime-manifest-v1.json",
-  "title": "ERTS Wasm immutable runtime generation manifest v1",
+  "title": "ERTS Wasm immutable runtime profile manifest v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["format", "generation", "trust", "sources", "artifacts", "runtime", "boot", "modules", "abi", "capabilities", "bounds"],
+  "required": ["format", "profile", "trust", "sources", "artifacts", "runtime", "boot", "modules", "abi", "capabilities", "bounds"],
   "properties": {
     "format": {"const": "erts-wasm-manifest-v1"},
-    "generation": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "profile": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 128},
     "trust": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["policy", "manifest_digest", "redirect", "cache", "service_worker", "worker_integrity", "wasm_compilation"],
+      "required": ["policy", "anchor", "credentials", "redirect", "cache", "service_worker", "worker_integrity", "wasm_compilation"],
       "properties": {
         "policy": {"const": "secure-origin-tcb-v1"},
-        "manifest_digest": {"$ref": "#/$defs/digest"},
+        "anchor": {"const": "external-bootstrap-sha256"},
+        "credentials": {"const": "omit"},
         "redirect": {"const": "error"},
         "cache": {"const": "no-store"},
         "service_worker": {"const": "absent-required"},
-        "worker_integrity": {"const": "verified-bytes-before-executable-blob"},
+        "worker_integrity": {"const": "verified-single-file-bytes-before-executable-blob"},
         "wasm_compilation": {"const": "full-digest-before-compile"}
       }
     },
     "sources": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["otp_tag", "otp_commit", "otp_tree", "emscripten_release", "emscripten_bundle", "build_image", "patch_digest"],
+      "required": ["otp_tag", "otp_commit", "otp_tree", "emscripten_release", "emscripten_bundle", "build_image", "build_profile", "build_flags_digest", "generated_sources_digest", "patch_digest"],
       "properties": {
         "otp_tag": {"const": "OTP-29.0.6"},
         "otp_commit": {"const": "e07fd07837e5aa845657f5fa340637121e451d47"},
@@ -33,6 +34,9 @@
         "emscripten_release": {"const": "6.0.9"},
         "emscripten_bundle": {"const": "f04ea239d533260dd1db760dd2d668d5f9a88d6b"},
         "build_image": {"const": "sha256:3ba391c5b1554e06f9af0a69652ff20919dff14e771619339dba988bd62574b5"},
+        "build_profile": {"const": "poc-interpreter-pthreads-fixed-memory-v1"},
+        "build_flags_digest": {"$ref": "#/$defs/digest"},
+        "generated_sources_digest": {"$ref": "#/$defs/digest"},
         "patch_digest": {"$ref": "#/$defs/digest"}
       }
     },
@@ -44,42 +48,71 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "kind", "url", "digest", "bytes", "content_type"],
+        "required": ["id", "kind", "url", "digest", "encoded_bytes", "content_type", "content_encoding"],
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
           "kind": {"enum": ["wasm", "javascript", "worker", "release-pack", "configuration"]},
-          "url": {"type": "string", "pattern": "^/immutable/[a-f0-9]{64}/"},
+          "url": {"type": "string", "pattern": "^/immutable/[a-f0-9]{64}/[a-zA-Z0-9._/-]+$", "maxLength": 2048, "x-maxUtf8Bytes": 2048},
           "digest": {"$ref": "#/$defs/digest"},
-          "bytes": {"type": "integer", "minimum": 1, "maximum": 134217728},
-          "content_type": {"type": "string", "minLength": 1, "maxLength": 128}
-        }
+          "encoded_bytes": {"type": "integer", "minimum": 1, "maximum": 134217728},
+          "content_type": {"enum": ["application/wasm", "text/javascript", "application/json", "application/octet-stream"]},
+          "content_encoding": {"const": "identity"},
+          "expanded_bytes": {"type": "integer", "minimum": 1, "maximum": 268435456},
+          "entry_count": {"type": "integer", "minimum": 1, "maximum": 16384},
+          "maximum_entry_expanded_bytes": {"type": "integer", "minimum": 1, "maximum": 134217728}
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"kind": {"const": "release-pack"}}, "required": ["kind"]},
+            "then": {"required": ["expanded_bytes", "entry_count", "maximum_entry_expanded_bytes"]},
+            "else": {"not": {"anyOf": [{"required": ["expanded_bytes"]}, {"required": ["entry_count"]}, {"required": ["maximum_entry_expanded_bytes"]}]}}
+          },
+          {
+            "if": {"properties": {"kind": {"const": "wasm"}}, "required": ["kind"]},
+            "then": {"properties": {"content_type": {"const": "application/wasm"}}}
+          },
+          {
+            "if": {"properties": {"kind": {"enum": ["javascript", "worker"]}}, "required": ["kind"]},
+            "then": {"properties": {"content_type": {"const": "text/javascript"}}}
+          },
+          {
+            "if": {"properties": {"kind": {"const": "release-pack"}}, "required": ["kind"]},
+            "then": {"properties": {"content_type": {"const": "application/octet-stream"}}}
+          },
+          {
+            "if": {"properties": {"kind": {"const": "configuration"}}, "required": ["kind"]},
+            "then": {"properties": {"content_type": {"const": "application/json"}}}
+          }
+        ]
       }
     },
     "runtime": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["topology", "initial_memory", "maximum_memory", "pthread_pool", "automatic_main", "entry_export", "features"],
+      "required": ["topology", "initial_memory", "maximum_memory", "worker_agents", "pthread_pool", "automatic_main", "entry_export", "features"],
       "properties": {
         "topology": {"enum": ["outer-dedicated-worker", "proxy-to-pthread"]},
         "initial_memory": {"type": "integer", "minimum": 16777216, "maximum": 536870912, "multipleOf": 65536},
         "maximum_memory": {"type": "integer", "minimum": 16777216, "maximum": 536870912, "multipleOf": 65536},
+        "worker_agents": {"type": "integer", "minimum": 1, "maximum": 64},
         "pthread_pool": {"type": "integer", "minimum": 1, "maximum": 64},
         "automatic_main": {"const": false},
         "entry_export": {"const": "erts_wasm_start"},
-        "features": {"type": "array", "items": {"enum": ["secure-context", "cross-origin-isolated", "shared-array-buffer", "wasm-threads", "worker-module"]}, "minItems": 5, "maxItems": 5, "uniqueItems": true}
+        "features": {"type": "array", "items": {"enum": ["secure-context", "cross-origin-isolated", "shared-array-buffer", "wasm-threads"]}, "minItems": 4, "maxItems": 4, "uniqueItems": true}
       }
     },
     "boot": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["argv", "environment", "root", "cwd", "boot_file", "code_paths"],
+      "required": ["argv", "environment", "root", "cwd", "boot_file", "boot_file_digest", "code_paths"],
       "properties": {
-        "argv": {"type": "array", "minItems": 1, "maxItems": 64, "items": {"type": "string", "maxLength": 4096}},
+        "argv": {"type": "array", "minItems": 1, "maxItems": 64, "items": {"type": "string", "maxLength": 4096, "x-maxUtf8Bytes": 4096}},
         "environment": {"type": "object", "maxProperties": 0},
         "root": {"const": "/runtime"},
         "cwd": {"const": "/runtime"},
         "boot_file": {"const": "/runtime/releases/29/start.boot"},
-        "code_paths": {"type": "array", "minItems": 3, "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^/runtime/lib/[a-z0-9_.-]+/ebin$", "maxLength": 1024}}
+        "boot_file_digest": {"$ref": "#/$defs/digest"},
+        "code_paths": {"type": "array", "minItems": 3, "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^/runtime/lib/[a-z0-9_.-]+/ebin$", "maxLength": 1024, "x-maxUtf8Bytes": 1024}}
       }
     },
     "modules": {
@@ -88,14 +121,95 @@
       "required": ["closure_digest", "entries", "qualification_admission", "post_ready_loading"],
       "properties": {
         "closure_digest": {"$ref": "#/$defs/digest"},
-        "entries": {"type": "array", "minItems": 1, "maxItems": 4096, "uniqueItems": true, "items": {"type": "object", "required": ["name", "digest", "boot", "on_load"], "additionalProperties": false, "properties": {"name": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9_@]*$"}, "digest": {"$ref": "#/$defs/digest"}, "boot": {"type": "boolean"}, "on_load": {"enum": ["none", "manifest-qualified"]}}}},
-        "qualification_admission": {"type": "object", "additionalProperties": false, "required": ["name", "digest", "uses_normal_loader", "single_use", "closes_before_parse"], "properties": {"name": {"const": "erts_wasm_loader_probe"}, "digest": {"$ref": "#/$defs/digest"}, "uses_normal_loader": {"const": true}, "single_use": {"const": true}, "closes_before_parse": {"const": true}}},
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": ["name", "path", "digest", "bytes", "boot", "on_load"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9_@]*$"},
+              "path": {"type": "string", "pattern": "^/runtime/lib/[a-z0-9_.-]+/ebin/[a-zA-Z0-9_@]+\\.beam$", "maxLength": 1024, "x-maxUtf8Bytes": 1024},
+              "digest": {"$ref": "#/$defs/digest"},
+              "bytes": {"type": "integer", "minimum": 1, "maximum": 16777216},
+              "boot": {"type": "boolean"},
+              "on_load": {"enum": ["none", "manifest-qualified"]}
+            }
+          }
+        },
+        "qualification_admission": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "path", "digest", "bytes", "uses_normal_loader", "single_use", "closes_before_parse"],
+          "properties": {
+            "name": {"const": "erts_wasm_loader_probe"},
+            "path": {"const": "/runtime/lib/erts_wasm_poc-0.1.0/ebin/erts_wasm_loader_probe.beam"},
+            "digest": {"$ref": "#/$defs/digest"},
+            "bytes": {"type": "integer", "minimum": 1, "maximum": 16777216},
+            "uses_normal_loader": {"const": true},
+            "single_use": {"const": true},
+            "closes_before_parse": {"const": true}
+          }
+        },
         "post_ready_loading": {"const": "denied"}
       }
     },
-    "abi": {"type": "object", "required": ["imports", "exports", "schema"], "additionalProperties": false, "properties": {"imports": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"type": "string"}}, "exports": {"type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": {"type": "string"}}, "schema": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}},
-    "capabilities": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"type": "object", "required": ["id", "version", "quota"], "additionalProperties": false, "properties": {"id": {"type": "string"}, "version": {"type": "integer", "minimum": 1}, "quota": {"type": "object"}}}},
-    "bounds": {"type": "object", "required": ["contract_digest"], "additionalProperties": false, "properties": {"contract_digest": {"$ref": "#/$defs/digest"}}}
+    "abi": {
+      "type": "object",
+      "required": ["imports", "exports", "schema"],
+      "additionalProperties": false,
+      "properties": {
+        "imports": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"type": "string"}},
+        "exports": {"type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": {"type": "string"}},
+        "schema": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "capabilities": {"type": "array", "maxItems": 0},
+    "bounds": {
+      "type": "object",
+      "required": ["contract_digest", "aggregate_encoded_artifact_bytes", "release_expanded_bytes", "release_entry_count", "release_entry_expanded_bytes", "beam_module_bytes", "worker_agents", "pre_ready_message_queue", "pre_ready_message_bytes", "pre_ready_queued_bytes", "concurrent_fetches", "startup_timers", "startup_wall_clock_ms"],
+      "additionalProperties": false,
+      "properties": {
+        "contract_digest": {"const": "sha256:bdc9924e7af66f94977d6077cf80e6ed41f3453c63117f15f53d79b4f3becd28"},
+        "aggregate_encoded_artifact_bytes": {"type": "integer", "minimum": 1, "maximum": 268435456},
+        "release_expanded_bytes": {"type": "integer", "minimum": 1, "maximum": 268435456},
+        "release_entry_count": {"type": "integer", "minimum": 1, "maximum": 16384},
+        "release_entry_expanded_bytes": {"type": "integer", "minimum": 1, "maximum": 134217728},
+        "beam_module_bytes": {"type": "integer", "minimum": 1, "maximum": 16777216},
+        "worker_agents": {"type": "integer", "minimum": 1, "maximum": 64},
+        "pre_ready_message_queue": {"type": "integer", "minimum": 1, "maximum": 1024},
+        "pre_ready_message_bytes": {"type": "integer", "minimum": 1, "maximum": 1048576},
+        "pre_ready_queued_bytes": {"type": "integer", "minimum": 1, "maximum": 16777216},
+        "concurrent_fetches": {"type": "integer", "minimum": 1, "maximum": 16},
+        "startup_timers": {"type": "integer", "minimum": 1, "maximum": 32},
+        "startup_wall_clock_ms": {"type": "integer", "minimum": 1, "maximum": 120000}
+      }
+    }
   },
-  "$defs": {"digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}}
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  },
+  "x-manifest-authentication": {
+    "representation": "exact fetched identity-encoded bytes",
+    "anchor": "trusted bootstrap supplies the expected SHA-256 outside the manifest",
+    "parse_order": "enforce byte ceiling, hash exact bytes, compare without fallback, reject invalid UTF-8 or duplicate object members, then bounded-decode and validate",
+    "runtime_generation": "supervisor creates a fresh 256-bit token after manifest authentication and binds it to the computed manifest digest; the token is not a manifest field"
+  },
+  "x-p0-bound-bindings": {
+    "contract_path": "research/assets/p0-governed-baseline/phase-02/p0-loader-startup-bounds.json",
+    "contract_sha256": "bdc9924e7af66f94977d6077cf80e6ed41f3453c63117f15f53d79b4f3becd28",
+    "bound_ids": ["manifest-bytes", "manifest-depth", "manifest-record-count", "artifact-count", "artifact-encoded-bytes", "aggregate-encoded-artifact-bytes", "release-expanded-bytes", "release-entry-count", "release-entry-expanded-bytes", "beam-module-bytes", "artifact-url-bytes", "path-bytes", "code-path-count", "argv-count", "argv-entry-bytes", "worker-agents", "initial-shared-memory", "maximum-shared-memory", "pre-ready-message-queue", "pre-ready-message-bytes", "pre-ready-queued-bytes", "concurrent-fetches", "startup-timers", "startup-wall-clock"],
+    "non_schema_rules": [
+      "manifest byte, depth, and record ceilings are enforced by the bounded decoder before ordinary schema validation",
+      "all UTF-8 byte ceilings are enforced on bytes and do not rely on JSON Schema maxLength character counts",
+      "artifact, release, and queue aggregates use overflow-checked observed counters and may not rely only on declarations",
+      "initial_memory must equal maximum_memory and worker_agents must cover every generation-owned Worker and pthread host",
+      "every release member is path-normalized, size-checked, digest-verified against the release index, and rejected before allocation or mount on breach",
+      "every BEAM entry size and digest is rechecked on the immutable byte snapshot before native parser entry",
+      "artifact IDs and URLs, module names and paths, and the qualification admission are unique under their owning profile; uniqueItems alone is not sufficient"
+    ]
+  }
 }

@@ -381,13 +381,88 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
     environment = load_json(root / "p0-empty-environment-contract.json")
     acceptance = load_json(root / "p0-acceptance-contract.json")
     report = load_json(root / "p0-acceptance-report.json")
+    validation = load_json(root / "p0-phase-03-validation-contract.json")
+    accepted_bounds_path = P0_ROOT / "phase-02" / "p0-loader-startup-bounds.json"
+    accepted_bounds = load_json(accepted_bounds_path)
+    accepted_bound_rows = {row["id"]: row for row in accepted_bounds.get("bounds", [])}
+    accepted_bound_digest = sha256_file(accepted_bounds_path)
 
-    required_manifest = {"format", "generation", "trust", "sources", "artifacts", "runtime", "boot", "modules", "abi", "capabilities", "bounds"}
+    required_manifest = {"format", "profile", "trust", "sources", "artifacts", "runtime", "boot", "modules", "abi", "capabilities", "bounds"}
     if set(schema.get("required", [])) != required_manifest:
         raise ContractError("incomplete-manifest-schema", "manifest required fields do not match the generation contract")
     format_const = schema.get("properties", {}).get("format", {}).get("const")
     if format_const != "erts-wasm-manifest-v1" or loader.get("schema_version") != format_const:
         raise ContractError("mixed-manifest-identity", "loader and manifest schema versions differ")
+    manifest_auth = schema.get("x-manifest-authentication", {})
+    schema_trust = schema.get("properties", {}).get("trust", {})
+    schema_trust_required = set(schema_trust.get("required", []))
+    if (
+        schema_trust.get("properties", {}).get("anchor", {}).get("const") != "external-bootstrap-sha256"
+        or "manifest_digest" in schema_trust_required
+        or "outside the manifest" not in manifest_auth.get("anchor", "")
+        or "duplicate object members" not in manifest_auth.get("parse_order", "")
+    ):
+        raise ContractError("self-authenticating-manifest", "manifest authentication must be externally anchored and precede strict bounded decoding")
+
+    bound_bindings = schema.get("x-p0-bound-bindings", {})
+    if (
+        bound_bindings.get("contract_sha256") != accepted_bound_digest
+        or set(bound_bindings.get("bound_ids", [])) != set(accepted_bound_rows)
+        or loader.get("accepted_bounds_contract", {}).get("sha256") != accepted_bound_digest
+    ):
+        raise ContractError("stale-manifest-bounds", "manifest and loader must bind every accepted Phase 2 bound at its exact digest")
+    if len(bound_bindings.get("non_schema_rules", [])) < 6:
+        raise ContractError("incomplete-non-schema-bounds", "byte, aggregate, equality, release, and native-parser rules must remain explicit")
+
+    properties = schema.get("properties", {})
+    artifacts = properties.get("artifacts", {})
+    artifact_properties = artifacts.get("items", {}).get("properties", {})
+    runtime_schema = properties.get("runtime", {}).get("properties", {})
+    boot_schema = properties.get("boot", {}).get("properties", {})
+    module_schema = properties.get("modules", {}).get("properties", {}).get("entries", {}).get("items", {}).get("properties", {})
+    manifest_bounds = properties.get("bounds", {}).get("properties", {})
+
+    def bound_limit(bound_id: str) -> int:
+        value = accepted_bound_rows.get(bound_id, {}).get("limit")
+        if not isinstance(value, int) or isinstance(value, bool):
+            raise ContractError("invalid-accepted-bound", f"{bound_id} lacks an integer limit")
+        return value
+
+    schema_limit_checks = {
+        "artifact-count": artifacts.get("maxItems"),
+        "artifact-encoded-bytes": artifact_properties.get("encoded_bytes", {}).get("maximum"),
+        "artifact-url-bytes": artifact_properties.get("url", {}).get("x-maxUtf8Bytes"),
+        "path-bytes": boot_schema.get("code_paths", {}).get("items", {}).get("x-maxUtf8Bytes"),
+        "code-path-count": boot_schema.get("code_paths", {}).get("maxItems"),
+        "argv-count": boot_schema.get("argv", {}).get("maxItems"),
+        "argv-entry-bytes": boot_schema.get("argv", {}).get("items", {}).get("x-maxUtf8Bytes"),
+        "worker-agents": runtime_schema.get("worker_agents", {}).get("maximum"),
+        "initial-shared-memory": runtime_schema.get("initial_memory", {}).get("maximum"),
+        "maximum-shared-memory": runtime_schema.get("maximum_memory", {}).get("maximum"),
+        "beam-module-bytes": module_schema.get("bytes", {}).get("maximum"),
+        "aggregate-encoded-artifact-bytes": manifest_bounds.get("aggregate_encoded_artifact_bytes", {}).get("maximum"),
+        "release-expanded-bytes": manifest_bounds.get("release_expanded_bytes", {}).get("maximum"),
+        "release-entry-count": manifest_bounds.get("release_entry_count", {}).get("maximum"),
+        "release-entry-expanded-bytes": manifest_bounds.get("release_entry_expanded_bytes", {}).get("maximum"),
+        "pre-ready-message-queue": manifest_bounds.get("pre_ready_message_queue", {}).get("maximum"),
+        "pre-ready-message-bytes": manifest_bounds.get("pre_ready_message_bytes", {}).get("maximum"),
+        "pre-ready-queued-bytes": manifest_bounds.get("pre_ready_queued_bytes", {}).get("maximum"),
+        "concurrent-fetches": manifest_bounds.get("concurrent_fetches", {}).get("maximum"),
+        "startup-timers": manifest_bounds.get("startup_timers", {}).get("maximum"),
+        "startup-wall-clock": manifest_bounds.get("startup_wall_clock_ms", {}).get("maximum"),
+    }
+    for bound_id, schema_limit in schema_limit_checks.items():
+        if schema_limit != bound_limit(bound_id):
+            raise ContractError("manifest-bound-drift", f"{bound_id} schema limit differs from the accepted contract")
+    if artifact_properties.get("content_encoding", {}).get("const") != "identity":
+        raise ContractError("ambiguous-content-encoding", "first-proof artifact representation must use identity content encoding")
+    if properties.get("capabilities", {}).get("maxItems") != 0:
+        raise ContractError("ambient-poc-capability", "the POC manifest must admit no optional host capabilities")
+    if runtime_schema.get("initial_memory", {}).get("multipleOf") != 65536 or runtime_schema.get("maximum_memory", {}).get("multipleOf") != 65536:
+        raise ContractError("invalid-memory-page-rule", "shared memory values must be WebAssembly-page aligned")
+    source_required = set(properties.get("sources", {}).get("required", []))
+    if not {"build_profile", "build_flags_digest", "generated_sources_digest"}.issubset(source_required):
+        raise ContractError("incomplete-build-identity", "manifest must bind profile, build flags, and generated sources")
 
     states_list = loader.get("states", [])
     if len(states_list) != len(set(states_list)):
@@ -422,7 +497,7 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
 
     failures = loader.get("failure_matrix", [])
     unique(failures, "id", "duplicate-loader-failure")
-    required_failures = {"malformed-manifest", "stale-generation", "duplicate-start", "identity-skew", "out-of-bounds", "undeclared-module", "entry-before-mount", "partial-worker-graph", "trust-preflight-failure"}
+    required_failures = {"untrusted-manifest", "malformed-manifest", "stale-generation", "duplicate-start", "identity-skew", "out-of-bounds", "release-expansion-breach", "memory-profile-mismatch", "ambient-capability", "worker-descendant-load", "undeclared-module", "entry-before-mount", "partial-worker-graph", "trust-preflight-failure"}
     if {row["id"] for row in failures} != required_failures:
         raise ContractError("incomplete-failure-matrix", "loader failure matrix is incomplete")
     for row in failures:
@@ -432,6 +507,8 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
     ownership = loader.get("generation_ownership", {})
     if ownership.get("owner") != "page-supervisor" or not ownership.get("register_before_effect"):
         raise ContractError("unowned-generation", "page supervisor must register generation resources before effect")
+    if "stored outside the immutable manifest" not in ownership.get("token", ""):
+        raise ContractError("manifest-owned-generation-token", "runtime-generation tokens must be fresh external supervisor state")
     if trust.get("selected_policy") != "secure-origin-tcb-v1" or trust.get("self_authentication") is not False:
         raise ContractError("circular-root-trust", "root policy must not self-authenticate")
     if trust.get("service_worker_policy", "").find("fails preflight") < 0:
@@ -440,6 +517,15 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
         raise ContractError("redirect-ambiguity", "redirects must fail")
     if trust.get("wasm_policy", "").find("verify the complete") < 0:
         raise ContractError("stream-before-trust", "Wasm must be fully verified before compile")
+    if (
+        "exact SHA-256 outside the manifest" not in trust.get("root", "")
+        or "duplicate object names" not in trust.get("manifest_policy", "")
+        or "credentials omit" not in trust.get("manifest_policy", "")
+        or "identity content encoding" not in trust.get("manifest_policy", "")
+    ):
+        raise ContractError("incomplete-manifest-trust", "root trust must externally pin and strictly decode identity-encoded manifest bytes")
+    if not all(term in trust.get("worker_integrity", "") for term in ("credentials omit", "identity content encoding", "importScripts", "child Workers")):
+        raise ContractError("incomplete-worker-integrity", "Worker policy must prohibit credential and descendant executable authority")
     required_headers = {"Cross-Origin-Opener-Policy", "Cross-Origin-Embedder-Policy", "Cross-Origin-Resource-Policy", "Content-Security-Policy", "X-Content-Type-Options", "Cache-Control"}
     if set(trust.get("headers", {})) != required_headers:
         raise ContractError("missing-deployment-prerequisite", "required header policy is incomplete")
@@ -492,6 +578,7 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
         "p0-product-budget-method", "p0-evidence-profile",
         "p0-loader-contract", "p0-bootstrap-trust",
         "p0-asset-dependency-patch-ledger", "p0-role-assignments", "p0-empty-target-environment",
+        "p0-phase-03-validation",
     }
     if set(acceptance.get("required_contracts", [])) != required_contracts:
         raise ContractError("missing-p0-contract", "P0 acceptance contract set is incomplete")
@@ -529,6 +616,65 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
         raise ContractError("stale-accepted-phase", "P0 acceptance report must retain passed P0-A01 and P0-A02 evidence state")
     if report.get("gate_state") != "blocked" or report.get("planning_evidence") != expected_partial_evidence:
         raise ContractError("premature-p0-closure", "P0 cannot close with unresolved blockers")
+    negative_rows = validation.get("negative_cases", [])
+    unique(negative_rows, "id", "duplicate-phase-03-negative")
+    expected_negative_codes = {
+        "mixed-manifest-identity", "self-authenticating-manifest", "stale-manifest-bounds",
+        "manifest-bound-drift", "ambiguous-content-encoding", "ambient-poc-capability",
+        "invalid-memory-page-rule", "incomplete-build-identity", "circular-loader-order",
+        "manifest-owned-generation-token", "incomplete-failure-matrix", "circular-root-trust",
+        "incomplete-manifest-trust", "incomplete-worker-integrity", "missing-deployment-prerequisite",
+        "fabricated-role-completion", "fabricated-empty-environment", "downstream-p0-blocker",
+        "premature-p0-closure",
+    }
+    if {row.get("expected_code") for row in negative_rows} != expected_negative_codes or len(negative_rows) != 20:
+        raise ContractError("incomplete-phase-03-validation", "Phase 3 validation contract does not cover every reviewed rejection class")
+    if len(validation.get("positive_assertions", [])) < 8 or not validation.get("acceptance_boundary"):
+        raise ContractError("missing-phase-03-acceptance-boundary", "Phase 3 validation must preserve its non-acceptance boundary")
+
+    receipt_path = root / "p0-phase-03-producer-review-receipt.json"
+    packet_path = root / "p0-phase-03-owner-review-packet.json"
+    if receipt_path.exists() or packet_path.exists():
+        if not receipt_path.exists() or not packet_path.exists():
+            raise ContractError("incomplete-review-packet", "Phase 3 producer receipt and owner packet must be published together")
+        receipt = load_json(receipt_path)
+        packet = load_json(packet_path)
+        if receipt.get("review_state") != "ready-for-explicit-owner-disposition" or packet.get("state") != "ready-for-explicit-owner-disposition":
+            raise ContractError("invalid-review-state", "Phase 3 review artifacts must await explicit owner disposition")
+        entry = receipt.get("entry_evidence", {})
+        if entry.get("gate") != "P0-A02" or entry.get("sha256") != sha256_file(P0_ROOT / "phase-02" / "p0-phase-02-acceptance.planning-evidence.json"):
+            raise ContractError("stale-entry-evidence", "Phase 3 producer review must bind accepted P0-A02 evidence")
+        for binding in receipt.get("reviewed_contracts", []):
+            relative = Path(binding.get("path", ""))
+            if not relative.name:
+                raise ContractError("invalid-review-binding", "Phase 3 reviewed contract binding lacks a path")
+            bound_path = root / relative.name
+            if not bound_path.exists() or binding.get("sha256") != sha256_file(bound_path):
+                raise ContractError("stale-producer-review", f"Phase 3 producer receipt does not bind {relative.name}")
+        packet_receipt = packet.get("producer_review_receipt", {})
+        requested = packet.get("explicit_disposition_requested", {})
+        if packet_receipt.get("sha256") != sha256_file(receipt_path):
+            raise ContractError("stale-owner-review-packet", "Phase 3 owner packet does not bind the producer receipt")
+        if requested.get("acceptable_response") != "I accept the P0.3 owner-review packet and its recorded limitations.":
+            raise ContractError("invalid-owner-review-request", "Phase 3 packet lacks the exact owner disposition request")
+
+    owner_result_path = root / "p0-phase-03-owner-review-result.json"
+    if owner_result_path.exists():
+        owner_result = load_json(owner_result_path)
+        if (
+            owner_result.get("reviewer") != "Pascal Charbonneau (pcharbon70)"
+            or owner_result.get("reviewer_statement") != "I accept the P0.3 owner-review packet and its recorded limitations."
+            or owner_result.get("user_statement_verbatim") != "accept the P0.3 owner-review packet and its recorded limitations."
+            or not owner_result.get("statement_normalization")
+            or owner_result.get("outcome") != "accepted"
+        ):
+            raise ContractError("invalid-owner-attestation", "P0.3 owner result does not contain the exact accepted disposition")
+        reviewed_packet = owner_result.get("reviewed_packet", {})
+        producer_receipt = owner_result.get("producer_review_receipt", {})
+        packet_path = root / "p0-phase-03-owner-review-packet.json"
+        receipt_path = root / "p0-phase-03-producer-review-receipt.json"
+        if reviewed_packet.get("sha256") != sha256_file(packet_path) or producer_receipt.get("sha256") != sha256_file(receipt_path):
+            raise ContractError("stale-owner-attestation", "P0.3 owner result does not bind the reviewed packet and producer receipt")
 
     validate_phase_01()
     validate_phase_02()

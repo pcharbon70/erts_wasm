@@ -1,15 +1,15 @@
 {
-  "report_id": "p0-local-acceptance-review-2026-09-15",
+  "report_id": "p0-local-acceptance-review-2026-09-16",
   "contract_id": "p0-acceptance",
-  "tested_base_revision": "aaff05d6801e0a6340d422d5f7a98a8d340264b2",
-  "local_contract_results": {"P0-A01": "passed-reviewed-evidence-bound", "P0-A02": "passed-reviewed-evidence-bound", "P0-A03": "pass-local-review-pending", "P0-GATE": "blocked"},
+  "tested_base_revision": "c7123a862f96a414270f2d8dc19d3709e0c56b8c",
+  "local_contract_results": {"P0-A01": "passed-reviewed-evidence-bound", "P0-A02": "passed-reviewed-evidence-bound", "P0-A03": "owner-accepted-clean-evidence-pending", "P0-GATE": "blocked"},
   "gate_state": "blocked",
   "review_complete": false,
   "runtime_execution": "not-run",
   "empty_environment_reproduction": "not-run",
-  "role_assignment": {"contract": "p0-role-assignments", "assignee": "Pascal Charbonneau (pcharbon70)", "state": "Phase 1 and Phase 2 reviews accepted; Phase 3 reviews and experiment work remain open"},
+  "role_assignment": {"contract": "p0-role-assignments", "assignee": "Pascal Charbonneau (pcharbon70)", "state": "Phase 1 through Phase 3 contract reviews are accepted; clean P0-A03 evidence and P0-GATE readiness work remain open"},
   "blockers": [
-    "Phase 3 loader/protocol and root-trust security reviews are not run",
+    "the Phase 3 owner accepted P0-A03 and its limitations, but a clean pass-closing evidence record has not yet been issued",
     "clean experiment-readiness static preflight and empty browser profiles have been specified but not reproduced"
   ],
   "deferred_outcomes_not_blocking_p0": [

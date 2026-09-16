@@ -1,0 +1,38 @@
+{
+  "contract_id": "p0-phase-03-validation",
+  "acceptance_id": "P0-A03",
+  "task_id": "p0-p03-integration",
+  "positive_assertions": [
+    "the manifest and loader bind all 24 accepted P0.2 bounds at the exact accepted contract digest",
+    "the bootstrap supplies the manifest digest externally and no manifest field claims to authenticate its own representation",
+    "the immutable profile identity and fresh runtime-generation token are distinct",
+    "the first-proof manifest admits no optional browser capability",
+    "identity-encoded manifest, Worker, Wasm, and release bytes are bounded and verified before parsing, execution, compilation, or mounting",
+    "fixed shared memory, aggregate byte counters, UTF-8 byte limits, release expansion, per-BEAM limits, and pre-ready message limits retain explicit non-schema enforcement rules",
+    "both Worker topology orders remain candidates and every generation resource is registered before effect",
+    "P0-A01 and P0-A02 remain evidence-bound while P0-A03 and P0-GATE remain open"
+  ],
+  "negative_cases": [
+    {"id": "P0-P03-NEG-MIXED-MANIFEST", "expected_code": "mixed-manifest-identity"},
+    {"id": "P0-P03-NEG-SELF-AUTH", "expected_code": "self-authenticating-manifest"},
+    {"id": "P0-P03-NEG-STALE-BOUND-DIGEST", "expected_code": "stale-manifest-bounds"},
+    {"id": "P0-P03-NEG-MISSING-BOUND-ID", "expected_code": "stale-manifest-bounds"},
+    {"id": "P0-P03-NEG-BOUND-DRIFT", "expected_code": "manifest-bound-drift"},
+    {"id": "P0-P03-NEG-CONTENT-ENCODING", "expected_code": "ambiguous-content-encoding"},
+    {"id": "P0-P03-NEG-AMBIENT-CAPABILITY", "expected_code": "ambient-poc-capability"},
+    {"id": "P0-P03-NEG-MEMORY-PAGE", "expected_code": "invalid-memory-page-rule"},
+    {"id": "P0-P03-NEG-BUILD-IDENTITY", "expected_code": "incomplete-build-identity"},
+    {"id": "P0-P03-NEG-CIRCULAR-ORDER", "expected_code": "circular-loader-order"},
+    {"id": "P0-P03-NEG-MANIFEST-TOKEN", "expected_code": "manifest-owned-generation-token"},
+    {"id": "P0-P03-NEG-INCOMPLETE-FAILURE", "expected_code": "incomplete-failure-matrix"},
+    {"id": "P0-P03-NEG-CIRCULAR-TRUST", "expected_code": "circular-root-trust"},
+    {"id": "P0-P03-NEG-MANIFEST-TRUST", "expected_code": "incomplete-manifest-trust"},
+    {"id": "P0-P03-NEG-WORKER-INTEGRITY", "expected_code": "incomplete-worker-integrity"},
+    {"id": "P0-P03-NEG-DEPLOYMENT", "expected_code": "missing-deployment-prerequisite"},
+    {"id": "P0-P03-NEG-ROLE-COMPLETION", "expected_code": "fabricated-role-completion"},
+    {"id": "P0-P03-NEG-ENVIRONMENT-COMPLETION", "expected_code": "fabricated-empty-environment"},
+    {"id": "P0-P03-NEG-DOWNSTREAM-BLOCKER", "expected_code": "downstream-p0-blocker"},
+    {"id": "P0-P03-NEG-PREMATURE-GATE", "expected_code": "premature-p0-closure"}
+  ],
+  "acceptance_boundary": "passing these deterministic contract checks establishes internal consistency only; it does not supply owner acceptance, clean-environment reproduction, browser deployment evidence, runtime behavior, or P0-GATE closure"
+}

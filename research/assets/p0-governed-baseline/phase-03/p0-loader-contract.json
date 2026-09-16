@@ -4,7 +4,19 @@
   "task_id": "p0-p03-loader-contract",
   "schema": "p0-runtime-manifest.schema.json",
   "schema_version": "erts-wasm-manifest-v1",
-  "review_state": "loader-protocol-review-pending",
+  "review_state": "producer-reviewed-owner-disposition-pending",
+  "manifest_authentication": {
+    "anchor_source": "the trusted root bootstrap supplies the expected manifest SHA-256 outside the manifest",
+    "representation": "exact identity-encoded response bytes",
+    "order": ["bounded fetch", "SHA-256 comparison", "reject invalid UTF-8 and duplicate object members", "bounded decode", "schema and cross-field validation"],
+    "self_digest": "forbidden",
+    "failure": "reject before a runtime generation or executable Blob URL exists"
+  },
+  "accepted_bounds_contract": {
+    "path": "research/assets/p0-governed-baseline/phase-02/p0-loader-startup-bounds.json",
+    "sha256": "bdc9924e7af66f94977d6077cf80e6ed41f3453c63117f15f53d79b4f3becd28",
+    "binding": "all 24 accepted bound IDs are bound by p0-runtime-manifest.schema.json; pre-decode, UTF-8 byte, aggregate, equality, and observed-byte rules remain mandatory when JSON Schema cannot express them"
+  },
   "states": ["created", "platform-preflighted", "bootstrap-trust-established", "manifest-authenticated", "topology-starting", "artifacts-verified", "shared-memory-created", "workers-registered", "runtime-instantiated-main-suppressed", "immutable-release-mounted", "explicit-erts-entry-invoked", "erts-initialized", "otp-booted", "runtime-identity-attested", "booted-for-qualification", "qualification-admission-consumed-and-closed", "qualification-module-published", "qualification-module-executed", "tier-0-self-check-passed", "ready", "cancelling", "all-generation-resources-revoked", "terminated"],
   "common_partial_order": [
     ["created", "platform-preflighted"], ["platform-preflighted", "bootstrap-trust-established"], ["bootstrap-trust-established", "manifest-authenticated"], ["manifest-authenticated", "topology-starting"], ["artifacts-verified", "runtime-instantiated-main-suppressed"], ["shared-memory-created", "runtime-instantiated-main-suppressed"], ["workers-registered", "runtime-instantiated-main-suppressed"], ["runtime-instantiated-main-suppressed", "immutable-release-mounted"], ["immutable-release-mounted", "explicit-erts-entry-invoked"], ["explicit-erts-entry-invoked", "erts-initialized"], ["erts-initialized", "otp-booted"], ["otp-booted", "runtime-identity-attested"], ["runtime-identity-attested", "booted-for-qualification"], ["booted-for-qualification", "qualification-admission-consumed-and-closed"], ["qualification-admission-consumed-and-closed", "qualification-module-published"], ["qualification-module-published", "qualification-module-executed"], ["qualification-module-executed", "tier-0-self-check-passed"], ["tier-0-self-check-passed", "ready"], ["cancelling", "all-generation-resources-revoked"], ["all-generation-resources-revoked", "terminated"]
@@ -34,14 +46,19 @@
     "failure_action": "generation-fatal; admission remains closed",
     "post_ready": "all code loading denied"
   },
-  "runtime_identity": {"required": ["otp-source-tag", "otp-source-commit", "otp-source-tree", "erts-version", "otp-release", "kernel-version", "stdlib-version", "emscripten-bundle", "build-image-digest", "patch-digest", "generation-id", "manifest-digest", "boot-profile-digest", "module-closure-digest"], "expected_versions": {"erts": "17.0.6", "otp": "29", "kernel": "11.0.3", "stdlib": "8.0.4"}, "mismatch_action": "cancel and terminate generation before ready"},
-  "generation_ownership": {"owner": "page-supervisor", "token": "unforgeable 256-bit generation identifier bound to the manifest digest", "register_before_effect": true, "owned_resources": ["Workers", "pthread slots", "MessagePorts", "requests", "timers", "listeners", "shared memory", "verified-byte Blob URLs", "renderer handles if later present"], "stale_completion": "reject and count", "cleanup": "idempotent cancellation, revoke authority, terminate every Worker, cancel handles, revoke Blob URLs, reject pending promises, sample quiescence"},
+  "runtime_identity": {"required": ["otp-source-tag", "otp-source-commit", "otp-source-tree", "erts-version", "otp-release", "kernel-version", "stdlib-version", "emscripten-bundle", "build-image-digest", "build-profile", "build-flags-digest", "generated-sources-digest", "patch-digest", "runtime-generation-token", "manifest-digest", "boot-profile-digest", "module-closure-digest"], "expected_versions": {"erts": "17.0.6", "otp": "29", "kernel": "11.0.3", "stdlib": "8.0.4"}, "mismatch_action": "cancel and terminate generation before ready"},
+  "generation_ownership": {"owner": "page-supervisor", "token": "fresh supervisor-generated unforgeable 256-bit runtime-generation token, stored outside the immutable manifest and bound in the registry to its computed manifest digest", "register_before_effect": true, "owned_resources": ["Workers", "pthread slots", "MessagePorts", "requests", "timers", "listeners", "shared memory", "verified-byte Blob URLs", "renderer handles if later present"], "stale_completion": "reject and count", "cleanup": "idempotent cancellation, revoke authority, terminate every Worker, cancel handles, revoke Blob URLs, reject pending promises, sample quiescence"},
   "failure_matrix": [
-    {"id": "malformed-manifest", "detect": "bounded schema decode", "owner": "manifest-verifier", "action": "reject before generation effect"},
+    {"id": "untrusted-manifest", "detect": "exact response-byte SHA-256 differs from the bootstrap-pinned digest", "owner": "root bootstrap", "action": "reject before decode or generation creation with no fallback"},
+    {"id": "malformed-manifest", "detect": "invalid UTF-8, duplicate object member, excessive depth/records, or schema failure during bounded decode", "owner": "manifest-verifier", "action": "reject before generation effect"},
     {"id": "stale-generation", "detect": "generation token mismatch", "owner": "page-supervisor", "action": "reject, count, and perform no effect"},
     {"id": "duplicate-start", "detect": "non-created state receives start", "owner": "page-supervisor", "action": "reject without second ERTS entry"},
     {"id": "identity-skew", "detect": "source, build, artifact, runtime, or module digest mismatch", "owner": "loader", "action": "cancel complete generation"},
-    {"id": "out-of-bounds", "detect": "Phase 2 bound enforcement", "owner": "resource owner named by bound", "action": "reject before allocation where specified and terminate if generation exists"},
+    {"id": "out-of-bounds", "detect": "any of the 24 accepted Phase 2 bounds, including overflow-checked aggregate or observed-byte checks, is breached", "owner": "resource owner named by bound", "action": "reject before allocation where specified and terminate if generation exists"},
+    {"id": "release-expansion-breach", "detect": "entry count, member bytes, aggregate expanded bytes, path, or indexed member digest breaches the accepted release rules", "owner": "release-mounter", "action": "abort expansion, discard the partial mount, and terminate the generation"},
+    {"id": "memory-profile-mismatch", "detect": "memory is not page-aligned, exceeds the accepted ceiling, or initial and maximum differ", "owner": "runtime-generation", "action": "refuse WebAssembly.Memory construction"},
+    {"id": "ambient-capability", "detect": "the POC manifest declares any host capability", "owner": "manifest-verifier", "action": "reject manifest"},
+    {"id": "worker-descendant-load", "detect": "verified single-file Worker output attempts an import, importScripts, child Worker, or other undeclared executable fetch", "owner": "page-supervisor", "action": "terminate the complete generation and retain the emitted-output failure"},
     {"id": "undeclared-module", "detect": "lowest practical loader admission check", "owner": "C loader policy", "action": "reject before native parser entry"},
     {"id": "entry-before-mount", "detect": "state transition guard", "owner": "page-supervisor", "action": "reject and terminate"},
     {"id": "partial-worker-graph", "detect": "registry and startup deadline", "owner": "page-supervisor", "action": "terminate all registered agents and revoke handles"},

@@ -1,0 +1,59 @@
+{
+  "receipt_id": "p0-phase-03-producer-review-2026-09-16",
+  "acceptance_id": "P0-A03",
+  "producer": "Codex",
+  "designated_independent_reviewer": "Pascal Charbonneau (pcharbon70)",
+  "review_state": "ready-for-explicit-owner-disposition",
+  "repository_base_revision": "c7123a862f96a414270f2d8dc19d3709e0c56b8c",
+  "repository_state": "dirty working tree containing the active P0.3 producer review; this receipt is not pass-closing evidence",
+  "entry_evidence": {
+    "gate": "P0-A02",
+    "path": "research/assets/p0-governed-baseline/phase-02/p0-phase-02-acceptance.planning-evidence.json",
+    "sha256": "363784404bf58cd1fdb882d7e8714b40efe20e3f9f32b19446dcbc28a649dc8a",
+    "outcome": "pass"
+  },
+  "reviewed_contracts": [
+    {"task_id": "p0-p03-loader-contract", "path": "research/assets/p0-governed-baseline/phase-03/p0-runtime-manifest.schema.json", "sha256": "2d2cfff01b6d92cd9c5b0a4cb9cfd3a1d9b5daee94e1ca0c0b514b23ce4e43e9"},
+    {"task_id": "p0-p03-loader-contract", "path": "research/assets/p0-governed-baseline/phase-03/p0-loader-contract.json", "sha256": "ca1c470e41c6d93d185cbb3ed0bc28627f7f44870c405161ba41121986a69628"},
+    {"task_id": "p0-p03-bootstrap-trust", "path": "research/assets/p0-governed-baseline/phase-03/p0-bootstrap-trust.json", "sha256": "6d650b9c876809330dc926c8871b2b9e8f2ea26fd28aae337b2cbc9d62527d81"},
+    {"task_id": "p0-p03-integration", "path": "research/assets/p0-governed-baseline/phase-03/p0-asset-dependency-patch-ledger.json", "sha256": "c3321b67f4395b8bfbfd6dbba68838a406ae6c19546398b479598f03e3b05741"},
+    {"task_id": "p0-p03-integration", "path": "research/assets/p0-governed-baseline/phase-03/p0-role-assignments.json", "sha256": "938f76efaa2ef0d50924d3d38645e264e71a483dcf4d73044dd99647a125da08"},
+    {"task_id": "p0-p03-integration", "path": "research/assets/p0-governed-baseline/phase-03/p0-empty-environment-contract.json", "sha256": "af8074765c3aef6ac18e78ad009982a44bff26412092f76e5133b86256ce5517"},
+    {"task_id": "p0-p03-integration", "path": "research/assets/p0-governed-baseline/phase-03/p0-acceptance-contract.json", "sha256": "632a8613bd46da867da0787288a2b0752d555cd4259f18b7daffda8a494ba973"},
+    {"task_id": "p0-p03-integration", "path": "research/assets/p0-governed-baseline/phase-03/p0-phase-03-validation-contract.json", "sha256": "105d739f45104e46f5fdc14c453aeadd72d53b5971231c43a2cf5fbd62ae7b4e"}
+  ],
+  "review_method": [
+    "read the planning convention and all three planning templates required for phase review",
+    "trace P0-D02 and P0-A03 to the canonical architecture, loader-generation component note, minimum-platform inquiry, and accepted P0.1 and P0.2 evidence",
+    "compare every manifest and loader limit with all 24 accepted P0.2 bound identities, values, owners, enforcement points, and non-schema obligations",
+    "adversarially review manifest authentication, root authority, runtime-generation identity, redirects, credentials, cache, service-worker, Worker, Wasm, MIME, CSP, and fixed-memory policy",
+    "check immutable release and BEAM admission against encoded, expanded, per-entry, per-module, path, aggregate, and before-native-parser requirements",
+    "check that P0-A03 contract acceptance remains separate from clean-environment reproduction and P0-GATE closure",
+    "run the positive validator and focused P0 contract unit tests after correction"
+  ],
+  "corrections": [
+    "replaced the circular in-manifest self-digest with an exact SHA-256 supplied by the trusted bootstrap outside the manifest",
+    "separated the immutable profile identity from the fresh supervisor-generated runtime-generation token",
+    "bound the manifest and loader to all 24 accepted P0.2 bounds at the exact accepted contract digest",
+    "added encoded and expanded release accounting, per-entry and per-BEAM bounds, UTF-8 byte annotations, aggregate message/fetch/timer/deadline limits, and explicit non-schema enforcement rules",
+    "bound build profile, build flags, generated sources, boot file, module paths, module sizes, ABI schema, and fixed-memory rules into the immutable profile",
+    "made the first-proof manifest capability-free and required credential-free, redirect-failing, no-store, identity-encoded delivery",
+    "expanded Worker integrity to reject descendant executable loads and expanded the loader failure matrix for trust, release, memory, capability, and Worker failures",
+    "added a 20-case Phase 3 validation meta-contract and nine focused regression tests"
+  ],
+  "validation": [
+    {"argv": ["python3", "research/70-tools/p0_contract_validation.py", "phase-03"], "result": "pass-local", "observation": "manifest, loader, trust, ledger, role, environment, and blocked-disposition contracts validated; P0-A03 and P0-GATE remained open"},
+    {"argv": ["python3", "-m", "unittest", "discover", "-s", "research/70-tools", "-p", "test_p0_contract_validation.py"], "result": "pass-local", "observation": "59 tests passed, including the reviewed Phase 3 bound, trust, authority, identity, and premature-closure rejection classes"}
+  ],
+  "limitations": [
+    "This review establishes static contract consistency only. No C, Emscripten, Wasm, Worker, browser, ERTS, OTP, semantic, performance, sanitizer, fuzz, or lifecycle experiment was run.",
+    "The secure origin, TLS termination, root document, bootstrap, and update path remain trusted and can replace the pinned manifest digest and all executable policy.",
+    "Exact manifest-digest pinning, no-store delivery, identity content encoding, full-byte verification, and verified Blob execution are deliberately conservative POC choices with update, offline, transfer, memory, CSP, and startup costs.",
+    "JSON Schema cannot enforce pre-decode byte/depth/record limits, UTF-8 byte lengths, aggregate counters, initial-equals-maximum memory, observed response sizes, or before-parser checks; the implementation and later executable tests must enforce every recorded non-schema rule.",
+    "The ban on Worker descendant loads depends on emitted-output inspection and browser-negative tests that have not yet run; a generated Emscripten Worker dependency that cannot be made single-file under the reviewed policy requires revise or stop.",
+    "Both Worker topology orders remain candidates and the exact Emscripten controlled-start and lower-boundary BEAM admission seams remain later probe outcomes.",
+    "The first proof admits no optional browser capability. Networking, persistence, cryptography, DOM access, rendering, and generic JavaScript remain outside the POC manifest.",
+    "The clean experiment-readiness recipe, empty Chrome and Firefox profiles, recursive response headers, secure-context/isolation preflight, and service-worker exclusion have not been reproduced; P0-GATE therefore remains blocked even if P0-A03 is accepted."
+  ],
+  "acceptance_effect": "none until the designated independent reviewer records an explicit disposition; this receipt cannot close a task, checkbox, P0-A03, or P0-GATE"
+}
