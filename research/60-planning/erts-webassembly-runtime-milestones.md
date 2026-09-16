@@ -40,7 +40,7 @@ meaningful proof of concept.
 
 | Milestone | Outcome | Planning state |
 | --- | --- | --- |
-| [P0](01-proof-of-concept/p0-governed-baseline-and-proof-contract/README.md) | Governed baseline and proof contract | Three draft phases locally validated and review/experiment roles assigned; gate blocked on review, input materialization, and experiment readiness—not downstream implementation results. |
+| [P0](01-proof-of-concept/p0-governed-baseline-and-proof-contract/README.md) | Governed baseline and proof contract | P0.1 accepted and P0-A01 passed; P0-GATE remains blocked on P0-A02/P0-A03 review and clean experiment readiness—not downstream implementation results. |
 | [P1](01-proof-of-concept/p1-target-and-dependency-probes/README.md) | Target and dependency probes | Three authored phases; not started. |
 | [P2](01-proof-of-concept/p2-interpreter-artifact-and-outer-loader/README.md) | Interpreter artifact and outer loader | Decomposition pending P1 evidence. |
 | [P3](01-proof-of-concept/p3-immutable-erts-and-otp-cold-boot/README.md) | Immutable ERTS and OTP cold boot | Decomposition pending P2 evidence. |
@@ -82,7 +82,8 @@ milestone cannot defer its loading consequences to a later integration pass.
 ## Preservation ledger
 
 The hierarchy preserves all source obligations from the former monolithic
-plan: P0 drafting subtasks may be checked while all stable P0–P6 tasks and gates remain open; 35 unchecked C1–C10 work items, and ten C1–C10
+plan: P0.1 tasks and P0-A01 are evidence-closed while later P0–P6 tasks and
+gates remain open; 35 unchecked C1–C10 work items, and ten C1–C10
 gate statements. It also preserves every objective, runtime-loading
 obligation, claim boundary, stop trigger, Program B entry rule, and global
 ordering rule. Structural phase, integration, and handoff tasks add planning

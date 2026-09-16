@@ -37,13 +37,12 @@ readiness, and long-term support do not belong in the proof claim.
 
 ## Program state and ordering
 
-P0's three phase drafts are implemented and locally validated, but P0-GATE is
-blocked on independent review, materialized experiment inputs, and
-clean-environment readiness evidence. Pascal Charbonneau (`pcharbon70`) has
-accepted the immediate review and experiment-owner roles. Runtime implementation
-results are explicitly deferred to P1–P6. P1 has authored phase plans. P2–P6 retain substantive
-milestone definitions but remain `decomposition pending` until predecessor
-evidence localizes the next work. All stable tasks and gates remain unchecked.
+P0.1 is accepted and P0-A01 passes. P0-GATE remains blocked on P0-A02/P0-A03
+independent review and clean-environment readiness evidence. Pascal Charbonneau
+(`pcharbon70`) has accepted the remaining review and experiment-owner roles.
+Runtime implementation results are explicitly deferred to P1–P6. P1 has
+authored phase plans. P2–P6 retain substantive milestone definitions but remain
+`decomposition pending` until predecessor evidence localizes the next work.
 
 Milestones execute in ID order. A later milestone may be researched, but its
 implementation cannot claim entry until the preceding milestone gate is

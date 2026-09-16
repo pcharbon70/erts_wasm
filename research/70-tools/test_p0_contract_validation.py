@@ -215,6 +215,10 @@ class Phase03ContractTests(unittest.TestCase):
         self.mutate("p0-acceptance-report.json", lambda value: value.update(gate_state="passed"))
         self.assert_code("premature-p0-closure")
 
+    def test_missing_partial_p0_a01_evidence_is_rejected(self) -> None:
+        self.mutate("p0-acceptance-report.json", lambda value: value.update(planning_evidence="none"))
+        self.assert_code("premature-p0-closure")
+
     def test_missing_project_owner_assignment_is_rejected(self) -> None:
         self.mutate("p0-role-assignments.json", lambda value: value["assignee"].update(github=""))
         self.assert_code("missing-role-assignment")

@@ -371,7 +371,12 @@ def validate_phase_03(root: Path = P0_ROOT / "phase-03") -> list[str]:
         raise ContractError("downstream-p0-blocker", "downstream implementation or product outcomes cannot block P0")
     if len(report.get("deferred_outcomes_not_blocking_p0", [])) != 6:
         raise ContractError("missing-deferred-outcome", "P0 report must preserve six downstream outcome classes")
-    if report.get("gate_state") != "blocked" or report.get("planning_evidence") != "none; no task or gate may close":
+    expected_partial_evidence = (
+        "P0-A01: research/assets/p0-governed-baseline/phase-01/"
+        "p0-phase-01-acceptance.planning-evidence.json; "
+        "P0-A02, P0-A03, and P0-GATE: none"
+    )
+    if report.get("gate_state") != "blocked" or report.get("planning_evidence") != expected_partial_evidence:
         raise ContractError("premature-p0-closure", "P0 cannot close with unresolved blockers")
 
     validate_phase_01()
@@ -395,7 +400,12 @@ def main(argv: list[str]) -> int:
         print(f"P0 contract validation failed [{exc.code}]: {exc}", file=sys.stderr)
         return 1
     print(f"P0 {phase} contract validation passed: {', '.join(validated)}")
-    print("Acceptance status: independent review pending; no P0 gate closed")
+    if phase == "phase-01":
+        print("Acceptance status: P0-A01 passed by independent reviewed evidence")
+    elif phase == "phase-02":
+        print("Acceptance status: independent review pending; P0-A02 remains open")
+    else:
+        print("Acceptance status: P0-A01 passed; P0-A02, P0-A03, and P0-GATE remain open")
     return 0
 
 

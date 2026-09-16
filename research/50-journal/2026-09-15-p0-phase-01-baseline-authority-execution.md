@@ -97,8 +97,8 @@ and the explicit owner checklist is
 
 The focused P0 validator now rejects unmaterialized required inputs, missing
 browser digests, missing TypeScript toolchain pins, the stale driver path, and
-the stale preload count. Its 36 tests pass. P0-A01 remains review-pending and no
-`*.planning-evidence.json` file has been created.
+the stale preload count. Its 36 tests pass. At that point P0-A01 remained
+review-pending and no `*.planning-evidence.json` file had been created.
 
 ## Owner acceptance
 
@@ -108,8 +108,11 @@ review result is
 [`p0-phase-01-owner-review-result.json`](../assets/p0-governed-baseline/phase-01/p0-phase-01-owner-review-result.json).
 This accepts the six reviewed contract areas and the Phase 1 handoff for
 P0-A01 only. ADR-0001, P0-A02, P0-A03, P0-GATE, and every downstream runtime
-claim remain open. Task roll-up still requires committed-baseline replay and a
-valid `contract_research` evidence record.
+claim remain open. Clean revision `aaff05d` was subsequently replayed and bound
+by
+[`p0-phase-01-acceptance.planning-evidence.json`](../assets/p0-governed-baseline/phase-01/p0-phase-01-acceptance.planning-evidence.json).
+That record closes the seven Phase 1 tasks and P0-A01 without expanding the
+accepted claim.
 
 The aggregate command `python3 research/70-tools/check_all.py` passed after the
 Section 1.2 changes, including the focused P0 tests. `git diff --check` also
@@ -118,31 +121,27 @@ PR and merge revisions are transport history rather than tested inputs.
 
 ## Machine-readable evidence
 
-No `*.planning-evidence.json` record was created. The local validation report
-is deliberately not pass-closing evidence because it has no independent
-review and includes required not-run cases.
+The non-synthetic `contract_research` record above binds exact reviewed inputs,
+the owner's acceptance result, validation output digests, clean tested revision
+`aaff05d`, all seven Phase 1 tasks, and P0-A01. Its limitations preserve the
+native optional-debugger failure, locally reproduced Chrome digest, and absence
+of downstream runtime evidence.
 
 ## Review and handoff
 
-Disposition: **P0.1 contract ready for owner review; P0-A01 remains open**. The
-user explicitly authorized preparation and merge of later phase drafts while
-evidence-bound tasks remain unchecked. Phase 2 may consume these artifacts as
-draft inputs, but this does not satisfy its formal `p0-p01-handoff` dependency
-until the owner records the requested acceptance disposition.
+Disposition: **P0.1 accepted; P0-A01 passed on 2026-09-16**. The owner accepted
+the recorded limitations, clean revision `aaff05d` passed the contract and
+archive suites, and pass-closing evidence binds all seven Phase 1 tasks. Phase
+2 may now consume the exact P0.1 inputs through its formal
+`p0-p01-handoff` dependency.
 
-Independent reviewers must still resolve all pin materializations, accept the
-trust and language boundaries, audit the runtime inventory, and approve the
-thread-census contract. Changes to any pin, trust zone, language owner, runtime
-category, or pool-size rule reopen the corresponding local validation.
+Changes to any pin, trust zone, language owner, runtime category, or pool-size
+rule reopen P0-A01 and the corresponding local validation.
 
 ## Follow-ups
 
-- Obtain Pascal Charbonneau's explicit disposition on the six items in the
-  owner-review packet, including the recorded native-build and Chrome-checksum
-  limitations.
-- After acceptance, bind the committed contract and artifact digests in an
-  independently reviewed `contract_research` evidence record and roll up only
-  the P0.1 task hierarchy and P0-A01.
+- Begin formal P0.2 review from the accepted P0.1 handoff without treating its
+  later instrumentation experiments as already run.
 - Implement and run the census only in the later target/runtime probe.
 - Preserve the explicit distinction between draft progression and accepted
   P0 evidence in Phases 2 and 3.
